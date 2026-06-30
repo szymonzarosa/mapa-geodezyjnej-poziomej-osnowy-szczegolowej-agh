@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interaktywna Osnowy - Praca Inżynierska</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+</head>
+<body>
+
+<div id="welcomeModal" class="modal-overlay">
+        <div class="modal-content ui-panel">
+            <div class="modal-header">
+                <div class="modal-logos">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" class="logo-agh">
+                    
+                    </div>
+                
+                <h2>Akademia Górniczo-Hutnicza im. Stanisława Staszica w Krakowie</h2>
+                <h3>Wydział Geodezji Górniczej i Inżynierii Środowiska<br>Katedra Geodezji Zintegrowanej i Kartografii</h3>
+            </div>
+            
+            <div class="modal-body">
+                <div class="thesis-type">Projekt dyplomowy</div>
+                
+                <h1 class="thesis-title-pl">
+                    Inwentaryzacja geodezyjnej poziomej osnowy szczegółowej wraz z projektem modernizacji na wybranym terenie Miasta Krakowa
+                </h1>
+                <div class="thesis-title-en">
+                    Inventory of the detailed horizontal geodetic control network along with a modernization project in a selected area of the City of Krakow
+                </div>
+
+                <div class="app-description">
+                    <strong>O aplikacji:</strong> To integralna część pracy inżynierskiej. Umożliwia ona interaktywną wizualizację stanu osnowy geodezyjnej, przeglądanie atrybutów poszczególnych punktów oraz opisów topograficznych, a także wykonywanie pomiarów na mapie i eksport danych (CSV/GeoJSON).
+                </div>
+
+                <table class="authors-table">
+                    <tr>
+                        <th>Autorzy:</th>
+                        <td>Szymon Kobacki, Szymon Zarosa</td>
+                    </tr>
+                    <tr>
+                        <th>Kierunek studiów:</th>
+                        <td>Geodezja i Kartografia</td>
+                    </tr>
+                    <tr>
+                        <th>Opiekun pracy:</th>
+                        <td>dr inż. Mikołaj Skulich, prof. AGH</td>
+                    </tr>
+                </table>
+                
+                <div class="modal-footer-text">Kraków, 2026</div>
+            </div>
+            
+            <button id="closeModalBtn" class="action-btn btn-nav" style="width: 100%; margin-top: 20px; font-size: 14px; padding: 12px;">
+                Rozumiem, przejdź do aplikacji
+            </button>
+        </div>
+    </div>
+
+<div class="search-container ui-panel">
+        <div style="position: relative; flex-grow: 1;">
+            <input type="text" id="searchInput" placeholder="Wpisz numer punktu..." autocomplete="off">
+            <ul id="customSuggestions" class="custom-suggestions"></ul>
+        </div>
+        <button id="searchBtn">Szukaj</button>
+    </div>
+    <div id="searchError">Nie znaleziono punktu</div>
+
+    <button class="locate-btn ui-panel" id="locateBtn" title="Pokaż moją lokalizację">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+        </svg>
+    </button>
+    
+    <button class="locate-btn ui-panel" id="measureBtn" style="top: 155px;" title="Włącz/Wyłącz pomiar odległości i pola">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.17 3.25q.33.33.5.76q.16.42.16.86q0 .44-.16.86q-.17.43-.5.76l-11.5 11.5q-.33.33-.76.5q-.42.16-.86.16q-.44 0-.86-.16q-.43-.17-.76-.5L3.25 14q-.33-.33-.5-.76q-.16-.42-.16-.86q0-.44.16-.86q.17-.43.5-.76l11.5-11.5q.33-.33.76-.5q.42-.16.86-.16q.44 0 .86.16q.43.17.76.5Z"></path>
+            <path d="m7.5 4.5l12 12"></path>
+            <path d="m6.5 10.5l3.5 3.5"></path>
+            <path d="m10.5 6.5l3.5 3.5"></path>
+        </svg>
+    </button>
+	
+	<button class="locate-btn ui-panel" id="mobileLayersBtn" style="top: 155px;" title="Warstwy">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+    </button>
+    
+    <div id="measurePanel" class="ui-panel">
+        <div class="measure-header">Pomiary Geodezyjne</div>
+        <div class="measure-toggle">
+            <input type="radio" id="mode-dist" name="measureMode" value="distance" checked>
+            <label for="mode-dist">Odległość</label>
+            <input type="radio" id="mode-area" name="measureMode" value="area">
+            <label for="mode-area">Powierzchnia</label>
+        </div>
+        <div class="measure-results">
+            <div class="coord-row">
+                <span class="coord-label" id="measure-dist-label">Odległość:</span>
+                <span id="measure-dist" class="coord-value">0.00 m</span>
+            </div>
+            <div class="coord-row" id="row-area" style="display: none;">
+                <span class="coord-label">Powierzchnia:</span>
+                <span id="measure-area" class="coord-value">0.00 m²</span>
+            </div>
+        </div>
+        <div class="pdf-actions" style="margin-top: 15px;">
+            <button id="measure-undo" class="action-btn btn-pdf" style="cursor: pointer; width: 100%;">Cofnij</button>
+            <button id="measure-clear" class="action-btn btn-nav" style="border: none; cursor: pointer; width: 100%; margin-top: 0;">Wyczyść</button>
+        </div>
+    </div>
+
+    <div class="custom-layers-control ui-panel" id="layersPanel">
+        <div class="layers-header">
+            Warstwy 
+            <span id="closeLayersBtn" class="close-layers" style="cursor:pointer; font-size: 20px; line-height: 1;">&times;</span>
+        </div>
+        <div class="layers-body">
+            
+            <button class="accordion-btn active">Podkłady Mapowe</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOsm" checked><span>CartoDB Voyager</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOrtoGeo"><span>Ortofotomapa (Geoportal)</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOrtoEsri"><span>Ortofotomapa (Esri)</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseTopoEsri"><span>Mapa Topograficzna (Esri)</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseTopoOpen"><span>OpenTopoMap</span></label>        
+            </div>
+
+            <button class="accordion-btn active">Usługi WMS</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="checkbox" id="layerKieg"><span>Działki i Budynki (KIEG)</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerAdresy"><span>Adresy i Ulice (KIMUiA)</span></label>
+            </div>
+
+            <button class="accordion-btn active">Osnowa Szczegółowa Pozioma</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="checkbox" id="layerPanstwowa" checked><span>Osnowa Państwowa</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerKuzniar" checked><span>Opracowanie Projektowe (inż. K. Kuźniar)</span></label>
+            </div>
+
+            <button class="accordion-btn active">Osnowa Pomiarowa</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="checkbox" id="layerSkulich" checked><span>Opracowanie Dydaktyczne (dr inż. M. Skulich, prof. AGH)</span></label>
+            </div>
+
+            <button class="accordion-btn active">Analizy i Eksport Danych</button>
+            <div class="accordion-content">
+                <label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerZakres" checked><span>Zakres opracowania</span></label>
+                
+                <label class="layer-item-label" style="margin-bottom: 15px;"><input type="checkbox" id="layerWizury" checked><span>Wizury</span></label>
+                
+                <button id="selectAreaBtn" class="action-btn" style="width: 100%; border: 1px solid #d1d5db; background: white; cursor: pointer; color: #374151; margin-bottom: 8px;">Wybierz obszar na mapie</button>
+                <div style="display: flex; gap: 8px;">
+                    <button id="exportCsvBtn" class="action-btn btn-pdf" style="flex: 1; cursor: pointer; border: 1px solid #d1d5db; background: white;">Do CSV</button>
+                    <button id="exportGeoJsonBtn" class="action-btn btn-pdf" style="flex: 1; cursor: pointer; border: 1px solid #d1d5db; background: white;">Do GeoJSON</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+	<div id="map"></div>
+    
+    <div id="exportFloatingPanel" class="ui-panel" style="display: none; position: absolute; top: 75px; left: 50%; transform: translateX(-50%); z-index: 2000; padding: 12px; width: 90%; max-width: 350px; flex-direction: column; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+        <div id="exportInstructions" style="font-weight: 700; font-size: 13px; color: #1a1a1a; text-align: center;">Kliknij w pierwszy róg obszaru na mapie...</div>
+        <div id="exportActionButtons" style="display: none; gap: 8px; width: 100%;">
+            <button id="floatExportCsv" class="action-btn btn-pdf" style="flex: 1; border: 1px solid #d1d5db; background: white; cursor: pointer;">Pobierz CSV</button>
+            <button id="floatExportGeoJson" class="action-btn btn-pdf" style="flex: 1; border: 1px solid #d1d5db; background: white; cursor: pointer;">Pobierz GeoJSON</button>
+        </div>
+        <button id="floatExportCancel" class="action-btn" style="background: var(--danger-color); color: white; border: none; width: 100%; cursor: pointer; margin-top: 5px;">Anuluj eksport</button>
+    </div>
+	
+    <div id="coordinatesPanel" class="ui-panel">
+        <div class="coord-row">
+            <span class="coord-label">WGS84:</span>
+            <span id="coord-wgs" class="coord-value">-</span>
+        </div>
+        <div class="coord-row">
+            <span class="coord-label" id="pl2000-label">PL-2000:</span>
+            <span id="coord-pl2000" class="coord-value">-</span>
+        </div>
+    </div>
+
+    <script type="module" src="/src/app.js"></script>
+
+</body>
+</html>

@@ -960,6 +960,18 @@ const desktopSteps = [
             description: 'Jeśli zapomnisz do czego służą poszczególne narzędzia, tutaj odnajdziesz najczęściej zadawane pytania.', 
             side: "right" 
         } 
+    },
+	{
+        popover: {
+            title: 'Koniec samouczka',
+            description: `To już wszystko, życzymy przyjemnego korzystania z aplikacji. W razie problemów panel pomocy jest do Twojej dyspozycji. Powodzenia!
+            <div style="text-align: center; margin-top: 25px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" style="width: 50px; margin-bottom: 10px;">
+                <div style="font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Stan danych na: 18.04.2026 r.
+                </div>
+            </div>`
+        }
     }
 ];
 
@@ -1100,6 +1112,18 @@ const mobileSteps = [
             description: 'Skrócona instrukcja obsługi narzędzi aplikacji jest dostępna zawsze pod tym przyciskiem.', 
             side: "right" 
         } 
+    },
+	{
+        popover: {
+            title: 'Koniec samouczka',
+            description: `To już wszystko, życzymy przyjemnego korzystania z aplikacji. W razie problemów panel pomocy jest do Twojej dyspozycji. Powodzenia!
+            <div style="text-align: center; margin-top: 25px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" style="width: 50px; margin-bottom: 10px;">
+                <div style="font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Stan danych na: 18.04.2026 r.
+                </div>
+            </div>`
+        }
     }
 ];
 

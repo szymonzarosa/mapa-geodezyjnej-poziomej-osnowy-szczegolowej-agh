@@ -138,7 +138,6 @@ document.querySelectorAll('input[name="measureMode"]').forEach(radio => {
         measureMode = e.target.value; 
         rowArea.style.display = measureMode === 'area' ? 'flex' : 'none'; 
         
-        // Etykiety - zmiana
         measureDistLabel.innerText = measureMode === 'area' ? 'Obwód:' : 'Odległość:';
         
         clearMeasurement();
@@ -169,14 +168,12 @@ function calculateMeasurement() {
     const ptsPl2000 = measurePoints.map(ll => proj4('EPSG:4326', epsg, [ll.lng, ll.lat]));
     let dist = 0;
     
-    // Obliczanie odległości między kolejnymi punktami
     for (let i = 1; i < ptsPl2000.length; i++) {
         let dx = ptsPl2000[i][0] - ptsPl2000[i-1][0]; 
         let dy = ptsPl2000[i][1] - ptsPl2000[i-1][1]; 
         dist += Math.sqrt(dx*dx + dy*dy);
     }
     
-    // Zamknięcie obwodu, gdy jesteśmy w trybie Powierzchni
     if (measureMode === 'area' && ptsPl2000.length > 2) {
         let dx = ptsPl2000[0][0] - ptsPl2000[ptsPl2000.length-1][0]; 
         let dy = ptsPl2000[0][1] - ptsPl2000[ptsPl2000.length-1][1]; 
@@ -901,7 +898,7 @@ const desktopSteps = [
     { 
         element: '#locateBtn', 
         popover: { 
-            title: 'Lokalizacja urządzenia', // --- OBSŁUGA EKRANU POWITALNEGO ---
+            title: 'Lokalizacja urządzenia',
             description: 'Po kliknięciu danej opcji, aplikacja automatycznie wskaże oraz przeniesie Cię w Twoje aktualne położenie.', 
             side: "right" 
         } 
@@ -991,12 +988,12 @@ const mobileSteps = [
             side: "right" 
         } 
     },
-	{ 
+    { 
         element: '.leaflet-popup', 
         popover: { 
             title: 'Karta informacyjna punktu', 
             description: 'Przeanalizujmy atrybuty na przykładzie punktu 712511112230. Znajdziesz tu m.in. typ znaku (rurka hartowana), rodzaj stabilizacji (Naziemny), wysokość, współrzędne oraz klasę osnowy.', 
-            side: "left", 
+            side: "bottom", 
             align: 'start' 
         },
         onHighlightStarted: () => {
@@ -1008,41 +1005,85 @@ const mobileSteps = [
         element: '.topo-section:nth-of-type(1)', 
         popover: { 
             title: 'Opis topograficzny', 
-            description: 'Z tego miejsca możesz błyskawicznie wyświetlić lub pobrać oryginalny opis topograficzny w formacie PDF oraz JPG.', 
-            side: "left" 
-        } 
+            description: 'Tutaj możesz wyświetlić (lub pobrać) opis topograficzny w formacie PDF oraz JPG.', 
+            side: "top" 
+        },
+        onHighlightStarted: () => {
+            const popupBody = document.querySelector('.popup-body');
+            const target = document.querySelectorAll('.topo-section')[0];
+            if (popupBody && target) popupBody.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+        }
     },
     { 
         element: '.topo-section:nth-of-type(2)', 
         popover: { 
             title: 'Mapa porównania z terenem', 
-            description: 'Narzędzie pozwala wygenerować plik PDF z dokładną mapą ułatwiającą weryfikację punktu w terenie.', 
-            side: "left" 
-        } 
+            description: 'Narzędzie pozwala wyświetlić plik PDF z mapą porównania z terenem.', 
+            side: "top" 
+        },
+        onHighlightStarted: () => {
+            const popupBody = document.querySelector('.popup-body');
+            const target = document.querySelectorAll('.topo-section')[1];
+            if (popupBody && target) popupBody.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+        }
     },
     { 
         element: '.topo-section:nth-of-type(3)', 
         popover: { 
             title: 'Nawigacja do punktu', 
-            description: 'Opcja wyjątkowo przydatna w terenie – jednym kliknięciem uruchomisz trasowanie w aplikacjach Google Maps lub Apple Maps prosto do lokalizacji znaku.', 
-            side: "left" 
-        } 
+            description: 'Opcja wyjątkowo przydatna w terenie. Jednym kliknięciem uruchomisz trasę w aplikacjach Google Maps lub Apple Maps prosto do lokalizacji znaku.', 
+            side: "top" 
+        },
+        onHighlightStarted: () => {
+            const popupBody = document.querySelector('.popup-body');
+            const target = document.querySelectorAll('.topo-section')[2];
+            if (popupBody && target) popupBody.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+        }
     },
     { 
         element: '#mobileLayersBtn', 
         popover: { 
             title: 'Panel Warstw', 
-            description: 'Wybierzesz tu ortofotomapę ułatwiającą orientację, włączysz działki z KIEG, czy też wykonasz eksport.', 
+            description: 'Otwórz panel, aby zarządzać podkładami mapowymi lub przygotować dane do eksportu.', 
             side: "right" 
-        } 
+        },
+        onHighlightStarted: () => {
+            map.closePopup();
+            document.getElementById('layersPanel').classList.remove('mobile-active');
+        }
+    },
+    { 
+        element: '#selectAreaBtn', 
+        popover: { 
+            title: 'Eksport danych', 
+            description: 'Zaznacz na mapie interesujący Cię obszar, a następnie pobierz dane punktów do pliku CSV lub GeoJSON.', 
+            side: "top" 
+        },
+        onHighlightStarted: () => {
+            document.getElementById('layersPanel').classList.add('mobile-active');
+            
+            const btn = document.getElementById('selectAreaBtn');
+            if (btn) {
+                const content = btn.closest('.accordion-content');
+                if (content) {
+                    content.style.display = 'block';
+                    if (content.previousElementSibling) content.previousElementSibling.classList.add('active');
+                }
+                const layersBody = document.querySelector('.layers-body');
+                if (layersBody) layersBody.scrollTo({ top: btn.offsetTop - 60, behavior: 'smooth' });
+            }
+        }
     },
     { 
         element: '#measureBtn', 
         popover: { 
             title: 'Pomiary', 
-            description: 'Uruchamia narzędzie pomiarowe pozwalające na wyznaczenie odległości i pola powierzchni. Przelicza odległości z uwzględnieniem redukcji odwzorowawczej.', 
+            description: 'Uruchamia narzędzie pomiarowe pozwalające na wyznaczenie odległości i pola powierzchni.', 
             side: "right" 
-        } 
+        },
+        onHighlightStarted: () => {
+            document.getElementById('layersPanel').classList.remove('mobile-active');
+        }
     },
     { 
         element: '.info.legend', 

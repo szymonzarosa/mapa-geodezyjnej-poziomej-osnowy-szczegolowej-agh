@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Interaktywna Osnowy - Praca Inżynierska</title>
+	
+	<link rel="icon" type="image/svg" href="/logo_agh.svg" />
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
@@ -54,12 +56,80 @@
                 
                 <div class="modal-footer-text">Kraków, 2026</div>
             </div>
+			
+			<button id="startTutorialFromModalBtn" class="action-btn" style="width: 100%; margin-top: 20px; font-size: 14px; padding: 12px; background-color: white; color: var(--primary-color); border: 2px solid var(--primary-color); cursor: pointer; font-weight: 700;">
+				Chcę poznać aplikację (Samouczek)
+			</button>
             
             <button id="closeModalBtn" class="action-btn btn-nav" style="width: 100%; margin-top: 20px; font-size: 14px; padding: 12px;">
                 Rozumiem, przejdź do aplikacji
             </button>
         </div>
     </div>
+	
+	<div id="faqModal" class="modal-overlay">
+    <div class="modal-content ui-panel" style="position: relative;">
+        <span id="closeFaqIcon" style="position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #9ca3af; cursor: pointer; line-height: 1;">&times;</span>
+        
+        <div class="modal-header">
+            <h2>Instrukcja Obsługi</h2>
+            <h3>Często zadawane pytania (FAQ)</h3>
+        </div>
+        <div class="modal-body">
+            <h4 style="color: var(--accent-color); margin-bottom: 5px;">1. Jak odszukać punkt osnowy w aplikacji?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Wpisz numer punktu w polu wyszukiwania znajdującym się w lewym górnym rogu aplikacji. Po wybraniu odpowiedniego wyniku mapa automatycznie przeniesie się do lokalizacji punktu i odpowiednio przybliży widok. Wystarczy podanie tylko części numeru, aby aplikacja automatycznie dopasowała wszystkie dostępne odpowiedzi.</p>
+            
+            <h4 style="color: var(--accent-color); margin-bottom: 5px;">2. Gdzie mogę znaleźć opis topograficzny punktu?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Po kliknięciu wybranego punktu na mapie, otworzy się okno z jego szczegółami. W panelu informacji dostępny jest przycisk umożliwiający wyświetlenie opisu topograficznego. Opis można wyświetlić w formie zdjęcia bądź pliku pdf.</p>
+            
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">3. Jak pobrać dane osnowy?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Przejdź do sekcji eksportu danych znajdującego się w panelu warstw, wybierz interesujący Cię obszar (postępuj zgodnie z wyświetlaną instrukcją) lub punkt oraz format pliku (CSV/GeoJSON). Następnie kliknij przycisk Pobierz, aby zapisać dane na swoim urządzeniu.</p>
+			
+            <h4 style="color: var(--accent-color); margin-bottom: 5px;">4. Jak wyświetlić informacje o punkcie?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Kliknij wybrany punkt na mapie. Zostanie wyświetlone okno zawierające podstawowe informacje opisowe, takie jak numer punktu, stan znaku, typ znaku, współrzędne, rodzaj stabilizacji oraz inne dostępne dane.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">5. Jak zmienić warstwę mapy?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Skorzystaj z panelu warstw i wybierz interesujący podkład mapowy, np. mapę standardową, ortofotomapę lub mapę topograficzną. Dodatkowo można posłużyć się warstwami działek lub adresów i ulic pozyskanych z geoportalu. Jednocześnie w zakładce „ANALIZY I EKSPORT DANYCH” dostępne są autorskie warstwy powiększające zakres wykorzystania aplikacji.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">6. Jak przybliżyć lub oddalić mapę?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Możesz użyć przycisków + i − znajdujących się na mapie lub skorzystać z kółka myszy. Na urządzeniach mobilnych użyj gestu „szczypania” dwoma palcami.</p>
+			
+            <h4 style="color: var(--accent-color); margin-bottom: 5px;">7. Dlaczego nie mogę znaleźć wybranego punktu?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Sprawdź, czy numer punktu został wpisany poprawnie. Jeśli punkt nadal nie jest widoczny, upewnij się, że odpowiednia warstwa danych jest włączona. Do odszukania interesującego cię punktu nie potrzeba podawać jego pełnej nazwy, wystarczy tylko część numeru, a algorytm odszuka wszystkie możliwe opcje wyboru.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">8. Jak zmierzyć odległość lub powierzchnię?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Wybierz narzędzie pomiarowe z paska narzędzi (ikona przypominająca gumkę), a następnie zaznacz punkty na mapie. Aplikacja automatycznie obliczy długość lub powierzchnię wraz z obwodem zaznaczonego obszaru.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">9. Jak odczytać współrzędne punktu?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Kliknij punkt na mapie. W oknie informacji zostaną wyświetlone jego współrzędne w wykorzystywanym państwowym układzie odniesienia.</p>
+			
+            <h4 style="color: var(--accent-color); margin-bottom: 5px;">10. Jak wyczyścić wyniki wyszukiwania lub pomiarów?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Kliknij przycisk Wyczyść znajdujący się w funkcji „Włącz/Wyłącz pomiar odległości i pola”, aby usunąć zaznaczenia z mapy.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">11. Czy mogę wyświetlić kilka warstw jednocześnie?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Tak. W panelu warstw możesz zaznaczyć kilka warstw jednocześnie, aby porównać prezentowane dane. Jednakże warstwy znajdujące się w zakładce „PODKŁADY MAPOWE” nie mogą być wyświetlane jednocześnie. Każda warstwa została sporządzona w zależności od preferencji użytkowników.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">12. Co zrobić, jeśli mapa nie wyświetla się poprawnie?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Odśwież stronę internetową. Jeśli problem nadal występuje, sprawdź połączenie z Internetem lub spróbuj otworzyć aplikację w innej przeglądarce. Jeżeli używasz aplikacji na urządzeniu mobilnym, preferowaną opcją jest posługiwanie się nią w przeglądarce internetowej.</p>
+			
+            <h4 style="color: var(--accent-color); margin-bottom: 5px;">13. Jak sprawdzić swoje aktualne położenie za pomocą aplikacji?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Kliknij przycisk Pokaż moją lokalizację (ikonka strzałki) znajdujący się pod panelem wyszukiwania punktów. Po uzyskaniu dostępu do lokalizacji aplikacja automatycznie wskażę twoje przybliżone położenie.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">14. Czy aplikacja działa na telefonach i tabletach?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Tak. Aplikacja jest responsywna i może być używana zarówno na komputerach, jak i urządzeniach mobilnych. Preferowaną opcją używania aplikacji jest przeglądarka internetowa.</p>
+			
+            <h4 style="color: var(--accent-color); margin-bottom: 5px;">15. Jak zgłosić błąd lub problem z aplikacją?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">W przypadku zauważenia błędu skontaktuj się z autorami aplikacji lub zgłoś problem za pomocą udostępnionego formularza kontaktowego.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">16. Jak dotrzeć do wybranego przeze mnie punktu osnowy?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Kliknij punkt na mapie, a następnie po wyświetleniu danych opisowych w zakładce „NAWIGACJA DO PUNKTU” wybierz preferowaną przez ciebie opcję nawigacji. Aplikacja przeniesie Cię do Google Maps/Apple Maps, a następnie wskaże najkrótszą możliwą drogę do punktu.</p>
+			
+			<h4 style="color: var(--accent-color); margin-bottom: 5px;">17. Jak odczytać współrzędne punktu nie będącego punktem osnowy geodezyjnej?</h4>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Poprzez kliknięcie/wskazanie na mapie interesującego cię punktu, nie będącego punktem osnowy geodezyjnej, jesteś w stanie odczytać jego współrzędne z paletki współrzędnych znajdującej się po środku na dole strony. Współrzędne można odczytać zarówno w systemie odniesienia WGS84, jak i w obowiązującym państwowym układzie współrzędnych geodezyjnych PL-2000 (PUWG 2000).</p>
+        </div>
+        <button id="closeFaqBtn" class="action-btn btn-nav" style="width: 100%; margin-top: 15px; padding: 10px;">Zamknij</button>
+    </div>
+</div>
 
 <div class="search-container ui-panel">
         <div style="position: relative; flex-grow: 1;">
@@ -90,6 +160,20 @@
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
             <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+    </button>
+	
+	<button class="locate-btn ui-panel" id="faqBtn" style="top: 200px;" title="Pomoc i Instrukcja Obsługi">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+	</button>
+	
+	<button class="locate-btn ui-panel" id="tutorialBtn" style="top: 245px;" title="Uruchom samouczek">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
         </svg>
     </button>
     
@@ -138,6 +222,14 @@
                 <label class="layer-item-label"><input type="checkbox" id="layerKieg"><span>Działki i Budynki (KIEG)</span></label>
                 <label class="layer-item-label"><input type="checkbox" id="layerAdresy"><span>Adresy i Ulice (KIMUiA)</span></label>
             </div>
+			
+			<button class="accordion-btn active">Stan punktu</button>
+			<div class="accordion-content" style="display: block;">
+				<label class="layer-item-label"><input type="checkbox" id="filterDobry" checked><span>Dobry</span></label>
+				<label class="layer-item-label"><input type="checkbox" id="filterUszkodzony" checked><span>Uszkodzone</span></label>
+				<label class="layer-item-label"><input type="checkbox" id="filterZniszczony" checked><span>Zniszczone</span></label>
+			</div>
+			
 
             <button class="accordion-btn active">Osnowa Szczegółowa Pozioma</button>
             <div class="accordion-content" style="display: block;">
@@ -151,10 +243,10 @@
             </div>
 
             <button class="accordion-btn active">Analizy i Eksport Danych</button>
-            <div class="accordion-content">
+            <div class="accordion-content" style="display: block;">
                 <label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerZakres" checked><span>Zakres opracowania</span></label>
-                
-                <label class="layer-item-label" style="margin-bottom: 15px;"><input type="checkbox" id="layerWizury" checked><span>Wizury</span></label>
+				<label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerWizuryDobre" checked><span>Wizury dobre</span></label>
+				<label class="layer-item-label" style="margin-bottom: 15px;"><input type="checkbox" id="layerWizuryUtrudnione" checked><span>Wizury utrudnione</span></label>
                 
                 <button id="selectAreaBtn" class="action-btn" style="width: 100%; border: 1px solid #d1d5db; background: white; cursor: pointer; color: #374151; margin-bottom: 8px;">Wybierz obszar na mapie</button>
                 <div style="display: flex; gap: 8px;">

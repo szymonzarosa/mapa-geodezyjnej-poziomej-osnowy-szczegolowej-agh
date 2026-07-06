@@ -7,8 +7,12 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import './style.css';
 
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+
 import { osnowaData } from './dane.js';
 import { zakresData } from './zakres.js';
+import { wizuryData } from './wizury.js';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
@@ -241,7 +245,8 @@ const clusterOptions = {
 const warstwaPanstwowa = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaSkulich = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaKuzniar = L.markerClusterGroup(clusterOptions).addTo(map);
-const wizuryLayer = L.featureGroup();
+const wizuryDobreLayer = L.featureGroup();
+const wizuryUtrudnioneLayer = L.featureGroup();
 const zakresLayer = L.featureGroup();
 
 // Funkcja obsługująca kliknięcie w klaster
@@ -378,8 +383,33 @@ async function initData() {
         L.geoJSON(zakresData, { style: { color: "#a629c6", weight: 3, fillOpacity: 0.02 } }).addTo(zakresLayer);
         if (document.getElementById('layerZakres')?.checked) map.addLayer(zakresLayer);
     }
+	
+	// 4. Ładowanie wizur
+    if (typeof wizuryData !== 'undefined') {
+        L.geoJSON(wizuryData, { 
+            coordsToLatLng: function (coords) {
+                const wgs = proj4('EPSG:2178', 'EPSG:4326', [coords[0], coords[1]]);
+                return new L.LatLng(wgs[1], wgs[0]);
+            },
+            style: function(feature) {
+                if (feature.properties && feature.properties.typ === 'utrudniona') {
+                    return { color: "#ef4444", weight: 2, opacity: 0.9, dashArray: "5, 5" };
+                }
+                return { color: "#ef4444", weight: 2, opacity: 0.9 };
+            },
+            onEachFeature: function(feature, layer) {
+                if (feature.properties && feature.properties.typ === 'utrudniona') {
+                    wizuryUtrudnioneLayer.addLayer(layer);
+                } else {
+                    wizuryDobreLayer.addLayer(layer);
+                }
+            }
+        });
+        if (document.getElementById('layerWizuryDobre')?.checked) map.addLayer(wizuryDobreLayer);
+        if (document.getElementById('layerWizuryUtrudnione')?.checked) map.addLayer(wizuryUtrudnioneLayer);
+    }
 
-    // 4. Dopasowanie widoku mapy do załadowanych punktów
+    // 5. Dopasowanie widoku mapy do załadowanych punktów
     const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar].filter(l => l.getLayers().length > 0);
     if (allLayersArray.length > 0) {
         map.fitBounds(L.featureGroup(allLayersArray).getBounds(), { padding: [40, 40] });
@@ -412,7 +442,8 @@ toggleLayer('layerSkulich', warstwaSkulich);
 toggleLayer('layerKuzniar', warstwaKuzniar);
 toggleLayer('layerKieg', wmsKieg);
 toggleLayer('layerAdresy', wmsAdresy);
-toggleLayer('layerWizury', wizuryLayer);
+toggleLayer('layerWizuryDobre', wizuryDobreLayer);
+toggleLayer('layerWizuryUtrudnione', wizuryUtrudnioneLayer);
 toggleLayer('layerZakres', zakresLayer);
 
 const panelDiv = document.getElementById('layersPanel');
@@ -429,12 +460,48 @@ function searchPoint() {
         if (warstwaPanstwowa.hasLayer(targetLayer) && !map.hasLayer(warstwaPanstwowa)) { map.addLayer(warstwaPanstwowa); document.getElementById('layerPanstwowa').checked = true; }
         if (warstwaSkulich.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulich)) { map.addLayer(warstwaSkulich); document.getElementById('layerSkulich').checked = true; }
         if (warstwaKuzniar.hasLayer(targetLayer) && !map.hasLayer(warstwaKuzniar)) { map.addLayer(warstwaKuzniar); document.getElementById('layerKuzniar').checked = true; }
-        map.setView(targetLayer.getLatLng(), 19);
+        map.setView(targetLayer.getLatLng(), 19, { animate: false });
         targetLayer.openPopup();
     } else if (input !== "") {
         errorMsg.innerText = "Nie znaleziono punktu: " + escapeHTML(inputRaw); errorMsg.style.display = 'block'; setTimeout(() => { errorMsg.style.display = 'none'; }, 3000);
     }
 }
+
+const filterDobry = document.getElementById('filterDobry');
+const filterUszkodzony = document.getElementById('filterUszkodzony');
+const filterZniszczony = document.getElementById('filterZniszczony');
+
+function applyStateFilters() {
+    warstwaPanstwowa.clearLayers();
+    warstwaSkulich.clearLayers();
+    warstwaKuzniar.clearLayers();
+
+    const showDobry = filterDobry.checked;
+    const showUszkodzony = filterUszkodzony.checked;
+    const showZniszczony = filterZniszczony.checked;
+
+    allMarkersData.forEach(item => {
+        const row = item.props;
+        const stan = (row.stan_znaku || row.stan || '').toLowerCase();
+        
+        let stanWizualny = 'zniszczony';
+        if (stan.includes('dobry')) stanWizualny = 'dobry';
+        else if (stan.includes('uszkodzony')) stanWizualny = 'uszkodzony';
+
+        let isVisible = false;
+        if (stanWizualny === 'dobry' && showDobry) isVisible = true;
+        if (stanWizualny === 'uszkodzony' && showUszkodzony) isVisible = true;
+        if (stanWizualny === 'zniszczony' && showZniszczony) isVisible = true;
+
+        if (isVisible) {
+            item.targetGroup.addLayer(item.layer);
+        }
+    });
+}
+
+[filterDobry, filterUszkodzony, filterZniszczony].forEach(cb => {
+    cb.addEventListener('change', applyStateFilters);
+});
 
 document.getElementById('searchBtn').addEventListener('click', searchPoint);
 document.getElementById("searchInput").addEventListener("keyup", function(e) { 
@@ -486,6 +553,9 @@ legend.onAdd = function () {
             
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#a629c6" stroke-width="15"/></svg>Zakres opracowania</div>
             
+			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><line x1="0" y1="50" x2="100" y2="50" stroke="#ef4444" stroke-width="12"/></svg>Wizury dobre</div>
+			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><line x1="0" y1="50" x2="100" y2="50" stroke="#ef4444" stroke-width="12" stroke-dasharray="20, 20"/></svg>Wizury utrudnione</div>
+			
             <div style="margin-top: 10px;"></div>
             <div class="legend-item"><div class="status-dot dot-dobry" style="position:relative; margin-right:12px; margin-left:4px;"></div>Punkty Zachowane</div>
             <div class="legend-item"><div class="status-dot dot-uszkodzony" style="position:relative; margin-right:12px; margin-left:4px;"></div>Punkty Uszkodzone</div>
@@ -704,6 +774,7 @@ if (searchInputElem && customSuggestions) {
 document.addEventListener('DOMContentLoaded', () => {
     const welcomeModal = document.getElementById('welcomeModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const startTutorialFromModalBtn = document.getElementById('startTutorialFromModalBtn');
     
     if (!sessionStorage.getItem('welcomeModalSeen')) {
         welcomeModal.style.display = 'flex';
@@ -713,4 +784,306 @@ document.addEventListener('DOMContentLoaded', () => {
         welcomeModal.style.display = 'none';
         sessionStorage.setItem('welcomeModalSeen', 'true');
     });
+
+    if (startTutorialFromModalBtn) {
+        startTutorialFromModalBtn.addEventListener('click', () => {
+            welcomeModal.style.display = 'none';
+            sessionStorage.setItem('welcomeModalSeen', 'true');
+            startTutorial();
+        });
+    }
 });
+
+const faqModal = document.getElementById('faqModal');
+const faqBtn = document.getElementById('faqBtn');
+const closeFaqBtn = document.getElementById('closeFaqBtn');
+const closeFaqIcon = document.getElementById('closeFaqIcon');
+
+L.DomEvent.disableClickPropagation(faqBtn);
+
+faqBtn.addEventListener('click', () => {
+    faqModal.style.display = 'flex';
+});
+
+closeFaqBtn.addEventListener('click', () => {
+    faqModal.style.display = 'none';
+});
+
+if (closeFaqIcon) {
+    closeFaqIcon.addEventListener('click', () => {
+        faqModal.style.display = 'none';
+    });
+}
+
+faqModal.addEventListener('click', (e) => {
+    if (e.target === faqModal) {
+        faqModal.style.display = 'none';
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && faqModal.style.display === 'flex') {
+        faqModal.style.display = 'none';
+    }
+});
+
+// --- SAMOUCZEK (DRIVER.JS) ---
+const tutorialBtn = document.getElementById('tutorialBtn');
+
+if (tutorialBtn) {
+    L.DomEvent.disableClickPropagation(tutorialBtn);
+}
+
+// 1. Wspólna konfiguracja
+const driverConfig = {
+    showProgress: true,
+    nextBtnText: 'Dalej ➔',
+    prevBtnText: '🠔 Wstecz',
+    doneBtnText: 'Zakończ',
+    popoverClass: 'custom-driver-popover',
+    allowClose: true
+};
+
+// 2. Rozbudowana ścieżka dla ekranów komputerów
+const desktopSteps = [
+    { 
+        popover: { 
+            title: 'Witaj w aplikacji!', 
+            description: 'Ten przewodnik pokaże Ci, jak korzystać z narzędzi tutaj dostępnych. Kliknij "Dalej".' 
+        } 
+    },
+    { 
+        element: '.search-container', 
+        popover: { 
+            title: 'Wyszukiwanie', 
+            description: 'Wpisz numer szukanego punktu (np. "16090"). System przefiltruje bazę, a po zatwierdzeniu wyśrodkuje mapę i wyświetli kartę informacyjną z danymi opisowymi.', 
+            side: "bottom", 
+            align: 'start' 
+        } 
+    },
+	{ 
+        element: '.leaflet-popup', 
+        popover: { 
+            title: 'Karta informacyjna punktu', 
+            description: 'Przeanalizujmy atrybuty na przykładzie punktu 712511112230. Znajdziesz tu m.in. typ znaku (rurka hartowana), rodzaj stabilizacji (Naziemny), wysokość, współrzędne oraz klasę osnowy.', 
+            side: "left", 
+            align: 'start' 
+        },
+        onHighlightStarted: () => {
+            document.getElementById('searchInput').value = '712511112230';
+            searchPoint();
+        }
+    },
+    { 
+        element: '.topo-section:nth-of-type(1)', 
+        popover: { 
+            title: 'Opis topograficzny', 
+            description: 'Z tego miejsca możesz wyświetlić (a także pobrać) opis topograficzny w formacie PDF oraz JPG.', 
+            side: "left" 
+        } 
+    },
+    { 
+        element: '.topo-section:nth-of-type(2)', 
+        popover: { 
+            title: 'Mapa porównania z terenem', 
+            description: 'Narzędzie pozwala wyświetlić plik PDF z mapą porówniania z terenem.', 
+            side: "left" 
+        } 
+    },
+    { 
+        element: '.topo-section:nth-of-type(3)', 
+        popover: { 
+            title: 'Nawigacja do punktu', 
+            description: 'Opcja wyjątkowo przydatna w terenie. Jednym kliknięciem uruchomisz trasę w aplikacjach Google Maps lub Apple Maps prosto do lokalizacji znaku.', 
+            side: "left" 
+        } 
+    },
+    { 
+        element: '#locateBtn', 
+        popover: { 
+            title: 'Lokalizacja urządzenia', // --- OBSŁUGA EKRANU POWITALNEGO ---
+            description: 'Po kliknięciu danej opcji, aplikacja automatycznie wskaże oraz przeniesie Cię w Twoje aktualne położenie.', 
+            side: "right" 
+        } 
+    },
+    { 
+        element: '#measureBtn', 
+        popover: { 
+            title: 'Pomiary', 
+            description: 'Narzędzie umożliwiające pomiar odległości oraz pola powierzchni.', 
+            side: "right" 
+        } 
+    },
+    { 
+        element: '#layersPanel', 
+        popover: { 
+            title: 'Zarządzanie widokiem mapy oraz prezentacji danych', 
+            description: 'Umożliwia przełączanie podkładów mapowych, uruchamianie usług WMS i innych warstw.', 
+            side: "left" 
+        } 
+    },
+    { 
+        element: '#selectAreaBtn', 
+        popover: { 
+            title: 'Eksport danych', 
+            description: 'Narzędzie do pobierania danych. Zaznacz na mapie prostokąt, z którego chcesz wyeksportować wybrane punkty do formatu CSV lub GeoJSON.', 
+            side: "left" 
+        },
+        onHighlightStarted: () => {
+            const btn = document.getElementById('selectAreaBtn');
+            const accordionContent = btn.closest('.accordion-content');
+            const accordionHeader = accordionContent.previousElementSibling;
+            if (accordionContent.style.display !== "block") {
+                accordionContent.style.display = "block";
+                accordionHeader.classList.add('active');
+            }
+            document.querySelector('.layers-body').scrollTop = 1000;
+        }
+    },
+    { 
+        element: '.info.legend', 
+        popover: { 
+            title: 'Legenda', 
+            description: 'Zwijana legenda objaśniająca dane prezentowane na mapie.', 
+            side: "top" 
+        } 
+    },
+    { 
+        element: '#coordinatesPanel', 
+        popover: { 
+            title: 'Transformacja', 
+            description: 'Panel wyświetlający aktualne współrzędne w układzie globalnym WGS84 oraz ich przelicznik na obowiązujący układ PL-2000.', 
+            side: "top" 
+        } 
+    },
+    { 
+        element: '#faqBtn', 
+        popover: { 
+            title: 'Instrukcja obsługi', 
+            description: 'Jeśli zapomnisz do czego służą poszczególne narzędzia, tutaj odnajdziesz najczęściej zadawane pytania.', 
+            side: "right" 
+        } 
+    }
+];
+
+// 3. Ścieżka zoptymalizowana dla urządzeń mobilnych (w terenie)
+const mobileSteps = [
+    { 
+        popover: { 
+            title: 'Witaj w aplikacji!', 
+            description: 'Ten przewodnik pokaże Ci, jak korzystać z narzędzi tutaj dostępnych. Zobaczmy, jak to działa.' 
+        } 
+    },
+    { 
+        element: '.search-container', 
+        popover: { 
+            title: 'Wyszukiwanie', 
+            description: 'Wpisz fragment numeru punktu. Lista podpowiedzi pozwoli Ci szybko go odnaleźć i przybliżyć do niego mapę.', 
+            side: "bottom", 
+            align: 'start' 
+        } 
+    },
+    { 
+        element: '#locateBtn', 
+        popover: { 
+            title: 'Nawigacja', 
+            description: 'Najważniejsze narzędzie w terenie. Kliknij, by wyśrodkować mapę na module GPS Twojego smartfona.', 
+            side: "right" 
+        } 
+    },
+	{ 
+        element: '.leaflet-popup', 
+        popover: { 
+            title: 'Karta informacyjna punktu', 
+            description: 'Przeanalizujmy atrybuty na przykładzie punktu 712511112230. Znajdziesz tu m.in. typ znaku (rurka hartowana), rodzaj stabilizacji (Naziemny), wysokość, współrzędne oraz klasę osnowy.', 
+            side: "left", 
+            align: 'start' 
+        },
+        onHighlightStarted: () => {
+            document.getElementById('searchInput').value = '712511112230';
+            searchPoint();
+        }
+    },
+    { 
+        element: '.topo-section:nth-of-type(1)', 
+        popover: { 
+            title: 'Opis topograficzny', 
+            description: 'Z tego miejsca możesz błyskawicznie wyświetlić lub pobrać oryginalny opis topograficzny w formacie PDF oraz JPG.', 
+            side: "left" 
+        } 
+    },
+    { 
+        element: '.topo-section:nth-of-type(2)', 
+        popover: { 
+            title: 'Mapa porównania z terenem', 
+            description: 'Narzędzie pozwala wygenerować plik PDF z dokładną mapą ułatwiającą weryfikację punktu w terenie.', 
+            side: "left" 
+        } 
+    },
+    { 
+        element: '.topo-section:nth-of-type(3)', 
+        popover: { 
+            title: 'Nawigacja do punktu', 
+            description: 'Opcja wyjątkowo przydatna w terenie – jednym kliknięciem uruchomisz trasowanie w aplikacjach Google Maps lub Apple Maps prosto do lokalizacji znaku.', 
+            side: "left" 
+        } 
+    },
+    { 
+        element: '#mobileLayersBtn', 
+        popover: { 
+            title: 'Panel Warstw', 
+            description: 'Wybierzesz tu ortofotomapę ułatwiającą orientację, włączysz działki z KIEG, czy też wykonasz eksport.', 
+            side: "right" 
+        } 
+    },
+    { 
+        element: '#measureBtn', 
+        popover: { 
+            title: 'Pomiary', 
+            description: 'Uruchamia narzędzie pomiarowe pozwalające na wyznaczenie odległości i pola powierzchni. Przelicza odległości z uwzględnieniem redukcji odwzorowawczej.', 
+            side: "right" 
+        } 
+    },
+    { 
+        element: '.info.legend', 
+        popover: { 
+            title: 'Legenda', 
+            description: 'Dotknij nagłówka legendy, aby ją rozwinąć.', 
+            side: "top" 
+        } 
+    },
+    { 
+        element: '#faqBtn', 
+        popover: { 
+            title: 'Pomoc', 
+            description: 'Skrócona instrukcja obsługi narzędzi aplikacji jest dostępna zawsze pod tym przyciskiem.', 
+            side: "right" 
+        } 
+    }
+];
+
+// 4. Inicjalizacja poprzez wydzieloną funkcję
+function startTutorial() {
+    const isMobileView = window.innerWidth <= 768;
+    
+    const initialCenter = map.getCenter();
+    const initialZoom = map.getZoom();
+    
+    const driverObj = driver({
+        ...driverConfig,
+        steps: isMobileView ? mobileSteps : desktopSteps,
+        
+        onDestroyed: () => {
+            map.closePopup();
+            map.setView(initialCenter, initialZoom);
+            document.getElementById('searchInput').value = '';
+        }
+    });
+    
+    driverObj.drive();
+}
+
+
+if (tutorialBtn) {
+    tutorialBtn.addEventListener('click', startTutorial);
+}

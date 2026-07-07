@@ -984,7 +984,7 @@ const desktopSteps = [
         element: '.section-raport', 
         popover: { 
             title: 'Metryczka punktu', 
-            description: 'Funkcja ta pozwala na wygenerowanie raportu w formacie PDF, tworzonego na podstawie atrybutów znaku.', 
+            description: 'Funkcja ta pozwala na wygenerowanie automatycznego raportu odnośnie punktu osnowy w formacie PDF. Dane w raporcie tworzone są na podstawie danych opisowych znaku oraz opisu topograficznego.', 
             side: "top",
             align: 'start'
         },
@@ -1056,6 +1056,22 @@ const desktopSteps = [
         popover: { 
             title: 'Instrukcja obsługi', 
             description: 'Jeśli zapomnisz do czego służą poszczególne narzędzia, tutaj odnajdziesz najczęściej zadawane pytania.', 
+            side: "right" 
+        } 
+    },
+	{ 
+        element: '#tutorialBtn', 
+        popover: { 
+            title: 'Samouczek', 
+            description: 'Ponowne uruchomienie samouczka obsługi aplikacji. Jeżeli chcesz w szybki sposób przypomnieć sobie wiedzę odnośnie obsługi aplikacji, możesz ponownie włączyć przygotowany przez nas tutorial.', 
+            side: "right" 
+        } 
+    },
+    { 
+        element: '#bugBtn', 
+        popover: { 
+            title: 'Zgłaszanie błędów', 
+            description: 'Napotkałeś problem? Skorzystaj z tego przycisku, aby wysłać zgłoszenie bezpośrednio do nas.', 
             side: "right" 
         } 
     },
@@ -1154,7 +1170,7 @@ const mobileSteps = [
         element: '.section-raport', 
         popover: { 
             title: 'Metryczka punktu', 
-            description: 'Funkcja ta pozwala na wygenerowanie raportu w formacie PDF, tworzonego na podstawie atrybutów znaku.', 
+            description: 'Funkcja ta pozwala na wygenerowanie automatycznego raportu odnośnie punktu osnowy w formacie PDF. Dane w raporcie tworzone są na podstawie danych opisowych znaku oraz opisu topograficznego.', 
             side: "top",
             align: 'start'
         },
@@ -1221,6 +1237,22 @@ const mobileSteps = [
         popover: { 
             title: 'Pomoc', 
             description: 'Skrócona instrukcja obsługi narzędzi aplikacji jest dostępna zawsze pod tym przyciskiem.', 
+            side: "right" 
+        } 
+    },
+	{ 
+        element: '#tutorialBtn', 
+        popover: { 
+            title: 'Samouczek', 
+            description: 'Ponowne uruchomienie samouczka obsługi aplikacji. Jeżeli chcesz w szybki sposób przypomnieć sobie wiedzę odnośnie obsługi aplikacji, możesz ponownie włączyć przygotowany przez nas tutorial.', 
+            side: "right" 
+        } 
+    },
+    { 
+        element: '#bugBtn', 
+        popover: { 
+            title: 'Zgłaszanie błędów', 
+            description: 'Napotkałeś problem? Skorzystaj z tego przycisku, aby wysłać zgłoszenie bezpośrednio do nas.', 
             side: "right" 
         } 
     },

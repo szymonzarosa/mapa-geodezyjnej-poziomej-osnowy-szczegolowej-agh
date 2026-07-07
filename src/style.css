@@ -58,13 +58,15 @@
 
 	.leaflet-popup-content-wrapper { padding: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
 	.leaflet-popup-content { margin: 0; line-height: 1.5; }
-	.popup-content { min-width: 260px; font-size: 13px; }
+	.popup-content { min-width: 200px; font-size: 12px; }
 	.popup-header { background: var(--primary-color); color: white; padding: 12px 15px; font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
 	.popup-body { padding: 15px; }
 	.popup-table { border-collapse: collapse; width: 100%; }
 	.popup-table td, .popup-table th { padding: 6px 0; border-bottom: 1px solid #f3f4f6; }
 	.popup-table th { color: #6b7280; font-weight: 500; width: 45%; text-align: left; }
 	.popup-table td { font-weight: 600; color: #111827; text-align: right; }
+	
+	.leaflet-popup-content-wrapper { max-height: 80vh; overflow-y: auto; }
 
 	.badge { padding: 4px 8px; border-radius: 4px; color: white; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 	.badge-dobry { background-color: var(--success-color); }
@@ -295,4 +297,29 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     pointer-events: none;
     z-index: 1000;
+}
+
+@media print {
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: white; }
+    body * { visibility: hidden; }
+    #printReport, #printReport * { visibility: visible; }
+    
+    #printReport {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        left: 0; 
+        top: 0;
+        width: 100vw; 
+        height: 100vh;
+        padding: 10mm 15mm;
+        box-sizing: border-box;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    @page { 
+        size: A4 portrait; 
+        margin: 0;
+    }
 }

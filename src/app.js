@@ -14,6 +14,8 @@ import { osnowaData } from './dane.js';
 import { zakresData } from './zakres.js';
 import { wizuryData } from './wizury.js';
 
+import { registerSW } from 'virtual:pwa-register';
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
 
@@ -92,9 +94,12 @@ map.on('mousemove', function(e) {
 
     const lat = e.latlng.lat; 
     const lng = e.latlng.lng;
-    const pl2000 = proj4('EPSG:4326', 'EPSG:2178', [lng, lat]);
+    
+    const zoneInfo = getPl2000Zone(lng); 
+    const pl2000 = proj4('EPSG:4326', zoneInfo.epsg, [lng, lat]);
+    
     coordWgs.innerText = `${lat.toFixed(5)}°, ${lng.toFixed(5)}°`;
-    pl2000Label.innerText = `PL-2000 (st. 7):`;
+    pl2000Label.innerText = `PL-2000 (st. ${zoneInfo.zone}):`;
     coordPl2000.innerText = `X: ${pl2000[1].toFixed(2)}, Y: ${pl2000[0].toFixed(2)}`;
 });
 
@@ -169,16 +174,16 @@ function calculateMeasurement() {
     let dist = 0;
     
     for (let i = 1; i < ptsPl2000.length; i++) {
-        let dx = ptsPl2000[i][0] - ptsPl2000[i-1][0]; 
-        let dy = ptsPl2000[i][1] - ptsPl2000[i-1][1]; 
-        dist += Math.sqrt(dx*dx + dy*dy);
-    }
-    
-    if (measureMode === 'area' && ptsPl2000.length > 2) {
-        let dx = ptsPl2000[0][0] - ptsPl2000[ptsPl2000.length-1][0]; 
-        let dy = ptsPl2000[0][1] - ptsPl2000[ptsPl2000.length-1][1]; 
-        dist += Math.sqrt(dx*dx + dy*dy);
-    }
+		let dY = ptsPl2000[i][0] - ptsPl2000[i-1][0];
+		let dX = ptsPl2000[i][1] - ptsPl2000[i-1][1];
+		dist += Math.sqrt(dX*dX + dY*dY);
+	}
+
+	if (measureMode === 'area' && ptsPl2000.length > 2) {
+		let dY = ptsPl2000[0][0] - ptsPl2000[ptsPl2000.length-1][0]; 
+		let dX = ptsPl2000[0][1] - ptsPl2000[ptsPl2000.length-1][1]; 
+		dist += Math.sqrt(dX*dX + dY*dY);
+	}
 
     measureDist.innerText = dist > 1000 ? (dist / 1000).toFixed(3) + ' km' : dist.toFixed(2) + ' m';
     
@@ -325,10 +330,18 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
             <div class="topo-section">
                 <div class="topo-title">Nawigacja do punktu</div>
                 <div class="pdf-actions">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #4285F4; color: white; border: none;">Google Maps</a>
+                    
+					<a href="https://www.google.com/maps/search/?api=1&query=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #4285F4; color: white; border: none;">Google Maps</a>
                     <a href="http://maps.apple.com/?daddr=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #000000; color: white; border: none;">Apple Maps</a>
                 </div>
             </div>
+			
+			<div class="topo-section section-raport">
+				<div class="topo-title">Generowanie raportu</div>
+				<div class="pdf-actions">
+					<button class="action-btn btn-nav" onclick="generateReport('${nr}', ${popLng}, ${x_val}, ${y_val}, '${h_val}', '${escapeHTML(typ_znaku_val)}', '${escapeHTML(stabilizacja_val)}', '${stanWizualny}')" style="width: 100%; border:none; cursor:pointer;">Pobierz metryczkę (PDF)</button>
+				</div>
+			</div>
         </div>
     </div>`;
     
@@ -342,6 +355,37 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     allMarkersData.push({ layer: marker, props: row, targetGroup: targetGroup, isLocal: fromLocalJS });
     targetGroup.addLayer(marker);
 }
+
+window.generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
+    const originalTitle = document.title;
+    document.title = `Metryczka_Punktu_${nr}`;
+    
+    const zoneInfo = getPl2000Zone(lng);
+    
+    document.getElementById('reportNr').innerText = `Punkt nr: ${nr}`;
+    document.getElementById('reportZone').innerText = zoneInfo.zone;
+    document.getElementById('reportX').innerText = parseFloat(x).toFixed(2) + ' m';
+    document.getElementById('reportY').innerText = parseFloat(y).toFixed(2) + ' m';
+    document.getElementById('reportH').innerText = isNaN(parseFloat(h)) ? 'Brak danych' : parseFloat(h).toFixed(3) + ' m';
+    document.getElementById('reportType').innerText = typ || '-';
+    document.getElementById('reportStab').innerText = stab || '-';
+    document.getElementById('reportStan').innerText = stan;
+    document.getElementById('reportDate').innerText = new Date().toLocaleDateString('pl-PL');
+
+    const imgElement = document.getElementById('reportSzkic');
+    imgElement.src = `szkice/${nr}.jpg`;
+    
+    imgElement.onload = function() {
+        window.print();
+        setTimeout(() => { document.title = originalTitle; }, 1000);
+    };
+    imgElement.onerror = function() {
+        imgElement.src = '';
+        imgElement.alt = 'Brak szkicu topograficznego dla tego punktu w bazie.';
+        window.print();
+        setTimeout(() => { document.title = originalTitle; }, 1000);
+    };
+};
 
 async function initData() {
     let successFromSupabase = false;
@@ -639,12 +683,6 @@ map.on('click', function(e) {
     }
 });
 
-map.on('mousemove', function(e) { 
-    if (isDrawingExportBox && selectionStartPoint && exportSelectionBox) {
-        exportSelectionBox.setBounds([selectionStartPoint, e.latlng]); 
-    } 
-});
-
 // Resetowanie i czyszczenie
 function clearExportSelection() { 
     isDrawingExportBox = false; 
@@ -824,6 +862,38 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// --- OBSŁUGA ZGŁASZANIA BŁĘDÓW ---
+const bugModal = document.getElementById('bugModal');
+const bugBtn = document.getElementById('bugBtn');
+const closeBugIcon = document.getElementById('closeBugIcon');
+const sendBugBtn = document.getElementById('sendBugBtn');
+
+if (bugBtn) L.DomEvent.disableClickPropagation(bugBtn);
+
+bugBtn.addEventListener('click', () => {
+    bugModal.style.display = 'flex';
+});
+
+closeBugIcon.addEventListener('click', () => {
+    bugModal.style.display = 'none';
+});
+
+bugModal.addEventListener('click', (e) => {
+    if (e.target === bugModal) bugModal.style.display = 'none';
+});
+
+sendBugBtn.addEventListener('click', () => {
+    const desc = document.getElementById('bugDescription').value;
+    
+    if (desc.trim() !== "") {
+        setTimeout(() => {
+            bugModal.style.display = 'none';
+            document.getElementById('bugDescription').value = '';
+            document.getElementById('bugReporter').value = '';
+        }, 500);
+    }
+});
+
 // --- SAMOUCZEK (DRIVER.JS) ---
 const tutorialBtn = document.getElementById('tutorialBtn');
 
@@ -875,25 +945,53 @@ const desktopSteps = [
         element: '.topo-section:nth-of-type(1)', 
         popover: { 
             title: 'Opis topograficzny', 
-            description: 'Z tego miejsca możesz wyświetlić (a także pobrać) opis topograficzny w formacie PDF oraz JPG.', 
-            side: "left" 
-        } 
+            description: 'Tutaj możesz wyświetlić (lub pobrać) opis topograficzny w formacie PDF oraz JPG.', 
+            side: "top" 
+        },
+        onHighlightStarted: () => {
+            const popupBody = document.querySelector('.popup-body');
+            const target = document.querySelectorAll('.topo-section')[0];
+            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
+        }
     },
     { 
         element: '.topo-section:nth-of-type(2)', 
         popover: { 
             title: 'Mapa porównania z terenem', 
-            description: 'Narzędzie pozwala wyświetlić plik PDF z mapą porówniania z terenem.', 
-            side: "left" 
-        } 
+            description: 'Narzędzie pozwala wyświetlić plik PDF z mapą porównania z terenem.', 
+            side: "top" 
+        },
+        onHighlightStarted: () => {
+            const popupBody = document.querySelector('.popup-body');
+            const target = document.querySelectorAll('.topo-section')[1];
+            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
+        }
     },
     { 
         element: '.topo-section:nth-of-type(3)', 
         popover: { 
             title: 'Nawigacja do punktu', 
             description: 'Opcja wyjątkowo przydatna w terenie. Jednym kliknięciem uruchomisz trasę w aplikacjach Google Maps lub Apple Maps prosto do lokalizacji znaku.', 
-            side: "left" 
-        } 
+            side: "top" 
+        },
+        onHighlightStarted: () => {
+            const popupBody = document.querySelector('.popup-body');
+            const target = document.querySelectorAll('.topo-section')[2];
+            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
+        }
+    },
+	{ 
+        element: '.section-raport', 
+        popover: { 
+            title: 'Metryczka punktu', 
+            description: 'Funkcja ta pozwala na wygenerowanie raportu w formacie PDF, tworzonego na podstawie atrybutów znaku.', 
+            side: "top",
+            align: 'start'
+        },
+        onHighlightStarted: () => {
+            const target = document.querySelector('.section-raport');
+            if (target) target.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
     },
     { 
         element: '#locateBtn', 
@@ -1023,7 +1121,7 @@ const mobileSteps = [
         onHighlightStarted: () => {
             const popupBody = document.querySelector('.popup-body');
             const target = document.querySelectorAll('.topo-section')[0];
-            if (popupBody && target) popupBody.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
         }
     },
     { 
@@ -1036,7 +1134,7 @@ const mobileSteps = [
         onHighlightStarted: () => {
             const popupBody = document.querySelector('.popup-body');
             const target = document.querySelectorAll('.topo-section')[1];
-            if (popupBody && target) popupBody.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
         }
     },
     { 
@@ -1049,7 +1147,20 @@ const mobileSteps = [
         onHighlightStarted: () => {
             const popupBody = document.querySelector('.popup-body');
             const target = document.querySelectorAll('.topo-section')[2];
-            if (popupBody && target) popupBody.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
+        }
+    },
+	{ 
+        element: '.section-raport', 
+        popover: { 
+            title: 'Metryczka punktu', 
+            description: 'Funkcja ta pozwala na wygenerowanie raportu w formacie PDF, tworzonego na podstawie atrybutów znaku.', 
+            side: "top",
+            align: 'start'
+        },
+        onHighlightStarted: () => {
+            const target = document.querySelector('.section-raport');
+            if (target) target.scrollIntoView({ behavior: 'auto', block: 'center' });
         }
     },
     { 
@@ -1152,3 +1263,13 @@ function startTutorial() {
 if (tutorialBtn) {
     tutorialBtn.addEventListener('click', startTutorial);
 }
+
+// Inicjalizacja PWA
+const updateSW = registerSW({
+  onNeedRefresh() {
+    console.log('Dostępna nowa wersja aplikacji. Odśwież stronę.');
+  },
+  onOfflineReady() {
+    console.log('Aplikacja jest gotowa do pracy offline w terenie.');
+  },
+});

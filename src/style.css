@@ -299,27 +299,34 @@
     z-index: 1000;
 }
 
-@media print {
-    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: white; }
-    body * { visibility: hidden; }
-    #printReport, #printReport * { visibility: visible; }
+#printReport {
+    display: none;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     
-    #printReport {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        left: 0; 
-        top: 0;
-        width: 100vw; 
-        height: 100vh;
-        padding: 10mm 15mm;
-        box-sizing: border-box;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
+    width: 794px;
+    height: 1122px;
+    padding: 50px 60px;
     
-    @page { 
-        size: A4 portrait; 
-        margin: 0;
-    }
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#printReport .report-image-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #1a1a1a;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+#reportSzkic {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }

@@ -15,6 +15,7 @@ import { zakresData } from './zakres.js';
 import { wizuryData } from './wizury.js';
 
 import { registerSW } from 'virtual:pwa-register';
+import html2pdf from 'html2pdf.js';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
@@ -379,17 +380,43 @@ window.generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
     document.getElementById('reportDate').innerText = new Date().toLocaleDateString('pl-PL');
 
     const imgElement = document.getElementById('reportSzkic');
+    const reportElement = document.getElementById('printReport');
+    
     imgElement.src = `szkice/${nr}.jpg`;
     
-    imgElement.onload = function() {
-        window.print();
-        setTimeout(() => { document.title = originalTitle; }, 1000);
+    const createPdf = () => {
+    const options = {
+        margin:       0,
+        filename:     `Metryczka_Punktu_${nr}.pdf`,
+        image:        { type: 'jpeg', quality: 1.0 },
+        html2canvas:  { 
+            scale: 2,
+            useCORS: true,
+            scrollY: 0
+        },
+        jsPDF:        { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+        }
     };
+
+    reportElement.style.display = 'flex';
+
+    html2pdf().set(options).from(reportElement).save().then(() => {
+        document.title = originalTitle;
+        reportElement.style.display = 'none';
+    });
+};
+
+    imgElement.onload = function() {
+        createPdf();
+    };
+    
     imgElement.onerror = function() {
         imgElement.src = '';
         imgElement.alt = 'Brak szkicu topograficznego dla tego punktu w bazie.';
-        window.print();
-        setTimeout(() => { document.title = originalTitle; }, 1000);
+        createPdf();
     };
 };
 
@@ -683,15 +710,28 @@ map.on('click', function(e) {
 
     if (!selectionStartPoint) {
         selectionStartPoint = e.latlng; 
-        exportSelectionBox = L.rectangle([selectionStartPoint, selectionStartPoint], { color: "var(--success-color)", weight: 2, fillOpacity: 0.2, interactive: false }).addTo(map);
+        exportSelectionBox = L.rectangle([selectionStartPoint, selectionStartPoint], { 
+            color: "var(--success-color)", 
+            weight: 2, 
+            fillOpacity: 0.2, 
+            interactive: false 
+        }).addTo(map);
         exportInstructions.innerText = "Teraz kliknij w drugi (przeciwległy) róg.";
     } else {
+        exportSelectionBox.setBounds([selectionStartPoint, e.latlng]);
         exportSelectionBounds = exportSelectionBox.getBounds(); 
         isDrawingExportBox = false; 
         document.getElementById('map').style.cursor = '';
         
         exportInstructions.innerText = "Obszar zaznaczony. Wybierz format zapisu:";
         exportActionButtons.style.display = 'flex';
+    }
+});
+
+// Wizualizacja prostokąta na żywo przy ruchu myszką
+map.on('mousemove', function(e) {
+    if (isDrawingExportBox && selectionStartPoint && exportSelectionBox) {
+        exportSelectionBox.setBounds([selectionStartPoint, e.latlng]);
     }
 });
 

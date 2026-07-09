@@ -327,68 +327,68 @@
     </div>
 
     <div id="printReport">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #1a1a1a; padding-bottom: 15px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" style="height: 60px;" alt="Logo AGH">
-                <div>
-                    <h2 style="margin: 0; font-size: 14px; text-transform: uppercase;">Akademia Górniczo-Hutnicza</h2>
-                    <p style="margin: 2px 0 0 0; font-size: 11px; color: #444;">Wydział Geodezji Górniczej i Inżynierii Środowiska</p>
-                    <p style="margin: 0; font-size: 10px; color: #666;">Katedra Geodezji Zintegrowanej i Kartografii</p>
-                </div>
-            </div>
-            <div style="text-align: right; min-width: 180px;">
-                <p style="margin: 0; font-size: 11px; color: #666;">Data wydruku:</p>
-                <p style="margin: 2px 0 0 0; font-size: 14px; font-weight: bold;" id="reportDate"></p>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #1a1a1a; padding-bottom: 15px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" style="height: 60px;" alt="Logo AGH">
+            <div>
+                <h2 style="margin: 0; font-size: 14px; text-transform: uppercase;">Akademia Górniczo-Hutnicza</h2>
+                <p style="margin: 2px 0 0 0; font-size: 11px; color: #444;">Wydział Geodezji Górniczej i Inżynierii Środowiska</p>
+                <p style="margin: 0; font-size: 10px; color: #666;">Katedra Geodezji Zintegrowanej i Kartografii</p>
             </div>
         </div>
-
-        <h1 style="text-align: center; font-size: 18px; letter-spacing: 1px; margin-bottom: 5px;">KARTA INFORMACYJNA PUNKTU OSNOWY</h1>
-        <h2 style="text-align: center; font-size: 22px; color: #1a1a1a; margin-top: 0; margin-bottom: 20px;" id="reportNr"></h2>
-
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
-            <tbody>
-                <tr>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; width: 45%; font-weight: 600;">Układ współrzędnych płaskich:</td>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700;">PL-2000 (strefa <span id="reportZone"></span>)</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Współrzędna X:</td>
-                    <td id="reportX" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Współrzędna Y:</td>
-                    <td id="reportY" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Wysokość H (PL-EVRF2007-NH):</td>
-                    <td id="reportH" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Typ znaku:</td>
-                    <td id="reportType" style="padding: 8px 12px; border: 1px solid #1a1a1a;"></td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Rodzaj stabilizacji:</td>
-                    <td id="reportStab" style="padding: 8px 12px; border: 1px solid #1a1a1a;"></td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Stan znaku (dzień inwentaryzacji):</td>
-                    <td id="reportStan" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700; text-transform: uppercase;"></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div style="flex-grow: 1; border: 1px solid #1a1a1a; position: relative; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-            <div style="position: absolute; top: 0; left: 0; background-color: #f3f4f6; padding: 4px 8px; font-weight: 600; font-size: 11px; border-bottom: 1px solid #1a1a1a; border-right: 1px solid #1a1a1a; z-index: 2;">
-                Opis topograficzny
-            </div>
-            <img id="reportSzkic" src="" style="width: 100%; height: 100%; object-fit: contain;">
+        <div style="text-align: right; min-width: 180px;">
+            <p style="margin: 0; font-size: 11px; color: #666;">Data wydruku:</p>
+            <p style="margin: 2px 0 0 0; font-size: 14px; font-weight: bold;" id="reportDate"></p>
         </div>
-
-        <div style="text-align: center; margin-top: 20px;">
-			<p style="font-size: 12px; font-weight: 600; margin: 0;"><i>WYGENEROWANO AUTOMATYCZNIE</i></p>
-		</div>
     </div>
+
+    <h1 style="text-align: center; font-size: 18px; letter-spacing: 1px; margin-bottom: 5px;">KARTA INFORMACYJNA PUNKTU OSNOWY</h1>
+    <h2 style="text-align: center; font-size: 22px; color: #1a1a1a; margin-top: 0; margin-bottom: 20px;" id="reportNr"></h2>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
+        <tbody>
+            <tr>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; width: 45%; font-weight: 600;">Układ współrzędnych płaskich:</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700;">PL-2000 (strefa <span id="reportZone"></span>)</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Współrzędna X:</td>
+                <td id="reportX" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Współrzędna Y:</td>
+                <td id="reportY" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Wysokość H (PL-EVRF2007-NH):</td>
+                <td id="reportH" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Typ znaku:</td>
+                <td id="reportType" style="padding: 8px 12px; border: 1px solid #1a1a1a;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Rodzaj stabilizacji:</td>
+                <td id="reportStab" style="padding: 8px 12px; border: 1px solid #1a1a1a;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Stan znaku (dzień inwentaryzacji):</td>
+                <td id="reportStan" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700; text-transform: uppercase;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="report-image-container">
+        <div style="position: absolute; top: 0; left: 0; background-color: #f3f4f6; padding: 4px 8px; font-weight: 600; font-size: 11px; border-bottom: 1px solid #1a1a1a; border-right: 1px solid #1a1a1a; z-index: 2;">
+            Opis topograficzny
+        </div>
+        <img id="reportSzkic" src="">
+    </div>
+
+    <div style="text-align: center; margin-top: 15px;">
+        <p style="font-size: 12px; font-weight: 600; margin: 0; color: #1a1a1a;"><i>WYGENEROWANO AUTOMATYCZNIE</i></p>
+    </div>
+</div>
 
     <script type="module" src="/src/app.js"></script>
 

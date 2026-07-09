@@ -129,13 +129,13 @@
             <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Tak. Po kliknięciu na punkt na mapie, w oknie z informacjami znajdziesz sekcję „Generowanie raportu”. Przycisk „Pobierz metryczkę (PDF)” otworzy okno drukowania, w którym możesz wygenerować plik PDF z kompletem danych o punkcie, w tym z opisem topograficznym.</p>
 						
 			<h4 style="color: var(--accent-color); margin-bottom: 5px;">18. Jak ponownie uruchomić samouczek aplikacji?</h4>
-            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Jeśli chcesz przypomnieć sobie funkcje aplikacji, kliknij ikonę samouczka (przycisk z symbolem trójkąta/odtwarzania) znajdującą się po prawej stronie mapy. Przewodnik przeprowadzi Cię przez najważniejsze narzędzia krok po kroku.</p>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Jeśli chcesz przypomnieć sobie funkcje aplikacji, kliknij ikonę samouczka (przycisk z symbolem odtwarzania) znajdującą się po lewej stronie mapy. Przewodnik przeprowadzi Cię przez najważniejsze narzędzia krok po kroku.</p>
 						
 			<h4 style="color: var(--accent-color); margin-bottom: 5px;">19. Czy aplikacja działa w trybie offline?</h4>
             <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Tak, aplikacja posiada funkcjonalność PWA (Progressive Web App). Po pierwszym załadowaniu danych w zasięgu sieci, aplikacja zostanie zapisana w pamięci Twojej przeglądarki, co pozwoli na dostęp do podstawowych informacji o punktach i korzystanie z mapy także w miejscach bez dostępu do Internetu.</p>
 						
 			<h4 style="color: var(--accent-color); margin-bottom: 5px;">20. Jak zgłosić błąd lub potrzebną poprawkę?</h4>
-            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Jeśli zauważyłeś nieścisłość w danych lub błąd w działaniu narzędzi, skorzystaj z ikony zgłaszania błędów (przycisk z symbolem ołówka/robaka) na prawym pasku narzędzi. Wypełnij krótki formularz, który prześle Twoją uwagę bezpośrednio do zespołu projektowego.</p>
+            <p style="font-size: 13px; color: #374151; margin-bottom: 15px;">Jeśli zauważyłeś nieścisłość w danych lub błąd w działaniu narzędzi, skorzystaj z ikony zgłaszania błędów (przycisk z symbolem klucza) na pasku narzędzi. Wypełnij krótki formularz, który prześle Twoją uwagę bezpośrednio do zespołu projektowego.</p>
         </div>
         <button id="closeFaqBtn" class="action-btn btn-nav" style="width: 100%; margin-top: 15px; padding: 10px;">Zamknij</button>
     </div>
@@ -251,11 +251,13 @@
             <div class="accordion-content" style="display: block;">
                 <label class="layer-item-label"><input type="checkbox" id="layerPanstwowa" checked><span>Osnowa Państwowa</span></label>
                 <label class="layer-item-label"><input type="checkbox" id="layerKuzniar" checked><span>Opracowanie Projektowe (inż. K. Kuźniar)</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerStarzykiewicz" checked><span>Opracowanie Własne (inż. K. Starzykiewicz)</span></label>
             </div>
 
             <button class="accordion-btn active">Osnowa Pomiarowa</button>
             <div class="accordion-content" style="display: block;">
                 <label class="layer-item-label"><input type="checkbox" id="layerSkulich" checked><span>Opracowanie Dydaktyczne (dr inż. M. Skulich, prof. AGH)</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerKryusCalka" checked><span>Opracowanie Własne (inż. K. Kryus, inż. P. Całka)</span></label>
             </div>
 
             <button class="accordion-btn active">Analizy i Eksport Danych</button>

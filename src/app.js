@@ -247,6 +247,8 @@ const clusterOptions = {
 const warstwaPanstwowa = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaSkulich = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaKuzniar = L.markerClusterGroup(clusterOptions).addTo(map);
+const warstwaStarzykiewicz = L.markerClusterGroup(clusterOptions).addTo(map);
+const warstwaKryusCalka = L.markerClusterGroup(clusterOptions).addTo(map);
 const wizuryDobreLayer = L.featureGroup();
 const wizuryUtrudnioneLayer = L.featureGroup();
 const zakresLayer = L.featureGroup();
@@ -260,6 +262,8 @@ function handleClusterClick(a) {
 warstwaPanstwowa.on('clusterclick', handleClusterClick);
 warstwaSkulich.on('clusterclick', handleClusterClick);
 warstwaKuzniar.on('clusterclick', handleClusterClick);
+warstwaStarzykiewicz.on('clusterclick', handleClusterClick);
+warstwaKryusCalka.on('clusterclick', handleClusterClick);
 
 const allMarkersData = []; const pointsLayer = {};
 
@@ -351,6 +355,8 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     let targetGroup = warstwaPanstwowa; 
     if (zrodlo_val.includes('skulich')) targetGroup = warstwaSkulich;
     else if (zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar')) targetGroup = warstwaKuzniar;
+    else if (zrodlo_val.includes('starzykiewicz')) targetGroup = warstwaStarzykiewicz;
+    else if (zrodlo_val.includes('kryus') || zrodlo_val.includes('całka') || zrodlo_val.includes('calka')) targetGroup = warstwaKryusCalka;
 
     allMarkersData.push({ layer: marker, props: row, targetGroup: targetGroup, isLocal: fromLocalJS });
     targetGroup.addLayer(marker);
@@ -451,7 +457,7 @@ async function initData() {
     }
 
     // 5. Dopasowanie widoku mapy do załadowanych punktów
-    const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar].filter(l => l.getLayers().length > 0);
+    const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar, warstwaStarzykiewicz, warstwaKryusCalka].filter(l => l.getLayers().length > 0);
     if (allLayersArray.length > 0) {
         map.fitBounds(L.featureGroup(allLayersArray).getBounds(), { padding: [40, 40] });
     }
@@ -481,6 +487,8 @@ function toggleLayer(checkboxId, layerGroup) {
 toggleLayer('layerPanstwowa', warstwaPanstwowa); 
 toggleLayer('layerSkulich', warstwaSkulich); 
 toggleLayer('layerKuzniar', warstwaKuzniar);
+toggleLayer('layerStarzykiewicz', warstwaStarzykiewicz);
+toggleLayer('layerKryusCalka', warstwaKryusCalka);
 toggleLayer('layerKieg', wmsKieg);
 toggleLayer('layerAdresy', wmsAdresy);
 toggleLayer('layerWizuryDobre', wizuryDobreLayer);
@@ -501,6 +509,8 @@ function searchPoint() {
         if (warstwaPanstwowa.hasLayer(targetLayer) && !map.hasLayer(warstwaPanstwowa)) { map.addLayer(warstwaPanstwowa); document.getElementById('layerPanstwowa').checked = true; }
         if (warstwaSkulich.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulich)) { map.addLayer(warstwaSkulich); document.getElementById('layerSkulich').checked = true; }
         if (warstwaKuzniar.hasLayer(targetLayer) && !map.hasLayer(warstwaKuzniar)) { map.addLayer(warstwaKuzniar); document.getElementById('layerKuzniar').checked = true; }
+		if (warstwaStarzykiewicz.hasLayer(targetLayer) && !map.hasLayer(warstwaStarzykiewicz)) { map.addLayer(warstwaStarzykiewicz); document.getElementById('layerStarzykiewicz').checked = true; }
+        if (warstwaKryusCalka.hasLayer(targetLayer) && !map.hasLayer(warstwaKryusCalka)) { map.addLayer(warstwaKryusCalka); document.getElementById('layerKryusCalka').checked = true; }
         map.setView(targetLayer.getLatLng(), 19, { animate: false });
         targetLayer.openPopup();
     } else if (input !== "") {
@@ -516,6 +526,8 @@ function applyStateFilters() {
     warstwaPanstwowa.clearLayers();
     warstwaSkulich.clearLayers();
     warstwaKuzniar.clearLayers();
+	warstwaStarzykiewicz.clearLayers();
+    warstwaKryusCalka.clearLayers();
 
     const showDobry = filterDobry.checked;
     const showUszkodzony = filterUszkodzony.checked;
@@ -699,7 +711,14 @@ floatExportCancel.addEventListener('click', clearExportSelection);
 
 function getVisibleFeatures() {
     let features = []; 
-    const activeGroups = [ { layer: warstwaPanstwowa, checkboxId: 'layerPanstwowa' }, { layer: warstwaSkulich, checkboxId: 'layerSkulich' }, { layer: warstwaKuzniar, checkboxId: 'layerKuzniar' } ];
+    const activeGroups = [ 
+        { layer: warstwaPanstwowa, checkboxId: 'layerPanstwowa' }, 
+        { layer: warstwaSkulich, checkboxId: 'layerSkulich' }, 
+        { layer: warstwaKuzniar, checkboxId: 'layerKuzniar' },
+        // DODANE DO EKSPORTU
+        { layer: warstwaStarzykiewicz, checkboxId: 'layerStarzykiewicz' },
+        { layer: warstwaKryusCalka, checkboxId: 'layerKryusCalka' }
+    ];
     activeGroups.forEach(group => {
         if (document.getElementById(group.checkboxId).checked) {
             group.layer.eachLayer(marker => {

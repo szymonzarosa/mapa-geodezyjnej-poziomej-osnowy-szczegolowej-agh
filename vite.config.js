@@ -28,7 +28,8 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'], 
+        navigateFallbackDenylist: [/szkice/, /porownania/],
+		globPatterns: ['**/*.{js,css,html,ico,png,svg}'], 
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,

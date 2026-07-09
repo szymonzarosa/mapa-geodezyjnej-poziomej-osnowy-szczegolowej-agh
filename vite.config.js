@@ -28,7 +28,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,pdf}'], 
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'], 
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
@@ -38,7 +38,7 @@ export default defineConfig({
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 7
-              },
+                  },
               cacheableResponse: {
                 statuses: [0, 200]
               }
@@ -51,6 +51,20 @@ export default defineConfig({
               cacheName: 'map-tiles-cache',
               expiration: {
                 maxEntries: 1000,
+                maxAgeSeconds: 60 * 60 * 24 * 30
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
+            urlPattern: /\.(?:pdf|jpg|jpeg)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'sketches-and-topo-cache',
+              expiration: {
+                maxEntries: 150,
                 maxAgeSeconds: 60 * 60 * 24 * 30
               },
               cacheableResponse: {

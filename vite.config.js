@@ -6,6 +6,9 @@ export default defineConfig({
   server: {
     open: true
   },
+  build: {
+    chunkSizeWarningLimit: 1500,
+  },
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -29,8 +32,13 @@ export default defineConfig({
       },
       workbox: {
         navigateFallbackDenylist: [/szkice/, /porownania/],
-		globPatterns: ['**/*.{js,css,html,ico,png,svg}'], 
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'], 
         runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.web3forms\.com\/.*/i,
+            handler: 'NetworkOnly',
+            method: 'POST'
+          },
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
             handler: 'NetworkFirst',
@@ -39,7 +47,7 @@ export default defineConfig({
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 7
-                  },
+              },
               cacheableResponse: {
                 statuses: [0, 200]
               }

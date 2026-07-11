@@ -485,8 +485,13 @@ async function initData() {
 
     // 5. Dopasowanie widoku mapy do załadowanych punktów
     const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar, warstwaStarzykiewicz, warstwaKryusCalka].filter(l => l.getLayers().length > 0);
+    
     if (allLayersArray.length > 0) {
-        map.fitBounds(L.featureGroup(allLayersArray).getBounds(), { padding: [40, 40] });
+        const group = L.featureGroup(allLayersArray);
+        // Podwójne zabezpieczenie przed pustą warstwą geometrii
+        if (Object.keys(group._layers).length > 0) {
+            map.fitBounds(group.getBounds(), { padding: [40, 40] });
+        }
     }
 }
 
@@ -640,7 +645,7 @@ legend.onAdd = function () {
             <div class="legend-item"><div class="status-dot dot-dobry" style="position:relative; margin-right:12px; margin-left:4px;"></div>Punkty Zachowane</div>
             <div class="legend-item"><div class="status-dot dot-uszkodzony" style="position:relative; margin-right:12px; margin-left:4px;"></div>Punkty Uszkodzone</div>
             <div class="legend-item"><div class="status-dot dot-zniszczony" style="position:relative; margin-right:12px; margin-left:4px;"></div>Punkty Zniszczone</div>
-            <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 9px; font-weight: 700; color: #6b7280; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Stan danych na: 18.04.2026 r.</div>
+            <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 9px; font-weight: 700; color: #6b7280; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Kraków, 2026 r.</div>
         </div>
     `;
     return div;
@@ -941,16 +946,49 @@ bugModal.addEventListener('click', (e) => {
     if (e.target === bugModal) bugModal.style.display = 'none';
 });
 
-sendBugBtn.addEventListener('click', () => {
-    const desc = document.getElementById('bugDescription').value;
+const bugForm = document.querySelector('#bugModal form');
+
+bugForm.addEventListener('submit', function(e) {
+    e.preventDefault(); 
+
+    const submitBtn = document.getElementById('sendBugBtn');
+    const originalText = submitBtn.innerText;
     
-    if (desc.trim() !== "") {
-        setTimeout(() => {
-            bugModal.style.display = 'none';
-            document.getElementById('bugDescription').value = '';
-            document.getElementById('bugReporter').value = '';
-        }, 500);
-    }
+    submitBtn.innerText = 'Wysyłanie...';
+    submitBtn.disabled = true;
+
+    const formData = new FormData(this);
+
+	fetch('https://api.web3forms.com/submit', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json'
+		},
+		body: formData
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Błąd serwera formularzy');
+		}
+		return response.json();
+	})
+	.then(data => {
+		if (data.success) {
+			bugModal.style.display = 'none';
+			document.getElementById('bugDescription').value = '';
+			document.getElementById('bugReporter').value = '';
+		} else {
+			alert("Wystąpił problem z wysłaniem zgłoszenia.");
+		}
+	})
+	.catch(error => {
+		console.error('Błąd wysyłania:', error);
+		alert("Błąd połączenia. Zgłoszenie nie zostało wysłane. Sprawdź, czy Twój AdBlock nie blokuje formularza.");
+	})
+	.finally(() => {
+		submitBtn.innerText = originalText;
+		submitBtn.disabled = false;
+	});
 });
 
 // --- SAMOUCZEK (DRIVER.JS) ---
@@ -975,19 +1013,19 @@ const desktopSteps = [
     { 
         popover: { 
             title: 'Witaj w aplikacji!', 
-            description: 'Ten przewodnik pokaże Ci, jak korzystać z narzędzi tutaj dostępnych. Kliknij "Dalej".' 
+            description: "Ten przewodnik pokaże Ci, jak korzystać z dostępnych narzędzi. Kliknij 'Dalej', aby rozpocząć." 
         } 
     },
     { 
         element: '.search-container', 
         popover: { 
             title: 'Wyszukiwanie', 
-            description: 'Wpisz numer szukanego punktu (np. "16090"). System przefiltruje bazę, a po zatwierdzeniu wyśrodkuje mapę i wyświetli kartę informacyjną z danymi opisowymi.', 
+            description: 'Wpisz fragment numeru punktu. System wyświetli listę podpowiedzi, a po zatwierdzeniu automatycznie wyśrodkuje mapę i otworzy kartę informacyjną ze szczegółami.', 
             side: "bottom", 
             align: 'start' 
         } 
     },
-	{ 
+    { 
         element: '.leaflet-popup', 
         popover: { 
             title: 'Karta informacyjna punktu', 
@@ -1039,7 +1077,7 @@ const desktopSteps = [
             if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
         }
     },
-	{ 
+    { 
         element: '.section-raport', 
         popover: { 
             title: 'Metryczka punktu', 
@@ -1072,7 +1110,7 @@ const desktopSteps = [
         element: '#layersPanel', 
         popover: { 
             title: 'Zarządzanie widokiem mapy oraz prezentacji danych', 
-            description: 'Umożliwia przełączanie podkładów mapowych, uruchamianie usług WMS i innych warstw.', 
+            description: 'Zarządzanie widokiem. Otwórz panel, aby przełączać podkłady mapowe, uruchamiać usługi WMS i dostosowywać wyświetlane warstwy.', 
             side: "left" 
         } 
     },
@@ -1080,7 +1118,7 @@ const desktopSteps = [
         element: '#selectAreaBtn', 
         popover: { 
             title: 'Eksport danych', 
-            description: 'Narzędzie do pobierania danych. Zaznacz na mapie prostokąt, z którego chcesz wyeksportować wybrane punkty do formatu CSV lub GeoJSON.', 
+            description: 'Narzędzie do pobierania danych. Zaznacz na mapie interesujący Cię obszar, a następnie wyeksportuj dane punktów do pliku w formacie CSV lub GeoJSON.', 
             side: "left" 
         },
         onHighlightStarted: () => {
@@ -1118,7 +1156,7 @@ const desktopSteps = [
             side: "right" 
         } 
     },
-	{ 
+    { 
         element: '#tutorialBtn', 
         popover: { 
             title: 'Samouczek', 
@@ -1134,14 +1172,14 @@ const desktopSteps = [
             side: "right" 
         } 
     },
-	{
+    {
         popover: {
             title: 'Koniec samouczka',
             description: `To już wszystko, życzymy przyjemnego korzystania z aplikacji. W razie problemów panel pomocy jest do Twojej dyspozycji. Powodzenia!
             <div style="text-align: center; margin-top: 25px;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" style="width: 50px; margin-bottom: 10px;">
                 <div style="font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Stan danych na: 18.04.2026 r.
+                    Kraków, 2026 r.
                 </div>
             </div>`
         }
@@ -1153,14 +1191,14 @@ const mobileSteps = [
     { 
         popover: { 
             title: 'Witaj w aplikacji!', 
-            description: 'Ten przewodnik pokaże Ci, jak korzystać z narzędzi tutaj dostępnych. Zobaczmy, jak to działa.' 
+            description: "Ten przewodnik pokaże Ci, jak korzystać z dostępnych narzędzi. Kliknij 'Dalej', aby rozpocząć." 
         } 
     },
     { 
         element: '.search-container', 
         popover: { 
             title: 'Wyszukiwanie', 
-            description: 'Wpisz fragment numeru punktu. Lista podpowiedzi pozwoli Ci szybko go odnaleźć i przybliżyć do niego mapę.', 
+            description: 'Wpisz fragment numeru punktu. System wyświetli listę podpowiedzi, a po zatwierdzeniu automatycznie wyśrodkuje mapę i otworzy kartę informacyjną ze szczegółami.', 
             side: "bottom", 
             align: 'start' 
         } 
@@ -1225,7 +1263,7 @@ const mobileSteps = [
             if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
         }
     },
-	{ 
+    { 
         element: '.section-raport', 
         popover: { 
             title: 'Metryczka punktu', 
@@ -1242,7 +1280,7 @@ const mobileSteps = [
         element: '#mobileLayersBtn', 
         popover: { 
             title: 'Panel Warstw', 
-            description: 'Otwórz panel, aby zarządzać podkładami mapowymi lub przygotować dane do eksportu.', 
+            description: 'Zarządzanie widokiem. Otwórz panel, aby przełączać podkłady mapowe, uruchamiać usługi WMS i dostosowywać wyświetlane warstwy.', 
             side: "right" 
         },
         onHighlightStarted: () => {
@@ -1254,7 +1292,7 @@ const mobileSteps = [
         element: '#selectAreaBtn', 
         popover: { 
             title: 'Eksport danych', 
-            description: 'Zaznacz na mapie interesujący Cię obszar, a następnie pobierz dane punktów do pliku CSV lub GeoJSON.', 
+            description: 'Narzędzie do pobierania danych. Zaznacz na mapie interesujący Cię obszar, a następnie wyeksportuj dane punktów do pliku w formacie CSV lub GeoJSON.', 
             side: "top" 
         },
         onHighlightStarted: () => {
@@ -1292,6 +1330,14 @@ const mobileSteps = [
         } 
     },
     { 
+        element: '#coordinatesPanel', 
+        popover: { 
+            title: 'Transformacja', 
+            description: 'Panel wyświetlający aktualne współrzędne w układzie globalnym WGS84 oraz ich przelicznik na obowiązujący układ PL-2000.', 
+            side: "top" 
+        } 
+    },
+    { 
         element: '#faqBtn', 
         popover: { 
             title: 'Pomoc', 
@@ -1299,7 +1345,7 @@ const mobileSteps = [
             side: "right" 
         } 
     },
-	{ 
+    { 
         element: '#tutorialBtn', 
         popover: { 
             title: 'Samouczek', 
@@ -1315,14 +1361,14 @@ const mobileSteps = [
             side: "right" 
         } 
     },
-	{
+    {
         popover: {
             title: 'Koniec samouczka',
             description: `To już wszystko, życzymy przyjemnego korzystania z aplikacji. W razie problemów panel pomocy jest do Twojej dyspozycji. Powodzenia!
             <div style="text-align: center; margin-top: 25px;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" style="width: 50px; margin-bottom: 10px;">
                 <div style="font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Stan danych na: 18.04.2026 r.
+                    Kraków, 2026 r.
                 </div>
             </div>`
         }

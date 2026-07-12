@@ -51,6 +51,15 @@ const map = L.map('map', {
     layers: [osm],
 	zoomControl: false
 });
+
+function showLoader(text = 'Przetwarzanie...') {
+    document.getElementById('loaderText').innerText = text;
+    document.getElementById('globalLoader').style.display = 'flex';
+}
+
+function hideLoader() {
+    document.getElementById('globalLoader').style.display = 'none';
+}
 	
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
 L.control.scale({metric: true, imperial: false, position: 'bottomleft'}).addTo(map);
@@ -247,6 +256,7 @@ const clusterOptions = {
 };
 const warstwaPanstwowa = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaSkulich = L.markerClusterGroup(clusterOptions).addTo(map);
+const warstwaSkulichSzczegolowa = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaKuzniar = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaStarzykiewicz = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaKryusCalka = L.markerClusterGroup(clusterOptions).addTo(map);
@@ -262,6 +272,7 @@ function handleClusterClick(a) {
 // Przypięcie funkcji do warstw osnowy
 warstwaPanstwowa.on('clusterclick', handleClusterClick);
 warstwaSkulich.on('clusterclick', handleClusterClick);
+warstwaSkulichSzczegolowa.on('clusterclick', handleClusterClick);
 warstwaKuzniar.on('clusterclick', handleClusterClick);
 warstwaStarzykiewicz.on('clusterclick', handleClusterClick);
 warstwaKryusCalka.on('clusterclick', handleClusterClick);
@@ -284,8 +295,14 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     const stabilizacja_val = (row.rodzaj_stabilizacji || row.notatka || '');
     const typ_znaku_val = (row.typ_znaku || '');
     
-    const isPomiarowa = (klasa_val.includes('pomiarowa') || zrodlo_val.includes('skulich'));
-    const markerIcon = isPomiarowa ? getOsnowaPomiarowaIcon(stan_val, nr) : getOsnowaIcon(stan_val, nr);
+    let isPomiarowa = false;
+	if (klasa_val !== '') {
+		isPomiarowa = klasa_val.includes('pomiarowa');
+	} else {
+		isPomiarowa = zrodlo_val.includes('skulich') || zrodlo_val.includes('kryus') || zrodlo_val.includes('całka');
+	}
+
+	const markerIcon = isPomiarowa ? getOsnowaPomiarowaIcon(stan_val, nr) : getOsnowaIcon(stan_val, nr);
     
     const marker = L.marker(latlng, { icon: markerIcon });
     pointsLayer[nr.toUpperCase()] = marker;
@@ -354,10 +371,23 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     marker.feature = { type: "Feature", geometry: { type: "Point", coordinates: wgsCoords }, properties: row };
 
     let targetGroup = warstwaPanstwowa; 
-    if (zrodlo_val.includes('skulich')) targetGroup = warstwaSkulich;
-    else if (zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar')) targetGroup = warstwaKuzniar;
-    else if (zrodlo_val.includes('starzykiewicz')) targetGroup = warstwaStarzykiewicz;
-    else if (zrodlo_val.includes('kryus') || zrodlo_val.includes('całka') || zrodlo_val.includes('calka')) targetGroup = warstwaKryusCalka;
+
+	if (zrodlo_val.includes('skulich')) {
+		if (klasa_val.includes('szczegółowa') || klasa_val.includes('szczegolowa')) {
+			targetGroup = warstwaSkulichSzczegolowa;
+		} else {
+			targetGroup = warstwaSkulich;
+		}
+	}
+	else if (zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar')) {
+		targetGroup = warstwaKuzniar;
+	}
+	else if (zrodlo_val.includes('starzykiewicz')) {
+		targetGroup = warstwaStarzykiewicz;
+	}
+	else if (zrodlo_val.includes('kryus') || zrodlo_val.includes('całka') || zrodlo_val.includes('calka')) {
+		targetGroup = warstwaKryusCalka;
+	}
 
     allMarkersData.push({ layer: marker, props: row, targetGroup: targetGroup, isLocal: fromLocalJS });
     targetGroup.addLayer(marker);
@@ -385,6 +415,7 @@ window.generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
     imgElement.src = `szkice/${nr}.jpg`;
     
     const createPdf = () => {
+	showLoader('Generowanie metryczki PDF...');
     const options = {
         margin:       0,
         filename:     `Metryczka_Punktu_${nr}.pdf`,
@@ -406,6 +437,7 @@ window.generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
     html2pdf().set(options).from(reportElement).save().then(() => {
         document.title = originalTitle;
         reportElement.style.display = 'none';
+		hideLoader();
     });
 };
 
@@ -422,6 +454,7 @@ window.generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
 
 async function initData() {
     let successFromSupabase = false;
+	showLoader('Pobieranie punktów osnowy...');
 
     // 1. Supabase
     try {
@@ -493,6 +526,7 @@ async function initData() {
             map.fitBounds(group.getBounds(), { padding: [40, 40] });
         }
     }
+	hideLoader();
 }
 
 initData();
@@ -517,7 +551,8 @@ function toggleLayer(checkboxId, layerGroup) {
     });
 }
 toggleLayer('layerPanstwowa', warstwaPanstwowa); 
-toggleLayer('layerSkulich', warstwaSkulich); 
+toggleLayer('layerSkulich', warstwaSkulich);
+toggleLayer('layerSkulichSzczegolowa', warstwaSkulichSzczegolowa);
 toggleLayer('layerKuzniar', warstwaKuzniar);
 toggleLayer('layerStarzykiewicz', warstwaStarzykiewicz);
 toggleLayer('layerKryusCalka', warstwaKryusCalka);
@@ -540,6 +575,7 @@ function searchPoint() {
         errorMsg.style.display = 'none';
         if (warstwaPanstwowa.hasLayer(targetLayer) && !map.hasLayer(warstwaPanstwowa)) { map.addLayer(warstwaPanstwowa); document.getElementById('layerPanstwowa').checked = true; }
         if (warstwaSkulich.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulich)) { map.addLayer(warstwaSkulich); document.getElementById('layerSkulich').checked = true; }
+		if (warstwaSkulichSzczegolowa.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulichSzczegolowa)) { map.addLayer(warstwaSkulichSzczegolowa); document.getElementById('layerSkulichSzczegolowa').checked = true; }
         if (warstwaKuzniar.hasLayer(targetLayer) && !map.hasLayer(warstwaKuzniar)) { map.addLayer(warstwaKuzniar); document.getElementById('layerKuzniar').checked = true; }
 		if (warstwaStarzykiewicz.hasLayer(targetLayer) && !map.hasLayer(warstwaStarzykiewicz)) { map.addLayer(warstwaStarzykiewicz); document.getElementById('layerStarzykiewicz').checked = true; }
         if (warstwaKryusCalka.hasLayer(targetLayer) && !map.hasLayer(warstwaKryusCalka)) { map.addLayer(warstwaKryusCalka); document.getElementById('layerKryusCalka').checked = true; }
@@ -557,6 +593,7 @@ const filterZniszczony = document.getElementById('filterZniszczony');
 function applyStateFilters() {
     warstwaPanstwowa.clearLayers();
     warstwaSkulich.clearLayers();
+	warstwaSkulichSzczegolowa.clearLayers();
     warstwaKuzniar.clearLayers();
 	warstwaStarzykiewicz.clearLayers();
     warstwaKryusCalka.clearLayers();
@@ -758,9 +795,9 @@ function getVisibleFeatures() {
     let features = []; 
     const activeGroups = [ 
         { layer: warstwaPanstwowa, checkboxId: 'layerPanstwowa' }, 
-        { layer: warstwaSkulich, checkboxId: 'layerSkulich' }, 
+        { layer: warstwaSkulich, checkboxId: 'layerSkulich' },
+		{ layer: warstwaSkulichSzczegolowa, checkboxId: 'layerSkulichSzczegolowa' },
         { layer: warstwaKuzniar, checkboxId: 'layerKuzniar' },
-        // DODANE DO EKSPORTU
         { layer: warstwaStarzykiewicz, checkboxId: 'layerStarzykiewicz' },
         { layer: warstwaKryusCalka, checkboxId: 'layerKryusCalka' }
     ];

@@ -14,6 +14,11 @@
 </head>
 <body>
 
+<div id="globalLoader" style="display: none;">
+    <div class="spinner"></div>
+    <div id="loaderText">Przetwarzanie...</div>
+</div>
+
 <div id="welcomeModal" class="modal-overlay">
         <div class="modal-content ui-panel">
             <div class="modal-header">
@@ -234,10 +239,10 @@
             </div>
 
             <button class="accordion-btn active">Usługi WMS</button>
-            <div class="accordion-content" style="display: block;">
-                <label class="layer-item-label"><input type="checkbox" id="layerKieg"><span>Działki i Budynki (KIEG)</span></label>
-                <label class="layer-item-label"><input type="checkbox" id="layerAdresy"><span>Adresy i Ulice (KIMUiA)</span></label>
-            </div>
+			<div class="accordion-content" style="display: block;">
+				<label class="layer-item-label"><input type="checkbox" id="layerKieg"><span>Działki i Budynki (KIEG)</span></label>
+				<label class="layer-item-label"><input type="checkbox" id="layerAdresy"><span>Adresy i Ulice (EMUiA)</span></label>
+			</div>
 			
 			<button class="accordion-btn active">Stan punktu</button>
 			<div class="accordion-content" style="display: block;">
@@ -248,11 +253,14 @@
 			
 
             <button class="accordion-btn active">Osnowa Szczegółowa Pozioma</button>
-            <div class="accordion-content" style="display: block;">
-                <label class="layer-item-label"><input type="checkbox" id="layerPanstwowa" checked><span>Osnowa Państwowa</span></label>
-                <label class="layer-item-label"><input type="checkbox" id="layerKuzniar" checked><span>Opracowanie Projektowe (inż. K. Kuźniar)</span></label>
-                <label class="layer-item-label"><input type="checkbox" id="layerStarzykiewicz" checked><span>Opracowanie Własne (inż. K. Starzykiewicz)</span></label>
-            </div>
+			<div class="accordion-content" style="display: block;">
+				<label class="layer-item-label"><input type="checkbox" id="layerPanstwowa" checked><span>Osnowa Państwowa</span></label>
+    
+				<label class="layer-item-label"><input type="checkbox" id="layerSkulichSzczegolowa" checked><span>Opracowanie Dydaktyczne (dr inż. M. Skulich, prof. AGH)</span></label>
+    
+				<label class="layer-item-label"><input type="checkbox" id="layerKuzniar" checked><span>Opracowanie Projektowe (inż. K. Kuźniar)</span></label>
+				<label class="layer-item-label"><input type="checkbox" id="layerStarzykiewicz" checked><span>Opracowanie Własne (inż. K. Starzykiewicz)</span></label>
+			</div>
 
             <button class="accordion-btn active">Osnowa Pomiarowa</button>
             <div class="accordion-content" style="display: block;">

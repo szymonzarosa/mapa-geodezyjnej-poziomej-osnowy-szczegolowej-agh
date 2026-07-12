@@ -53,6 +53,20 @@ export default defineConfig({
               }
             }
           },
+		  {
+			urlPattern: /^https:\/\/integracja\.gugik\.gov\.pl\/.*/i,
+			handler: 'NetworkFirst',
+			options: {
+				cacheName: 'wms-gugik-cache',
+				expiration: {
+				maxEntries: 200,
+				maxAgeSeconds: 60 * 60 * 24 * 7
+				},
+				cacheableResponse: {
+				statuses: [0, 200]
+				}
+			}
+		  },
           {
             urlPattern: /^https:\/\/.*\.basemaps\.cartocdn\.com\/.*/i,
             handler: 'CacheFirst',

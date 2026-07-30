@@ -216,14 +216,16 @@ function calculateMeasurement() {
 // ---------------------------------------------------------
 
 // Symbol - Osnowa Szczegółowa
-function getOsnowaIcon(stan, nr) {
+function getOsnowaIcon(stan, nr, isPanstwowa = true) {
     let dotClass = 'dot-zniszczony';
     if (stan && stan.toLowerCase().includes('dobry')) dotClass = 'dot-dobry';
     else if (stan && stan.toLowerCase().includes('uszkodzony')) dotClass = 'dot-uszkodzony';
     
+    const fillColor = isPanstwowa ? "#FFFF00" : "transparent";
+    
     const svgIcon = `
         <svg viewBox="0 0 100 100" class="osnowa-svg">
-            <rect x="5" y="5" width="90" height="90" fill="#FFFF00" stroke="#000000" stroke-width="10"/>
+            <rect x="5" y="5" width="90" height="90" fill="${fillColor}" stroke="#000000" stroke-width="10"/>
             <line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
             <line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
         </svg>
@@ -295,14 +297,39 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     const stabilizacja_val = (row.rodzaj_stabilizacji || row.notatka || '');
     const typ_znaku_val = (row.typ_znaku || '');
     
-    let isPomiarowa = false;
-	if (klasa_val !== '') {
-		isPomiarowa = klasa_val.includes('pomiarowa');
-	} else {
-		isPomiarowa = zrodlo_val.includes('skulich') || zrodlo_val.includes('kryus') || zrodlo_val.includes('całka');
-	}
+let isPomiarowa = false;
+    if (klasa_val !== '') {
+        isPomiarowa = klasa_val.includes('pomiarowa');
+    } else {
+        isPomiarowa = zrodlo_val.includes('skulich') || zrodlo_val.includes('kryus') || zrodlo_val.includes('całka');
+    }
 
-	const markerIcon = isPomiarowa ? getOsnowaPomiarowaIcon(stan_val, nr) : getOsnowaIcon(stan_val, nr);
+    // ROZPOZNAWANIE GRUPY DOCELOWEJ I POCHODZENIA
+    let targetGroup = warstwaPanstwowa; 
+    let isPanstwowa = true;
+
+    if (zrodlo_val.includes('skulich')) {
+        isPanstwowa = false;
+        if (klasa_val.includes('szczegółowa') || klasa_val.includes('szczegolowa')) {
+            targetGroup = warstwaSkulichSzczegolowa;
+        } else {
+            targetGroup = warstwaSkulich;
+        }
+    }
+    else if (zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar')) {
+        isPanstwowa = false;
+        targetGroup = warstwaKuzniar;
+    }
+    else if (zrodlo_val.includes('starzykiewicz')) {
+        isPanstwowa = false;
+        targetGroup = warstwaStarzykiewicz;
+    }
+    else if (zrodlo_val.includes('kryus') || zrodlo_val.includes('całka') || zrodlo_val.includes('calka')) {
+        isPanstwowa = false;
+        targetGroup = warstwaKryusCalka;
+    }
+
+    const markerIcon = isPomiarowa ? getOsnowaPomiarowaIcon(stan_val, nr) : getOsnowaIcon(stan_val, nr, isPanstwowa);
     
     const marker = L.marker(latlng, { icon: markerIcon });
     pointsLayer[nr.toUpperCase()] = marker;
@@ -353,41 +380,22 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
                 <div class="topo-title">Nawigacja do punktu</div>
                 <div class="pdf-actions">
                     
-					<a href="https://www.google.com/maps/search/?api=1&query=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #4285F4; color: white; border: none;">Google Maps</a>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #4285F4; color: white; border: none;">Google Maps</a>
                     <a href="http://maps.apple.com/?daddr=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #000000; color: white; border: none;">Apple Maps</a>
                 </div>
             </div>
-			
-			<div class="topo-section section-raport">
-				<div class="topo-title">Generowanie raportu</div>
-				<div class="pdf-actions">
-					<button class="action-btn btn-nav" onclick="generateReport('${nr}', ${popLng}, ${x_val}, ${y_val}, '${h_val}', '${escapeHTML(typ_znaku_val)}', '${escapeHTML(stabilizacja_val)}', '${stanWizualny}')" style="width: 100%; border:none; cursor:pointer;">Pobierz metryczkę (PDF)</button>
-				</div>
-			</div>
+            
+            <div class="topo-section section-raport">
+                <div class="topo-title">Generowanie raportu</div>
+                <div class="pdf-actions">
+                    <button class="action-btn btn-nav" onclick="generateReport('${nr}', ${popLng}, ${x_val}, ${y_val}, '${h_val}', '${escapeHTML(typ_znaku_val)}', '${escapeHTML(stabilizacja_val)}', '${stanWizualny}')" style="width: 100%; border:none; cursor:pointer;">Pobierz metryczkę (PDF)</button>
+                </div>
+            </div>
         </div>
     </div>`;
     
     marker.bindPopup(content);
     marker.feature = { type: "Feature", geometry: { type: "Point", coordinates: wgsCoords }, properties: row };
-
-    let targetGroup = warstwaPanstwowa; 
-
-	if (zrodlo_val.includes('skulich')) {
-		if (klasa_val.includes('szczegółowa') || klasa_val.includes('szczegolowa')) {
-			targetGroup = warstwaSkulichSzczegolowa;
-		} else {
-			targetGroup = warstwaSkulich;
-		}
-	}
-	else if (zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar')) {
-		targetGroup = warstwaKuzniar;
-	}
-	else if (zrodlo_val.includes('starzykiewicz')) {
-		targetGroup = warstwaStarzykiewicz;
-	}
-	else if (zrodlo_val.includes('kryus') || zrodlo_val.includes('całka') || zrodlo_val.includes('calka')) {
-		targetGroup = warstwaKryusCalka;
-	}
 
     allMarkersData.push({ layer: marker, props: row, targetGroup: targetGroup, isLocal: fromLocalJS });
     targetGroup.addLayer(marker);
@@ -670,7 +678,8 @@ legend.onAdd = function () {
             <svg id="legend-icon" style="width: 14px; height: 14px; transition: transform 0.3s; margin-left: 15px; color: #6b7280;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </div>
         <div id="legend-content" style="margin-top: 10px; display: block;">
-            <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="#FFFF00" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa Pozioma</div>
+            <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="#FFFF00" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Państwowa)</div>
+<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Inne)</div>
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg" style="border-radius:50%;"><circle cx="50" cy="65" r="30" fill="transparent" stroke="#000000" stroke-width="8"/><line x1="50" y1="35" x2="50" y2="5" stroke="#000000" stroke-width="8" stroke-linecap="round"/></svg>Osnowa Pomiarowa</div>
             
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#a629c6" stroke-width="15"/></svg>Zakres opracowania</div>

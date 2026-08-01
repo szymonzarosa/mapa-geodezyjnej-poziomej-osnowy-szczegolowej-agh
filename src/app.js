@@ -1487,3 +1487,39 @@ const updateSW = registerSW({
     console.log('Aplikacja jest gotowa do pracy offline w terenie.');
   },
 });
+
+// --- OBSŁUGA MOTYWU (DARK/LIGHT MODE) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const moonIcon = document.getElementById('moonIcon');
+    const sunIcon = document.getElementById('sunIcon');
+
+    const currentTheme = localStorage.getItem('theme') || 
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
+    }
+
+    if (themeToggleBtn) {
+        L.DomEvent.disableClickPropagation(themeToggleBtn);
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            let theme = 'light';
+            
+            if (document.body.classList.contains('dark-mode')) {
+                theme = 'dark';
+                moonIcon.style.display = 'none';
+                sunIcon.style.display = 'block';
+            } else {
+                moonIcon.style.display = 'block';
+                sunIcon.style.display = 'none';
+            }
+            
+            localStorage.setItem('theme', theme);
+        });
+    }
+});

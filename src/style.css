@@ -87,7 +87,7 @@
 	.leaflet-tooltip-left.point-label::before, .leaflet-tooltip-right.point-label::before { display: none; }
 
 	/* Panel Warstw */
-	.custom-layers-control { position: absolute; top: 20px; right: 20px; z-index: 1000; width: 280px; max-height: calc(100vh - 350px); display: flex; flex-direction: column; overflow: hidden; }
+	.custom-layers-control { position: absolute; top: 20px; right: 20px; z-index: 1000; width: 280px; max-height: calc(100vh - 360px); display: flex; flex-direction: column; overflow: hidden; }
 	.layers-header { background: var(--primary-color); color: white; padding: 12px 15px; font-weight: 600; font-size: 14px; text-align: center; flex-shrink: 0; }
 	.layers-body { padding: 10px; overflow-y: auto; flex-grow: 1; }
 
@@ -106,6 +106,15 @@
 
 	/* Legenda */
 	.info.legend { padding: 12px 15px; }
+	@media (max-height: 850px) and (min-width: 769px) {
+		.custom-layers-control {
+			max-height: 55vh;
+		}
+		.info.legend {
+			max-height: 35vh;
+			overflow-y: auto;
+		}
+	}
 	.info.legend b { display: block; font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 	.legend-item { display: flex; align-items: center; margin-bottom: 6px; font-weight: 500; font-size: 12px; }
 	.legend-svg { width: 18px; height: 18px; margin-right: 10px; }
@@ -207,7 +216,7 @@
 		.authors-table td { padding-bottom: 12px; font-weight: 700; }
 	}
 	
-		@media (max-width: 768px) {
+		@media (max-width: 950px), (max-height: 550px) {
 		/* 1. Wyszukiwarka */
 		.search-container { top: 10px; left: 10px; right: 10px; width: auto; display: flex; }
 		.search-container input { flex-grow: 1; width: auto; }

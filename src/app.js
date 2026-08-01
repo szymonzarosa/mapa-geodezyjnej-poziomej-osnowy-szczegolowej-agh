@@ -703,7 +703,7 @@ const legendHeader = document.getElementById('legend-header');
 const legendContent = document.getElementById('legend-content');
 const legendIcon = document.getElementById('legend-icon');
 
-const isMobile = window.innerWidth <= 768;
+const isMobile = window.innerWidth <= 950 || window.innerHeight <= 550;
 
 function toggleLegend(forceClose = false) {
     if (legendContent.style.display === 'none' && !forceClose) {
@@ -1423,7 +1423,7 @@ const mobileSteps = [
 
 // 4. Inicjalizacja poprzez wydzieloną funkcję
 function startTutorial() {
-    const isMobileView = window.innerWidth <= 768;
+    const isMobileView = window.innerWidth <= 950 || window.innerHeight <= 550;
     
     const initialCenter = map.getCenter();
     const initialZoom = map.getZoom();

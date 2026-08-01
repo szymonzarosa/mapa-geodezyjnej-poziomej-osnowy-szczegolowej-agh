@@ -215,7 +215,7 @@ function calculateMeasurement() {
 // OSNOWA GEODEZYJNA I WIZUALIZACJA
 // ---------------------------------------------------------
 
-// Symbol - Osnowa Szczegółowa
+// Symbol - Osnowa Szczegółowa Pozioma
 function getOsnowaIcon(stan, nr, isPanstwowa = true) {
     let dotClass = 'dot-zniszczony';
     if (stan && stan.toLowerCase().includes('dobry')) dotClass = 'dot-dobry';
@@ -228,6 +228,23 @@ function getOsnowaIcon(stan, nr, isPanstwowa = true) {
             <rect x="5" y="5" width="90" height="90" fill="${fillColor}" stroke="#000000" stroke-width="10"/>
             <line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
             <line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/>
+        </svg>
+    `;
+    const labelHtml = nr ? `<div class="icon-nr-label">${nr}</div>` : '';
+    return L.divIcon({ className: '', html: `<div class="custom-osnowa-icon">${svgIcon}<div class="status-dot ${dotClass}"></div>${labelHtml}</div>`, iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -14] });
+}
+
+// Symbol - Osnowa Szczegółowa Wysokościowa 
+function getOsnowaWysokosciowaIcon(stan, nr) {
+    let dotClass = 'dot-zniszczony';
+    if (stan && stan.toLowerCase().includes('dobry')) dotClass = 'dot-dobry';
+    else if (stan && stan.toLowerCase().includes('uszkodzony')) dotClass = 'dot-uszkodzony';
+    
+    const svgIcon = `
+        <svg viewBox="0 0 100 100" class="osnowa-svg">
+            <polygon points="5,5 95,5 50,90" fill="#0000FF" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/>
+            <line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/>
+            <line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/>
         </svg>
     `;
     const labelHtml = nr ? `<div class="icon-nr-label">${nr}</div>` : '';
@@ -262,6 +279,7 @@ const warstwaSkulichSzczegolowa = L.markerClusterGroup(clusterOptions).addTo(map
 const warstwaKuzniar = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaStarzykiewicz = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaKryusCalka = L.markerClusterGroup(clusterOptions).addTo(map);
+const warstwaWysokosciowa = L.markerClusterGroup(clusterOptions).addTo(map);
 const wizuryDobreLayer = L.featureGroup();
 const wizuryUtrudnioneLayer = L.featureGroup();
 const zakresLayer = L.featureGroup();
@@ -278,6 +296,7 @@ warstwaSkulichSzczegolowa.on('clusterclick', handleClusterClick);
 warstwaKuzniar.on('clusterclick', handleClusterClick);
 warstwaStarzykiewicz.on('clusterclick', handleClusterClick);
 warstwaKryusCalka.on('clusterclick', handleClusterClick);
+warstwaWysokosciowa.on('clusterclick', handleClusterClick);
 
 const allMarkersData = []; const pointsLayer = {};
 
@@ -297,39 +316,44 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     const stabilizacja_val = (row.rodzaj_stabilizacji || row.notatka || '');
     const typ_znaku_val = (row.typ_znaku || '');
     
-let isPomiarowa = false;
-    if (klasa_val !== '') {
-        isPomiarowa = klasa_val.includes('pomiarowa');
-    } else {
-        isPomiarowa = zrodlo_val.includes('skulich') || zrodlo_val.includes('kryus') || zrodlo_val.includes('całka');
-    }
-
-    // ROZPOZNAWANIE GRUPY DOCELOWEJ I POCHODZENIA
-    let targetGroup = warstwaPanstwowa; 
+// ROZPOZNAWANIE KLASY, GRUPY DOCELOWEJ I POCHODZENIA
+    let targetGroup; 
     let isPanstwowa = true;
+    let markerIcon;
 
-    if (zrodlo_val.includes('skulich')) {
+    if (klasa_val.includes('wysokościowa') || klasa_val.includes('wysokosciowa')) {
+        targetGroup = warstwaWysokosciowa;
+        markerIcon = getOsnowaWysokosciowaIcon(stan_val, nr);
+    } 
+    else if (klasa_val.includes('pomiarowa') || zrodlo_val.includes('kryus') || zrodlo_val.includes('całka')) {
+        markerIcon = getOsnowaPomiarowaIcon(stan_val, nr);
         isPanstwowa = false;
-        if (klasa_val.includes('szczegółowa') || klasa_val.includes('szczegolowa')) {
-            targetGroup = warstwaSkulichSzczegolowa;
+        
+        if (zrodlo_val.includes('kryus') || zrodlo_val.includes('całka')) {
+            targetGroup = warstwaKryusCalka;
         } else {
             targetGroup = warstwaSkulich;
         }
+    } 
+    else {
+        if (zrodlo_val.includes('skulich')) {
+            isPanstwowa = false;
+            targetGroup = warstwaSkulichSzczegolowa;
+        }
+        else if (zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar')) {
+            isPanstwowa = false;
+            targetGroup = warstwaKuzniar;
+        }
+        else if (zrodlo_val.includes('starzykiewicz')) {
+            isPanstwowa = false;
+            targetGroup = warstwaStarzykiewicz;
+        }
+        else {
+            isPanstwowa = true;
+            targetGroup = warstwaPanstwowa;
+        }
+        markerIcon = getOsnowaIcon(stan_val, nr, isPanstwowa);
     }
-    else if (zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar')) {
-        isPanstwowa = false;
-        targetGroup = warstwaKuzniar;
-    }
-    else if (zrodlo_val.includes('starzykiewicz')) {
-        isPanstwowa = false;
-        targetGroup = warstwaStarzykiewicz;
-    }
-    else if (zrodlo_val.includes('kryus') || zrodlo_val.includes('całka') || zrodlo_val.includes('calka')) {
-        isPanstwowa = false;
-        targetGroup = warstwaKryusCalka;
-    }
-
-    const markerIcon = isPomiarowa ? getOsnowaPomiarowaIcon(stan_val, nr) : getOsnowaIcon(stan_val, nr, isPanstwowa);
     
     const marker = L.marker(latlng, { icon: markerIcon });
     pointsLayer[nr.toUpperCase()] = marker;
@@ -525,7 +549,7 @@ async function initData() {
     }
 
     // 5. Dopasowanie widoku mapy do załadowanych punktów
-    const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar, warstwaStarzykiewicz, warstwaKryusCalka].filter(l => l.getLayers().length > 0);
+    const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar, warstwaStarzykiewicz, warstwaKryusCalka, warstwaWysokosciowa].filter(l => l.getLayers().length > 0);
     
     if (allLayersArray.length > 0) {
         const group = L.featureGroup(allLayersArray);
@@ -564,6 +588,7 @@ toggleLayer('layerSkulichSzczegolowa', warstwaSkulichSzczegolowa);
 toggleLayer('layerKuzniar', warstwaKuzniar);
 toggleLayer('layerStarzykiewicz', warstwaStarzykiewicz);
 toggleLayer('layerKryusCalka', warstwaKryusCalka);
+toggleLayer('layerWysokosciowa', warstwaWysokosciowa);
 toggleLayer('layerKieg', wmsKieg);
 toggleLayer('layerAdresy', wmsAdresy);
 toggleLayer('layerWizuryDobre', wizuryDobreLayer);
@@ -587,6 +612,7 @@ function searchPoint() {
         if (warstwaKuzniar.hasLayer(targetLayer) && !map.hasLayer(warstwaKuzniar)) { map.addLayer(warstwaKuzniar); document.getElementById('layerKuzniar').checked = true; }
 		if (warstwaStarzykiewicz.hasLayer(targetLayer) && !map.hasLayer(warstwaStarzykiewicz)) { map.addLayer(warstwaStarzykiewicz); document.getElementById('layerStarzykiewicz').checked = true; }
         if (warstwaKryusCalka.hasLayer(targetLayer) && !map.hasLayer(warstwaKryusCalka)) { map.addLayer(warstwaKryusCalka); document.getElementById('layerKryusCalka').checked = true; }
+		if (warstwaWysokosciowa.hasLayer(targetLayer) && !map.hasLayer(warstwaWysokosciowa)) { map.addLayer(warstwaWysokosciowa); document.getElementById('layerWysokosciowa').checked = true; }
         map.setView(targetLayer.getLatLng(), 19, { animate: false });
         targetLayer.openPopup();
     } else if (input !== "") {
@@ -605,6 +631,7 @@ function applyStateFilters() {
     warstwaKuzniar.clearLayers();
 	warstwaStarzykiewicz.clearLayers();
     warstwaKryusCalka.clearLayers();
+	warstwaWysokosciowa.clearLayers();
 
     const showDobry = filterDobry.checked;
     const showUszkodzony = filterUszkodzony.checked;
@@ -679,7 +706,10 @@ legend.onAdd = function () {
         </div>
         <div id="legend-content" style="margin-top: 10px; display: block;">
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="#FFFF00" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Państwowa)</div>
-<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Inne)</div>
+			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Inne)</div>
+			
+			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><polygon points="5,5 95,5 50,90" fill="#0000FF" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/><line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa Wysokościowa</div>
+			
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg" style="border-radius:50%;"><circle cx="50" cy="65" r="30" fill="transparent" stroke="#000000" stroke-width="8"/><line x1="50" y1="35" x2="50" y2="5" stroke="#000000" stroke-width="8" stroke-linecap="round"/></svg>Osnowa Pomiarowa</div>
             
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#a629c6" stroke-width="15"/></svg>Zakres opracowania</div>
@@ -808,7 +838,8 @@ function getVisibleFeatures() {
 		{ layer: warstwaSkulichSzczegolowa, checkboxId: 'layerSkulichSzczegolowa' },
         { layer: warstwaKuzniar, checkboxId: 'layerKuzniar' },
         { layer: warstwaStarzykiewicz, checkboxId: 'layerStarzykiewicz' },
-        { layer: warstwaKryusCalka, checkboxId: 'layerKryusCalka' }
+        { layer: warstwaKryusCalka, checkboxId: 'layerKryusCalka' },
+		{ layer: warstwaWysokosciowa, checkboxId: 'layerWysokosciowa' }
     ];
     activeGroups.forEach(group => {
         if (document.getElementById(group.checkboxId).checked) {

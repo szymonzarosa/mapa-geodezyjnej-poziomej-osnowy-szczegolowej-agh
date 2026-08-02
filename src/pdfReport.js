@@ -8,7 +8,7 @@ export const generateReport = function(nr, lng, x, y, h, typ, stab, stan, klasa 
     const zoneInfo = getPl2000Zone(lng);
     
     const isPodstawowa = klasa.toLowerCase().includes('fundamentalna') || klasa.toLowerCase().includes('bazowa');
-    const precisionXY = isPodstawowa ? 4 : 2;
+    const precisionXY = isPodstawowa ? 2 : 2;
     const precisionH = isPodstawowa ? 4 : 3;
     
     document.getElementById('reportNr').innerText = `Punkt nr: ${nr}`;

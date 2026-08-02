@@ -391,7 +391,7 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
 
     const popLat = latlng[0]; const popLng = latlng[1];
     const isPodstawowa = klasa_val.includes('fundamentalna') || klasa_val.includes('bazowa');
-    const precisionXY = isPodstawowa ? 4 : 2;
+    const precisionXY = isPodstawowa ? 2 : 2;
     const precisionH = isPodstawowa ? 4 : 3;
 	
     const wysokoscText = (!isNaN(h_val)) ? `${h_val.toFixed(precisionH)} m` : 'Brak danych';

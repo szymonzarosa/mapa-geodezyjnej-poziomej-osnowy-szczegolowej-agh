@@ -122,11 +122,17 @@ let measureMarkers = L.layerGroup().addTo(map);
 
 const measureBtn = document.getElementById('measureBtn');
 const measurePanel = document.getElementById('measurePanel');
+const mapContainer = document.getElementById('map');
 const measureDist = document.getElementById('measure-dist');
 const measureArea = document.getElementById('measure-area');
 const measureClear = document.getElementById('measure-clear');
 const measureUndo = document.getElementById('measure-undo');
 const rowArea = document.getElementById('row-area');
+const searchInputGlobal = document.getElementById('searchInput');
+const searchErrorGlobal = document.getElementById('searchError');
+const searchInput = document.getElementById('searchInput');
+const searchError = document.getElementById('searchError');
+const customSuggestions = document.getElementById('customSuggestions');
 
 L.DomEvent.disableClickPropagation(measureBtn);
 L.DomEvent.disableClickPropagation(measurePanel);
@@ -136,13 +142,22 @@ function handleMeasureClick(e) { measurePoints.push(e.latlng); updateMeasurement
 measureBtn.addEventListener('click', () => {
     isMeasuring = !isMeasuring;
     if (isMeasuring) {
-        measureBtn.style.backgroundColor = 'var(--accent-color)'; measureBtn.style.color = 'white';
-        document.getElementById('map').style.cursor = 'crosshair'; measurePanel.style.display = 'block';
+        measureBtn.style.backgroundColor = 'var(--accent-color)'; 
+        measureBtn.style.color = 'white';
+        
+        mapContainer.style.cursor = 'crosshair';
+        measurePanel.style.display = 'block';
+        
         map.on('click', handleMeasureClick);
     } else {
-        measureBtn.style.backgroundColor = ''; measureBtn.style.color = 'var(--primary-color)';
-        document.getElementById('map').style.cursor = ''; measurePanel.style.display = 'none';
-        map.off('click', handleMeasureClick); clearMeasurement();
+        measureBtn.style.backgroundColor = ''; 
+        measureBtn.style.color = 'var(--primary-color)';
+        
+        mapContainer.style.cursor = '';
+        measurePanel.style.display = 'none';
+        
+        map.off('click', handleMeasureClick); 
+        clearMeasurement();
     }
 });
 
@@ -172,6 +187,8 @@ function updateMeasurementDisplay() {
     calculateMeasurement();
 }
 
+import GeographicLib from 'geographiclib';
+
 function calculateMeasurement() {
     if (measurePoints.length < 2) { 
         measureDist.innerText = '0.00 m'; 
@@ -179,33 +196,34 @@ function calculateMeasurement() {
         return; 
     }
     
-    const epsg = getPl2000Zone(measurePoints[0].lng).epsg;
-    const ptsPl2000 = measurePoints.map(ll => proj4('EPSG:4326', epsg, [ll.lng, ll.lat]));
+    const geod = GeographicLib.Geodesic.WGS84;
+    const polygon = geod.Polygon(false);
+    
     let dist = 0;
     
-    for (let i = 1; i < ptsPl2000.length; i++) {
-		let dY = ptsPl2000[i][0] - ptsPl2000[i-1][0];
-		let dX = ptsPl2000[i][1] - ptsPl2000[i-1][1];
-		dist += Math.sqrt(dX*dX + dY*dY);
-	}
+    for (let i = 1; i < measurePoints.length; i++) {
+        const p1 = measurePoints[i-1];
+        const p2 = measurePoints[i];
+        const result = geod.Inverse(p1.lat, p1.lng, p2.lat, p2.lng);
+        dist += result.s12;
+    }
 
-	if (measureMode === 'area' && ptsPl2000.length > 2) {
-		let dY = ptsPl2000[0][0] - ptsPl2000[ptsPl2000.length-1][0]; 
-		let dX = ptsPl2000[0][1] - ptsPl2000[ptsPl2000.length-1][1]; 
-		dist += Math.sqrt(dX*dX + dY*dY);
-	}
+    if (measureMode === 'area' && measurePoints.length > 2) {
+        const first = measurePoints[0];
+        const last = measurePoints[measurePoints.length - 1];
+        const closingResult = geod.Inverse(last.lat, last.lng, first.lat, first.lng);
+        dist += closingResult.s12;
+    }
 
     measureDist.innerText = dist > 1000 ? (dist / 1000).toFixed(3) + ' km' : dist.toFixed(2) + ' m';
     
     if (measureMode === 'area') {
         let area = 0;
-        if (ptsPl2000.length > 2) {
-            for (let i = 0; i < ptsPl2000.length; i++) {
-                let j = (i + 1) % ptsPl2000.length;
-                area += ptsPl2000[i][0] * ptsPl2000[j][1]; 
-                area -= ptsPl2000[j][0] * ptsPl2000[i][1];
-            }
-            area = Math.abs(area) / 2;
+        if (measurePoints.length > 2) {
+            const polyArea = geod.Polygon(true);
+            measurePoints.forEach(p => polyArea.AddPoint(p.lat, p.lng));
+            const areaResult = polyArea.Compute(false, true);
+            area = Math.abs(areaResult.area);
         }
         measureArea.innerText = area > 10000 ? (area / 10000).toFixed(4) + ' ha' : area.toFixed(2) + ' m²';
     }
@@ -365,7 +383,8 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     const popLat = latlng[0]; const popLng = latlng[1];
     const wysokoscText = (!isNaN(h_val)) ? `${h_val.toFixed(3)} m` : 'Brak danych';
 
-    let content = `
+
+let contentString = `
     <div class="popup-content">
         <div class="popup-header"><span>Punkt Osnowy ${nr}</span><span class="badge ${badgeClass}">${stanWizualny}</span></div>
         <div class="popup-body">
@@ -376,11 +395,11 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
                 <tr><th>X (PL-2000 strefa 7):</th><td>${x_val.toFixed(2)} m</td></tr>
                 <tr><th>Y (PL-2000 strefa 7):</th><td>${y_val.toFixed(2)} m</td></tr>`;
 
-    if ((stanWizualny === 'ZACHOWANY' || stanWizualny === 'USZKODZONY') && !isNaN(dx_val) && !isNaN(dy_val)) {
-        content += `<tr><th>Błąd dX / dY:</th><td>${dx_val.toFixed(2)} / ${dy_val.toFixed(2)} m</td></tr>`;
-    }
+if ((stanWizualny === 'ZACHOWANY' || stanWizualny === 'USZKODZONY') && !isNaN(dx_val) && !isNaN(dy_val)) {
+    contentString += `<tr><th>Błąd dX / dY:</th><td>${dx_val.toFixed(2)} / ${dy_val.toFixed(2)} m</td></tr>`;
+}
     
-    content += `
+contentString += `
                 <tr><th>Klasa osnowy:</th><td>${escapeHTML(klasa_val || 'szczegółowa')}</td></tr>
                 <tr><th>Źródło danych:</th><td>${escapeHTML(row.zrodlo_danych || row.uwagi || '')}</td></tr>
             </table>
@@ -403,7 +422,6 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
             <div class="topo-section">
                 <div class="topo-title">Nawigacja do punktu</div>
                 <div class="pdf-actions">
-                    
                     <a href="https://www.google.com/maps/search/?api=1&query=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #4285F4; color: white; border: none;">Google Maps</a>
                     <a href="http://maps.apple.com/?daddr=${popLat},${popLng}" target="_blank" class="action-btn" style="background-color: #000000; color: white; border: none;">Apple Maps</a>
                 </div>
@@ -411,21 +429,35 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
             
             <div class="topo-section section-raport">
                 <div class="topo-title">Generowanie raportu</div>
-                <div class="pdf-actions">
-                    <button class="action-btn btn-nav" onclick="generateReport('${nr}', ${popLng}, ${x_val}, ${y_val}, '${h_val}', '${escapeHTML(typ_znaku_val)}', '${escapeHTML(stabilizacja_val)}', '${stanWizualny}')" style="width: 100%; border:none; cursor:pointer;">Pobierz metryczkę (PDF)</button>
-                </div>
+                <!-- ZOSTAWILIŚMY TYLKO PUSTY KONTENER NA PRZYCISK -->
+                <div class="pdf-actions" id="report-btn-container"></div>
             </div>
         </div>
     </div>`;
-    
-    marker.bindPopup(content);
+
+
+const popupWrapper = document.createElement('div');
+popupWrapper.innerHTML = contentString;
+
+const reportBtn = document.createElement('button');
+reportBtn.className = 'action-btn btn-nav';
+reportBtn.style.cssText = 'width: 100%; border:none; cursor:pointer;';
+reportBtn.innerText = 'Pobierz metryczkę (PDF)';
+
+reportBtn.addEventListener('click', () => {
+    generateReport(nr, popLng, x_val, y_val, h_val, typ_znaku_val, stabilizacja_val, stanWizualny);
+});
+
+popupWrapper.querySelector('#report-btn-container').appendChild(reportBtn);
+
+marker.bindPopup(popupWrapper);
     marker.feature = { type: "Feature", geometry: { type: "Point", coordinates: wgsCoords }, properties: row };
 
     allMarkersData.push({ layer: marker, props: row, targetGroup: targetGroup, isLocal: fromLocalJS });
     targetGroup.addLayer(marker);
 }
 
-window.generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
+const generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
     const originalTitle = document.title;
     document.title = `Metryczka_Punktu_${nr}`;
     
@@ -444,44 +476,56 @@ window.generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
     const imgElement = document.getElementById('reportSzkic');
     const reportElement = document.getElementById('printReport');
     
-    imgElement.src = `szkice/${nr}.jpg`;
-    
     const createPdf = () => {
-	showLoader('Generowanie metryczki PDF...');
-    const options = {
-        margin:       0,
-        filename:     `Metryczka_Punktu_${nr}.pdf`,
-        image:        { type: 'jpeg', quality: 1.0 },
-        html2canvas:  { 
-            scale: 2,
-            useCORS: true,
-            scrollY: 0
-        },
-        jsPDF:        { 
-            unit: 'mm', 
-            format: 'a4', 
-            orientation: 'portrait' 
-        }
+        showLoader('Generowanie metryczki PDF...');
+        const options = {
+            margin:       0,
+            filename:     `Metryczka_Punktu_${nr}.pdf`,
+            image:        { type: 'jpeg', quality: 1.0 },
+            html2canvas:  { 
+                scale: 2,
+                useCORS: true,
+                scrollY: 0
+            },
+            jsPDF:        { 
+                unit: 'mm', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            }
+        };
+
+        reportElement.style.display = 'flex';
+
+        html2pdf().set(options).from(reportElement).save().then(() => {
+            document.title = originalTitle;
+            reportElement.style.display = 'none';
+            hideLoader();
+        });
     };
 
-    reportElement.style.display = 'flex';
-
-    html2pdf().set(options).from(reportElement).save().then(() => {
-        document.title = originalTitle;
-        reportElement.style.display = 'none';
-		hideLoader();
-    });
-};
-
-    imgElement.onload = function() {
-        createPdf();
-    };
+    imgElement.onload = null;
+    imgElement.onerror = null;
     
-    imgElement.onerror = function() {
-        imgElement.src = '';
-        imgElement.alt = 'Brak szkicu topograficznego dla tego punktu w bazie.';
+    imgElement.src = `szkice/${nr}.jpg`;
+
+    if (imgElement.complete) {
         createPdf();
-    };
+    } else {
+        imgElement.onload = function() {
+            imgElement.onload = null;
+            imgElement.onerror = null;
+            createPdf();
+        };
+        
+        imgElement.onerror = function() {
+            imgElement.onload = null;
+            imgElement.onerror = null; 
+            
+            imgElement.src = '';
+            imgElement.alt = 'Brak szkicu topograficznego dla tego punktu w bazie.';
+            createPdf();
+        };
+    }
 };
 
 async function initData() {
@@ -599,13 +643,12 @@ const panelDiv = document.getElementById('layersPanel');
 L.DomEvent.disableClickPropagation(panelDiv); L.DomEvent.disableScrollPropagation(panelDiv);
 
 function searchPoint() {
-    const inputRaw = document.getElementById('searchInput').value;
+    const inputRaw = searchInput.value;
     const input = inputRaw.trim().toUpperCase();
-    const errorMsg = document.getElementById('searchError');
     const targetLayer = pointsLayer[input];
     
     if (targetLayer) {
-        errorMsg.style.display = 'none';
+        searchError.style.display = 'none';
         if (warstwaPanstwowa.hasLayer(targetLayer) && !map.hasLayer(warstwaPanstwowa)) { map.addLayer(warstwaPanstwowa); document.getElementById('layerPanstwowa').checked = true; }
         if (warstwaSkulich.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulich)) { map.addLayer(warstwaSkulich); document.getElementById('layerSkulich').checked = true; }
 		if (warstwaSkulichSzczegolowa.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulichSzczegolowa)) { map.addLayer(warstwaSkulichSzczegolowa); document.getElementById('layerSkulichSzczegolowa').checked = true; }
@@ -616,7 +659,9 @@ function searchPoint() {
         map.setView(targetLayer.getLatLng(), 19, { animate: false });
         targetLayer.openPopup();
     } else if (input !== "") {
-        errorMsg.innerText = "Nie znaleziono punktu: " + escapeHTML(inputRaw); errorMsg.style.display = 'block'; setTimeout(() => { errorMsg.style.display = 'none'; }, 3000);
+        searchError.innerText = "Nie znaleziono punktu: " + escapeHTML(inputRaw); 
+        searchError.style.display = 'block'; 
+        setTimeout(() => { searchError.style.display = 'none'; }, 3000);
     }
 }
 
@@ -778,7 +823,7 @@ selectAreaBtn.addEventListener('click', () => {
 
     isDrawingExportBox = true;
     selectionStartPoint = null;
-    document.getElementById('map').style.cursor = 'crosshair';
+    mapContainer.style.cursor = 'crosshair';
     
     exportFloatingPanel.style.display = 'flex';
     exportActionButtons.style.display = 'none';
@@ -802,7 +847,7 @@ map.on('click', function(e) {
         exportSelectionBox.setBounds([selectionStartPoint, e.latlng]);
         exportSelectionBounds = exportSelectionBox.getBounds(); 
         isDrawingExportBox = false; 
-        document.getElementById('map').style.cursor = '';
+        mapContainer.style.cursor = '';
         
         exportInstructions.innerText = "Obszar zaznaczony. Wybierz format zapisu:";
         exportActionButtons.style.display = 'flex';
@@ -820,7 +865,7 @@ map.on('mousemove', function(e) {
 function clearExportSelection() { 
     isDrawingExportBox = false; 
     selectionStartPoint = null; 
-    document.getElementById('map').style.cursor = ''; 
+    mapContainer.style.cursor = '';
     exportFloatingPanel.style.display = 'none';
     if (exportSelectionBox) { 
         map.removeLayer(exportSelectionBox); 
@@ -906,11 +951,8 @@ if (mobileBtn && closeBtn && layersPanel) {
 }
 
 // Lista rozwijana dla wyszukiwarki
-const searchInputElem = document.getElementById('searchInput');
-const customSuggestions = document.getElementById('customSuggestions');
-
-if (searchInputElem && customSuggestions) {
-    searchInputElem.addEventListener('input', function() {
+if (searchInput && customSuggestions) {
+    searchInput.addEventListener('input', function() {
         const val = this.value.trim().toUpperCase();
         customSuggestions.innerHTML = '';
         
@@ -927,7 +969,7 @@ if (searchInputElem && customSuggestions) {
                 const li = document.createElement('li');
                 li.textContent = nr;
                 li.addEventListener('click', function() {
-                    searchInputElem.value = nr;
+                    searchInput.value = nr;
                     customSuggestions.style.display = 'none';
                     searchPoint(); 
                 });
@@ -938,9 +980,8 @@ if (searchInputElem && customSuggestions) {
         }
     });
 
-    // Ukrywanie listy po kliknięciu na mapę
     document.addEventListener('click', function(e) {
-        if (!searchInputElem.contains(e.target) && !customSuggestions.contains(e.target)) {
+        if (!searchInput.contains(e.target) && !customSuggestions.contains(e.target)) {
             customSuggestions.style.display = 'none';
         }
     });
@@ -1028,6 +1069,12 @@ const bugForm = document.querySelector('#bugModal form');
 bugForm.addEventListener('submit', function(e) {
     e.preventDefault(); 
 
+    const hCaptchaResponse = bugForm.querySelector('textarea[name=h-captcha-response]');
+    if (!hCaptchaResponse || !hCaptchaResponse.value) {
+        alert("Proszę potwierdzić, że nie jesteś robotem (Captcha).");
+        return;
+    }
+
     const submitBtn = document.getElementById('sendBugBtn');
     const originalText = submitBtn.innerText;
     
@@ -1036,13 +1083,13 @@ bugForm.addEventListener('submit', function(e) {
 
     const formData = new FormData(this);
 
-	fetch('https://api.web3forms.com/submit', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json'
-		},
-		body: formData
-	})
+    fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        },
+        body: formData
+    })
 	.then(response => {
 		if (!response.ok) {
 			throw new Error('Błąd serwera formularzy');

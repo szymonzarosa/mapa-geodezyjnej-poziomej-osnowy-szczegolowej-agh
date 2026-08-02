@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "driver.js": "^1.6.0",
+    "geographiclib": "^1.52.2",
     "html2pdf.js": "^0.14.0",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",

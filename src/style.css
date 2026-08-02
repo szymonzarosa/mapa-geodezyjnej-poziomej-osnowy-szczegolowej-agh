@@ -239,3 +239,55 @@ html, body {
 body.dark-mode .leaflet-bar a { background-color: var(--bg-panel); color: var(--text-main); border-bottom: 1px solid var(--border-color); }
 body.dark-mode .leaflet-bar a:hover { background-color: var(--hover-bg); color: var(--text-strong); }
 body.dark-mode .leaflet-control-scale-line { background: var(--bg-glass); color: var(--text-strong); border-color: var(--border-color); }
+
+/* GŁÓWNE PRZYCISKI MODALI / FORMULARZY */
+.btn-primary {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.btn-primary:hover {
+    opacity: 0.85;
+}
+
+.btn-outline {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: transparent;
+    color: var(--text-strong);
+    border: 2px solid var(--text-strong);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-outline:hover {
+    background-color: var(--hover-bg);
+}
+
+.btn-danger {
+    width: 100%;
+    margin-top: 5px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.btn-danger:hover {
+    opacity: 0.85;
+}

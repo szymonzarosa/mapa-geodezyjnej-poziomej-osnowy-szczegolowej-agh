@@ -63,11 +63,11 @@
                 <div class="modal-footer-text">Kraków, 2026</div>
             </div>
 			
-			<button id="startTutorialFromModalBtn" class="action-btn" style="width: 100%; margin-top: 20px; font-size: 14px; padding: 12px; background-color: transparent; color: var(--text-strong); border: 2px solid var(--text-strong); cursor: pointer; font-weight: 700;">
+			<button id="startTutorialFromModalBtn" class="action-btn btn-outline">
 				Chcę poznać aplikację (Samouczek)
 			</button>
-            
-			<button id="closeModalBtn" class="action-btn" style="width: 100%; margin-top: 15px; font-size: 14px; padding: 12px; background-color: var(--accent-color); color: white; border: none; cursor: pointer; font-weight: 700;">
+
+			<button id="closeModalBtn" class="action-btn btn-primary">
 				Rozumiem, przejdź do aplikacji
 			</button>
         </div>
@@ -142,7 +142,7 @@
 			<h4 style="color: var(--accent-color); margin-bottom: 5px;">20. Jak zgłosić błąd lub potrzebną poprawkę?</h4>
             <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Jeśli zauważyłeś nieścisłość w danych lub błąd w działaniu narzędzi, skorzystaj z ikony zgłaszania błędów (przycisk z symbolem klucza) na pasku narzędzi. Wypełnij krótki formularz, który prześle Twoją uwagę bezpośrednio do zespołu projektowego.</p>
         </div>
-        <button id="closeFaqBtn" class="action-btn btn-nav" style="width: 100%; margin-top: 15px; padding: 10px;">Zamknij</button>
+        <button id="closeFaqBtn" class="btn-primary">Zamknij</button>
     </div>
 </div>
 
@@ -236,8 +236,8 @@
             </div>
         </div>
         <div class="pdf-actions" style="margin-top: 15px;">
-            <button id="measure-undo" class="action-btn btn-pdf" style="cursor: pointer; width: 100%;">Cofnij</button>
-            <button id="measure-clear" class="action-btn btn-nav" style="border: none; cursor: pointer; width: 100%; margin-top: 0;">Wyczyść</button>
+            <button id="measure-undo" class="action-btn btn-pdf" style="width: 100%;">Cofnij</button>
+			<button id="measure-clear" class="action-btn btn-nav" style="width: 100%; margin-top: 0;">Wyczyść</button>
         </div>
     </div>
 
@@ -301,10 +301,10 @@
 				<label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerWizuryDobre" checked><span>Wizury dobre</span></label>
 				<label class="layer-item-label" style="margin-bottom: 15px;"><input type="checkbox" id="layerWizuryUtrudnione" checked><span>Wizury utrudnione</span></label>
                 
-                <button id="selectAreaBtn" class="action-btn btn-pdf" style="width: 100%; cursor: pointer; margin-bottom: 8px;">Wybierz obszar na mapie</button>
+                <button id="selectAreaBtn" class="action-btn btn-pdf" style="width: 100%; margin-bottom: 8px;">Wybierz obszar na mapie</button>
 				<div style="display: flex; gap: 8px;">
-					<button id="exportCsvBtn" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;">Do CSV</button>
-					<button id="exportGeoJsonBtn" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;">Do GeoJSON</button>
+					<button id="exportCsvBtn" class="action-btn btn-pdf" style="flex: 1;">Do CSV</button>
+					<button id="exportGeoJsonBtn" class="action-btn btn-pdf" style="flex: 1;">Do GeoJSON</button>
 				</div>
             </div>
 
@@ -319,7 +319,7 @@
 			<button id="floatExportCsv" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;">Pobierz CSV</button>
 			<button id="floatExportGeoJson" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;">Pobierz GeoJSON</button>
 		</div>
-		<button id="floatExportCancel" class="action-btn" style="background: var(--danger-color); color: white; border: none; width: 100%; cursor: pointer; margin-top: 5px;">Anuluj eksport</button>
+		<button id="floatExportCancel" class="btn-danger">Anuluj eksport</button>
 	</div>
 	
     <div id="coordinatesPanel" class="ui-panel">
@@ -341,23 +341,23 @@
                 <h3>Opisz napotkany błąd w aplikacji</h3>
             </div>
             
-            <form action="https://api.web3forms.com/submit" method="POST">
-                
-                <input type="hidden" name="access_key" value="2c8fe1cf-3063-469f-846d-dd4fe2bb49f3">
-                
-                <input type="hidden" name="subject" value="Zgłoszenie błędu - Mapa Osnowy AGH">
-                <input type="hidden" name="from_name" value="Mapa Osnowy">
-                
-                <div class="modal-body" style="padding: 10px 0;">
-					<input type="text" name="Zgłaszający" id="bugReporter" placeholder="Podaj swój e-mail" style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); border-radius: 6px; font-family: inherit; font-size: 13px; margin-bottom: 10px; outline: none;">                    
-                    
+            <form action="https://api.web3forms.com/submit" method="POST" id="bugFormElement">
+				<input type="hidden" name="access_key" value="2c8fe1cf-3063-469f-846d-dd4fe2bb49f3">
+				<input type="hidden" name="subject" value="Zgłoszenie błędu - Mapa Osnowy AGH">
+				<input type="hidden" name="from_name" value="Mapa Osnowy">
+    
+				<div class="modal-body" style="padding: 10px 0;">
+					<input type="text" name="Zgłaszający" id="bugReporter" placeholder="Podaj swój e-mail" required style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); border-radius: 6px; font-family: inherit; font-size: 13px; margin-bottom: 10px; outline: none;">                    
+        
 					<textarea name="Opis_problemu" id="bugDescription" rows="5" required style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); border-radius: 6px; font-family: inherit; font-size: 13px; resize: vertical; outline: none;" placeholder="Opisz dokładnie, co nie działa lub co wymaga poprawy..."></textarea>
-                    
-                    <p style="font-size: 11px; color: #6b7280; margin-top: 10px; text-align: center;">Zgłoszenie zostanie bezpośrednio przekazane do autorów projektu.</p>
-                </div>
-                
-                <button type="submit" id="sendBugBtn" class="action-btn btn-nav" style="width: 100%; margin-top: 15px; padding: 12px; font-size: 14px; cursor: pointer; border: none;">Wyślij zgłoszenie</button>
-            </form>
+        
+					<div class="h-captcha" data-captcha="true" style="margin-top: 10px; display: flex; justify-content: center;"></div>
+        
+					<p style="font-size: 11px; color: #6b7280; margin-top: 10px; text-align: center;">Zgłoszenie zostanie bezpośrednio przekazane do autorów projektu.</p>
+				</div>
+    
+				<button type="submit" id="sendBugBtn" class="btn-primary">Wyślij zgłoszenie</button>
+			</form>
         </div>
     </div>
 
@@ -426,6 +426,7 @@
 </div>
 
     <script type="module" src="/src/app.js"></script>
+	<script src="https://web3forms.com/client/script.js" async defer></script>
 
 </body>
 </html>

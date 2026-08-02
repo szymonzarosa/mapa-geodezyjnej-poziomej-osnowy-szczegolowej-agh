@@ -2962,7 +2962,7 @@ export const osnowaData = {
         "y_pl2000": 7421757.44,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 205.345
@@ -2983,7 +2983,7 @@ export const osnowaData = {
         "y_pl2000": 7422766.29,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.494
@@ -3004,7 +3004,7 @@ export const osnowaData = {
         "y_pl2000": 7422897.13,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.588
@@ -3025,7 +3025,7 @@ export const osnowaData = {
         "y_pl2000": 7422893.09,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.568
@@ -3046,7 +3046,7 @@ export const osnowaData = {
         "y_pl2000": 7423068.69,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 205.552
@@ -3067,7 +3067,7 @@ export const osnowaData = {
         "y_pl2000": 7422249.05,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.716
@@ -3088,7 +3088,7 @@ export const osnowaData = {
         "y_pl2000": 7421694.77,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 207.196
@@ -3109,7 +3109,7 @@ export const osnowaData = {
         "y_pl2000": 7421971.81,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 206.82
@@ -3130,7 +3130,7 @@ export const osnowaData = {
         "y_pl2000": 7423081.83,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 209.088
@@ -3151,7 +3151,7 @@ export const osnowaData = {
         "y_pl2000": 7422978.1,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.069
@@ -3172,7 +3172,7 @@ export const osnowaData = {
         "y_pl2000": 7422503.4,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.116
@@ -3193,7 +3193,7 @@ export const osnowaData = {
         "y_pl2000": 7422188.32,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.006
@@ -3214,7 +3214,7 @@ export const osnowaData = {
         "y_pl2000": 7422547.53,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 207.922
@@ -3235,7 +3235,7 @@ export const osnowaData = {
         "y_pl2000": 7422982.48,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 206.624
@@ -3256,7 +3256,7 @@ export const osnowaData = {
         "y_pl2000": 7422056.23,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.554
@@ -3277,7 +3277,7 @@ export const osnowaData = {
         "y_pl2000": 7422869.09,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 208.844
@@ -3298,7 +3298,7 @@ export const osnowaData = {
         "y_pl2000": 7423311.24,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 207.872
@@ -3319,7 +3319,7 @@ export const osnowaData = {
         "y_pl2000": 7423163.27,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 206.458
@@ -3340,7 +3340,7 @@ export const osnowaData = {
         "y_pl2000": 7422377.87,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 206.512
@@ -3361,7 +3361,7 @@ export const osnowaData = {
         "y_pl2000": 7421704.04,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 213.308
@@ -3382,7 +3382,7 @@ export const osnowaData = {
         "y_pl2000": 7421368.02,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 205.455
@@ -3403,7 +3403,7 @@ export const osnowaData = {
         "y_pl2000": 7422574.62,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 205.952
@@ -3424,7 +3424,7 @@ export const osnowaData = {
         "y_pl2000": 7421978.34,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 206.402
@@ -3445,7 +3445,7 @@ export const osnowaData = {
         "y_pl2000": 7421565.71,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 207.097
@@ -3466,7 +3466,7 @@ export const osnowaData = {
         "y_pl2000": 7423229.94,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 205.437
@@ -3487,7 +3487,7 @@ export const osnowaData = {
         "y_pl2000": 7422318.75,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 205.1
@@ -3508,7 +3508,7 @@ export const osnowaData = {
         "y_pl2000": 7422755.43,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.597
@@ -3529,7 +3529,7 @@ export const osnowaData = {
         "y_pl2000": 7422736.33,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.888
@@ -3550,7 +3550,7 @@ export const osnowaData = {
         "y_pl2000": 7422708.7,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.228
@@ -3571,7 +3571,7 @@ export const osnowaData = {
         "y_pl2000": 7422752.74,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 206.069
@@ -3592,7 +3592,7 @@ export const osnowaData = {
         "y_pl2000": 7422523.8,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 208.484
@@ -3613,7 +3613,7 @@ export const osnowaData = {
         "y_pl2000": 7422470.95,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.748
@@ -3634,7 +3634,7 @@ export const osnowaData = {
         "y_pl2000": 7423186.34,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 203.652
@@ -3655,7 +3655,7 @@ export const osnowaData = {
         "y_pl2000": 7421547.96,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.657
@@ -3676,7 +3676,7 @@ export const osnowaData = {
         "y_pl2000": 7422508.09,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 203.516
@@ -3697,7 +3697,7 @@ export const osnowaData = {
         "y_pl2000": 7422408.18,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 209.108
@@ -3718,7 +3718,7 @@ export const osnowaData = {
         "y_pl2000": 7421737.47,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 207.677
@@ -3739,7 +3739,7 @@ export const osnowaData = {
         "y_pl2000": 7422279.79,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 207.939
@@ -3760,10 +3760,157 @@ export const osnowaData = {
         "y_pl2000": 7421283.32,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Ścienny",
-        "typ_znaku": "Reper metalowy",
+        "typ_znaku": "reper",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 207.776
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.920458,
+          50.066111
+        ]
+      },
+      "properties": {
+        "numer_punktu": "163302400",
+        "x_pl2000": 5548331.63,
+        "y_pl2000": 7422714.35,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Naziemny",
+        "typ_znaku": "antenna",
+        "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
+        "klasa_punktu": "podstawowa fundamentalna pozioma",
+        "h_evrf2007": 227.435
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.908886,
+          50.056916
+        ]
+      },
+      "properties": {
+        "numer_punktu": "163302401",
+        "x_pl2000": 5547321.01,
+        "y_pl2000": 7421870.98,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Naziemny",
+        "typ_znaku": "słup betonowy",
+        "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
+        "klasa_punktu": "podstawowa fundamentalna pozioma",
+        "h_evrf2007": 205.4197
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.909337,
+          50.07431
+        ]
+      },
+      "properties": {
+        "numer_punktu": "16330045",
+        "x_pl2000": 5549255.08,
+        "y_pl2000": 7421931.51,
+        "stan_znaku": "Zniszczony",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
+        "klasa_punktu": "podstawowa bazowa wysokościowa",
+        "h_evrf2007": 211.8129
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.917881,
+          50.072989
+        ]
+      },
+      "properties": {
+        "numer_punktu": "16330046",
+        "x_pl2000": 5549099.32,
+        "y_pl2000": 7422540.92,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
+        "klasa_punktu": "podstawowa bazowa wysokościowa",
+        "h_evrf2007": 207.9064
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.924628,
+          50.070427
+        ]
+      },
+      "properties": {
+        "numer_punktu": "16330047",
+        "x_pl2000": 5548807.37,
+        "y_pl2000": 7423019.79,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
+        "klasa_punktu": "podstawowa bazowa wysokościowa",
+        "h_evrf2007": 208.3948
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.92343,
+          50.064027
+        ]
+      },
+      "properties": {
+        "numer_punktu": "16330048",
+        "x_pl2000": 5548096.82,
+        "y_pl2000": 7422923.81,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
+        "klasa_punktu": "podstawowa bazowa wysokościowa",
+        "h_evrf2007": 204.057
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.929771,
+          50.066869
+        ]
+      },
+      "properties": {
+        "numer_punktu": "16330553",
+        "x_pl2000": 5548406.42,
+        "y_pl2000": 7423382.27,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
+        "klasa_punktu": "podstawowa bazowa wysokościowa",
+        "h_evrf2007": 207.2543
       }
     }
   ]

@@ -1,17 +1,21 @@
 import html2pdf from 'html2pdf.js';
 import { showLoader, hideLoader, getPl2000Zone } from './utils.js';
 
-export const generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
+export const generateReport = function(nr, lng, x, y, h, typ, stab, stan, klasa = '') {
     const originalTitle = document.title;
     document.title = `Metryczka_Punktu_${nr}`;
     
     const zoneInfo = getPl2000Zone(lng);
     
+    const isPodstawowa = klasa.toLowerCase().includes('fundamentalna') || klasa.toLowerCase().includes('bazowa');
+    const precisionXY = isPodstawowa ? 4 : 2;
+    const precisionH = isPodstawowa ? 4 : 3;
+    
     document.getElementById('reportNr').innerText = `Punkt nr: ${nr}`;
     document.getElementById('reportZone').innerText = zoneInfo.zone;
-    document.getElementById('reportX').innerText = parseFloat(x).toFixed(2) + ' m';
-    document.getElementById('reportY').innerText = parseFloat(y).toFixed(2) + ' m';
-    document.getElementById('reportH').innerText = isNaN(parseFloat(h)) ? 'Brak danych' : parseFloat(h).toFixed(3) + ' m';
+    document.getElementById('reportX').innerText = parseFloat(x).toFixed(precisionXY) + ' m';
+    document.getElementById('reportY').innerText = parseFloat(y).toFixed(precisionXY) + ' m';
+    document.getElementById('reportH').innerText = isNaN(parseFloat(h)) ? 'Brak danych' : parseFloat(h).toFixed(precisionH) + ' m';
     document.getElementById('reportType').innerText = typ || '-';
     document.getElementById('reportStab').innerText = stab || '-';
     document.getElementById('reportStan').innerText = stan;

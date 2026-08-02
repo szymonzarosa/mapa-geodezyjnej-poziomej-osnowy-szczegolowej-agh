@@ -11,7 +11,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110500",
         "x_pl2000": 5548091.78,
         "y_pl2000": 7421280.07,
         "stan_znaku": "Zniszczony",
@@ -32,7 +32,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110501",
         "x_pl2000": 5548095.36,
         "y_pl2000": 7421284.51,
         "stan_znaku": "Zniszczony",
@@ -53,7 +53,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110560",
         "x_pl2000": 5547884.08,
         "y_pl2000": 7422136.21,
         "stan_znaku": "Zniszczony",
@@ -74,7 +74,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110640",
         "x_pl2000": 5548749.32,
         "y_pl2000": 7421667.24,
         "stan_znaku": "Zniszczony",
@@ -95,7 +95,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112220",
         "x_pl2000": 5548027.91,
         "y_pl2000": 7422180.75,
         "stan_znaku": "Uszkodzony",
@@ -118,7 +118,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112320",
         "x_pl2000": 5548368.07,
         "y_pl2000": 7423163.84,
         "stan_znaku": "Dobry",
@@ -141,7 +141,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112440",
         "x_pl2000": 5547809.99,
         "y_pl2000": 7421355.69,
         "stan_znaku": "Zniszczony",
@@ -162,12 +162,12 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112580",
         "x_pl2000": 5548905.99,
         "y_pl2000": 7422162.94,
         "stan_znaku": "Dobry",
         "rodzaj_stabilizacji": "Element budowli",
-        "typ_znaku": "wieża koĹ›cioła",
+        "typ_znaku": "wieża kościoła",
         "zrodlo_danych": "Państwowy Zasób Geodezyjny i Kartograficzny",
         "klasa_punktu": "szczegółowa pozioma",
         "dx": -0.01,
@@ -184,7 +184,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112582",
         "x_pl2000": 5548905.93,
         "y_pl2000": 7422160.43,
         "stan_znaku": "Dobry",
@@ -206,7 +206,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112584",
         "x_pl2000": 5548868.36,
         "y_pl2000": 7422114.49,
         "stan_znaku": "Dobry",
@@ -226,7 +226,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112610",
         "x_pl2000": 5548544.57,
         "y_pl2000": 7423131.12,
         "stan_znaku": "Dobry",
@@ -246,7 +246,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112611",
         "x_pl2000": 5548537.7,
         "y_pl2000": 7423066.95,
         "stan_znaku": "Dobry",
@@ -266,7 +266,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112612",
         "x_pl2000": 5548446.38,
         "y_pl2000": 7423026.94,
         "stan_znaku": "Dobry",
@@ -286,7 +286,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114130",
         "x_pl2000": 5547710.56,
         "y_pl2000": 7422974.76,
         "stan_znaku": "Dobry",
@@ -309,7 +309,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115250",
         "x_pl2000": 5547777.91,
         "y_pl2000": 7422112.41,
         "stan_znaku": "Dobry",
@@ -332,7 +332,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115600",
         "x_pl2000": 5547649.77,
         "y_pl2000": 7422923.59,
         "stan_znaku": "Dobry",
@@ -354,7 +354,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110570",
         "x_pl2000": 5548092.44,
         "y_pl2000": 7422193.16,
         "stan_znaku": "Zniszczony",
@@ -375,7 +375,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112400",
         "x_pl2000": 5548321.86,
         "y_pl2000": 7423247.06,
         "stan_znaku": "Dobry",
@@ -398,7 +398,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110550",
         "x_pl2000": 5547808.61,
         "y_pl2000": 7421989.52,
         "stan_znaku": "Dobry",
@@ -421,7 +421,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511111000",
         "x_pl2000": 5547927.09,
         "y_pl2000": 7423059.07,
         "stan_znaku": "Dobry",
@@ -444,7 +444,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110610",
         "x_pl2000": 5548169.76,
         "y_pl2000": 7421445.55,
         "stan_znaku": "Zniszczony",
@@ -465,7 +465,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110970",
         "x_pl2000": 5548118.07,
         "y_pl2000": 7422814.95,
         "stan_znaku": "Zniszczony",
@@ -486,7 +486,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110730",
         "x_pl2000": 5549205.25,
         "y_pl2000": 7422146.81,
         "stan_znaku": "Zniszczony",
@@ -507,7 +507,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114100",
         "x_pl2000": 5547507.0,
         "y_pl2000": 7422624.44,
         "stan_znaku": "Dobry",
@@ -530,7 +530,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115602",
         "x_pl2000": 5547568.53,
         "y_pl2000": 7422927.42,
         "stan_znaku": "Dobry",
@@ -552,7 +552,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115601",
         "x_pl2000": 5547594.71,
         "y_pl2000": 7423050.38,
         "stan_znaku": "Zniszczony",
@@ -572,7 +572,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114110",
         "x_pl2000": 5547725.11,
         "y_pl2000": 7422391.26,
         "stan_znaku": "Zniszczony",
@@ -593,7 +593,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114120",
         "x_pl2000": 5547634.87,
         "y_pl2000": 7422756.72,
         "stan_znaku": "Uszkodzony",
@@ -616,7 +616,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110421",
         "x_pl2000": 5549225.83,
         "y_pl2000": 7421665.76,
         "stan_znaku": "Dobry",
@@ -639,7 +639,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114040",
         "x_pl2000": 5547526.96,
         "y_pl2000": 7421539.47,
         "stan_znaku": "Dobry",
@@ -662,7 +662,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110350",
         "x_pl2000": 5549473.32,
         "y_pl2000": 7421732.06,
         "stan_znaku": "Zniszczony",
@@ -683,7 +683,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114060",
         "x_pl2000": 5547493.58,
         "y_pl2000": 7421934.73,
         "stan_znaku": "Dobry",
@@ -706,7 +706,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110920",
         "x_pl2000": 5548859.01,
         "y_pl2000": 7422881.81,
         "stan_znaku": "Dobry",
@@ -729,7 +729,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110890",
         "x_pl2000": 5548812.48,
         "y_pl2000": 7423235.46,
         "stan_znaku": "Dobry",
@@ -752,7 +752,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110520",
         "x_pl2000": 5547955.99,
         "y_pl2000": 7421506.62,
         "stan_znaku": "Dobry",
@@ -775,7 +775,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110530",
         "x_pl2000": 5547893.37,
         "y_pl2000": 7421658.67,
         "stan_znaku": "Dobry",
@@ -798,7 +798,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114080",
         "x_pl2000": 5547417.48,
         "y_pl2000": 7422191.73,
         "stan_znaku": "Dobry",
@@ -821,7 +821,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110720",
         "x_pl2000": 5549147.22,
         "y_pl2000": 7422299.81,
         "stan_znaku": "Zniszczony",
@@ -842,7 +842,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110660",
         "x_pl2000": 5548609.98,
         "y_pl2000": 7421836.43,
         "stan_znaku": "Zniszczony",
@@ -863,7 +863,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110680",
         "x_pl2000": 5548608.76,
         "y_pl2000": 7422156.61,
         "stan_znaku": "Uszkodzony",
@@ -886,7 +886,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110690",
         "x_pl2000": 5548574.71,
         "y_pl2000": 7422231.4,
         "stan_znaku": "Dobry",
@@ -909,7 +909,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110910",
         "x_pl2000": 5548791.93,
         "y_pl2000": 7423029.34,
         "stan_znaku": "Zniszczony",
@@ -930,7 +930,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112420",
         "x_pl2000": 5548509.7,
         "y_pl2000": 7422551.76,
         "stan_znaku": "Dobry",
@@ -953,7 +953,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112430",
         "x_pl2000": 5548495.81,
         "y_pl2000": 7422279.78,
         "stan_znaku": "Dobry",
@@ -976,7 +976,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114070",
         "x_pl2000": 5547374.47,
         "y_pl2000": 7421982.84,
         "stan_znaku": "Dobry",
@@ -999,7 +999,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511111070",
         "x_pl2000": 5548432.22,
         "y_pl2000": 7423036.82,
         "stan_znaku": "Zniszczony",
@@ -1020,7 +1020,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511111080",
         "x_pl2000": 5548231.34,
         "y_pl2000": 7422980.86,
         "stan_znaku": "Zniszczony",
@@ -1041,7 +1041,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110990",
         "x_pl2000": 5547878.82,
         "y_pl2000": 7422898.8,
         "stan_znaku": "Dobry",
@@ -1064,7 +1064,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110630",
         "x_pl2000": 5548578.07,
         "y_pl2000": 7421478.65,
         "stan_znaku": "Zniszczony",
@@ -1085,7 +1085,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110670",
         "x_pl2000": 5548659.69,
         "y_pl2000": 7422035.11,
         "stan_znaku": "Dobry",
@@ -1108,7 +1108,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112230",
         "x_pl2000": 5548286.36,
         "y_pl2000": 7422243.35,
         "stan_znaku": "Dobry",
@@ -1131,7 +1131,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110430",
         "x_pl2000": 5549025.75,
         "y_pl2000": 7421616.56,
         "stan_znaku": "Zniszczony",
@@ -1152,7 +1152,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114030",
         "x_pl2000": 5547693.83,
         "y_pl2000": 7421303.29,
         "stan_znaku": "Dobry",
@@ -1175,7 +1175,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110510",
         "x_pl2000": 5548017.99,
         "y_pl2000": 7421422.24,
         "stan_znaku": "Zniszczony",
@@ -1196,7 +1196,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110980",
         "x_pl2000": 5548080.2,
         "y_pl2000": 7422929.6,
         "stan_znaku": "Dobry",
@@ -1219,7 +1219,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110410",
         "x_pl2000": 5549316.91,
         "y_pl2000": 7421694.09,
         "stan_znaku": "Dobry",
@@ -1242,7 +1242,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110600",
         "x_pl2000": 5548120.51,
         "y_pl2000": 7421627.49,
         "stan_znaku": "Zniszczony",
@@ -1263,7 +1263,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112583",
         "x_pl2000": 5548978.71,
         "y_pl2000": 7421895.01,
         "stan_znaku": "Dobry",
@@ -1283,7 +1283,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110761",
         "x_pl2000": 5549272.18,
         "y_pl2000": 7422469.26,
         "stan_znaku": "Dobry",
@@ -1306,7 +1306,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112210",
         "x_pl2000": 5548951.59,
         "y_pl2000": 7422725.36,
         "stan_znaku": "Zniszczony",
@@ -1327,7 +1327,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115070",
         "x_pl2000": 5547561.82,
         "y_pl2000": 7423044.53,
         "stan_znaku": "Dobry",
@@ -1350,7 +1350,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110590",
         "x_pl2000": 5548254.04,
         "y_pl2000": 7421742.56,
         "stan_znaku": "Zniszczony",
@@ -1371,7 +1371,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110620",
         "x_pl2000": 5548374.78,
         "y_pl2000": 7421474.56,
         "stan_znaku": "Dobry",
@@ -1394,7 +1394,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110940",
         "x_pl2000": 5548676.27,
         "y_pl2000": 7422980.61,
         "stan_znaku": "Dobry",
@@ -1417,7 +1417,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110540",
         "x_pl2000": 5547855.69,
         "y_pl2000": 7421841.71,
         "stan_znaku": "Dobry",
@@ -1440,7 +1440,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110650",
         "x_pl2000": 5548707.16,
         "y_pl2000": 7421893.88,
         "stan_znaku": "Dobry",
@@ -1463,7 +1463,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110580",
         "x_pl2000": 5548410.88,
         "y_pl2000": 7421769.4,
         "stan_znaku": "Uszkodzony",
@@ -1486,7 +1486,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110820",
         "x_pl2000": 5548381.35,
         "y_pl2000": 7421954.82,
         "stan_znaku": "Dobry",
@@ -1509,7 +1509,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114090",
         "x_pl2000": 5547466.22,
         "y_pl2000": 7422425.83,
         "stan_znaku": "Dobry",
@@ -1532,7 +1532,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511112410",
         "x_pl2000": 5548589.76,
         "y_pl2000": 7422759.86,
         "stan_znaku": "Dobry",
@@ -1555,7 +1555,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110950",
         "x_pl2000": 5548492.89,
         "y_pl2000": 7422422.71,
         "stan_znaku": "Zniszczony",
@@ -1576,7 +1576,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110440",
         "x_pl2000": 5548809.45,
         "y_pl2000": 7421557.92,
         "stan_znaku": "Zniszczony",
@@ -1597,7 +1597,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110420",
         "x_pl2000": 5549185.96,
         "y_pl2000": 7421643.52,
         "stan_znaku": "Dobry",
@@ -1620,7 +1620,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114140",
         "x_pl2000": 5547628.91,
         "y_pl2000": 7423210.1,
         "stan_znaku": "Dobry",
@@ -1643,7 +1643,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115130",
         "x_pl2000": 5547199.89,
         "y_pl2000": 7421833.35,
         "stan_znaku": "Dobry",
@@ -1666,7 +1666,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110700",
         "x_pl2000": 5548892.49,
         "y_pl2000": 7422287.96,
         "stan_znaku": "Zniszczony",
@@ -1687,7 +1687,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115790",
         "x_pl2000": 5549482.75,
         "y_pl2000": 7421616.62,
         "stan_znaku": "Dobry",
@@ -1710,7 +1710,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115800",
         "x_pl2000": 5549417.31,
         "y_pl2000": 7421698.73,
         "stan_znaku": "Dobry",
@@ -1733,7 +1733,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115810",
         "x_pl2000": 5549307.97,
         "y_pl2000": 7421820.84,
         "stan_znaku": "Dobry",
@@ -1756,7 +1756,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115820",
         "x_pl2000": 5549238.2,
         "y_pl2000": 7421992.77,
         "stan_znaku": "Dobry",
@@ -1779,7 +1779,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115850",
         "x_pl2000": 5549093.65,
         "y_pl2000": 7422364.42,
         "stan_znaku": "Dobry",
@@ -1802,7 +1802,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115860",
         "x_pl2000": 5549038.83,
         "y_pl2000": 7422535.51,
         "stan_znaku": "Dobry",
@@ -1825,7 +1825,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115870",
         "x_pl2000": 5548964.7,
         "y_pl2000": 7422667.27,
         "stan_znaku": "Dobry",
@@ -1848,7 +1848,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115880",
         "x_pl2000": 5548901.04,
         "y_pl2000": 7422834.77,
         "stan_znaku": "Dobry",
@@ -1871,7 +1871,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115890",
         "x_pl2000": 5548819.19,
         "y_pl2000": 7422950.72,
         "stan_znaku": "Dobry",
@@ -1894,7 +1894,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115900",
         "x_pl2000": 5548783.12,
         "y_pl2000": 7423045.17,
         "stan_znaku": "Dobry",
@@ -1917,7 +1917,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115910",
         "x_pl2000": 5548697.49,
         "y_pl2000": 7423139.37,
         "stan_znaku": "Dobry",
@@ -1940,7 +1940,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115920",
         "x_pl2000": 5548578.47,
         "y_pl2000": 7423203.74,
         "stan_znaku": "Dobry",
@@ -1963,7 +1963,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115830",
         "x_pl2000": 5549205.59,
         "y_pl2000": 7422121.46,
         "stan_znaku": "Dobry",
@@ -1986,7 +1986,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511115840",
         "x_pl2000": 5549147.83,
         "y_pl2000": 7422278.49,
         "stan_znaku": "Dobry",
@@ -2009,7 +2009,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110760",
         "x_pl2000": 5549258.11,
         "y_pl2000": 7422454.91,
         "stan_znaku": "Zniszczony",
@@ -2030,7 +2030,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511114050",
         "x_pl2000": 5547319.23,
         "y_pl2000": 7421687.01,
         "stan_znaku": "Dobry",
@@ -2053,7 +2053,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511110960",
         "x_pl2000": 5548171.71,
         "y_pl2000": 7422572.55,
         "stan_znaku": "Dobry",
@@ -2076,7 +2076,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116010",
         "x_pl2000": 5548314.103,
         "y_pl2000": 7423007.09,
         "stan_znaku": "Dobry",
@@ -2098,7 +2098,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116110",
         "x_pl2000": 5548504.68,
         "y_pl2000": 7422542.127,
         "stan_znaku": "Dobry",
@@ -2120,7 +2120,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116000",
         "x_pl2000": 5548499.759,
         "y_pl2000": 7423070.96,
         "stan_znaku": "Dobry",
@@ -2142,7 +2142,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116030",
         "x_pl2000": 5547902.014,
         "y_pl2000": 7422876.81,
         "stan_znaku": "Zniszczony",
@@ -2162,7 +2162,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116120",
         "x_pl2000": 5548371.054,
         "y_pl2000": 7422828.46,
         "stan_znaku": "Dobry",
@@ -2184,7 +2184,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116060",
         "x_pl2000": 5548381.399,
         "y_pl2000": 7421954.17,
         "stan_znaku": "Dobry",
@@ -2206,7 +2206,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116090",
         "x_pl2000": 5548765.631,
         "y_pl2000": 7421555.72,
         "stan_znaku": "Zniszczony",
@@ -2226,7 +2226,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116020",
         "x_pl2000": 5548200.532,
         "y_pl2000": 7422959.637,
         "stan_znaku": "Dobry",
@@ -2248,7 +2248,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116050",
         "x_pl2000": 5548246.091,
         "y_pl2000": 7422457.09,
         "stan_znaku": "Dobry",
@@ -2270,7 +2270,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116100",
         "x_pl2000": 5548630.016,
         "y_pl2000": 7422120.237,
         "stan_znaku": "Dobry",
@@ -2292,7 +2292,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116070",
         "x_pl2000": 5548412.688,
         "y_pl2000": 7421771.8,
         "stan_znaku": "Dobry",
@@ -2314,7 +2314,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116040",
         "x_pl2000": 5548084.356,
         "y_pl2000": 7422757.57,
         "stan_znaku": "Dobry",
@@ -2336,7 +2336,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116080",
         "x_pl2000": 5548506.121,
         "y_pl2000": 7421488.951,
         "stan_znaku": "Dobry",
@@ -2358,7 +2358,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190010",
         "x_pl2000": 5548056.953,
         "y_pl2000": 7422549.839,
         "stan_znaku": "Dobry",
@@ -2380,7 +2380,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190020",
         "x_pl2000": 5547926.181,
         "y_pl2000": 7422584.36,
         "stan_znaku": "Dobry",
@@ -2402,7 +2402,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190030",
         "x_pl2000": 5547779.349,
         "y_pl2000": 7422529.829,
         "stan_znaku": "Dobry",
@@ -2424,7 +2424,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190040",
         "x_pl2000": 5547695.504,
         "y_pl2000": 7422509.996,
         "stan_znaku": "Dobry",
@@ -2446,7 +2446,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190050",
         "x_pl2000": 5547895.918,
         "y_pl2000": 7422423.86,
         "stan_znaku": "Dobry",
@@ -2468,7 +2468,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190060",
         "x_pl2000": 5548037.787,
         "y_pl2000": 7422433.854,
         "stan_znaku": "Dobry",
@@ -2490,7 +2490,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190070",
         "x_pl2000": 5548012.761,
         "y_pl2000": 7422281.907,
         "stan_znaku": "Dobry",
@@ -2512,7 +2512,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190080",
         "x_pl2000": 5548138.617,
         "y_pl2000": 7422238.865,
         "stan_znaku": "Dobry",
@@ -2534,7 +2534,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190090",
         "x_pl2000": 5547910.305,
         "y_pl2000": 7422258.23,
         "stan_znaku": "Dobry",
@@ -2556,7 +2556,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190100",
         "x_pl2000": 5548093.104,
         "y_pl2000": 7422371.133,
         "stan_znaku": "Dobry",
@@ -2578,7 +2578,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190110",
         "x_pl2000": 5548155.198,
         "y_pl2000": 7422479.466,
         "stan_znaku": "Dobry",
@@ -2600,7 +2600,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116130",
         "x_pl2000": 5548218.32,
         "y_pl2000": 7422453.66,
         "stan_znaku": "Dobry",
@@ -2621,7 +2621,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116140",
         "x_pl2000": 5548124.6,
         "y_pl2000": 7422804.7,
         "stan_znaku": "Dobry",
@@ -2642,7 +2642,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511116150",
         "x_pl2000": 5547986.88,
         "y_pl2000": 7422871.77,
         "stan_znaku": "Dobry",
@@ -2663,7 +2663,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190210",
         "x_pl2000": 5548208.619,
         "y_pl2000": 7422960.937,
         "stan_znaku": "Dobry",
@@ -2684,7 +2684,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190220",
         "x_pl2000": 5548333.188,
         "y_pl2000": 7422988.473,
         "stan_znaku": "Dobry",
@@ -2705,7 +2705,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190230",
         "x_pl2000": 5548403.735,
         "y_pl2000": 7422924.826,
         "stan_znaku": "Dobry",
@@ -2726,7 +2726,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190240",
         "x_pl2000": 5548481.589,
         "y_pl2000": 7422925.698,
         "stan_znaku": "Dobry",
@@ -2747,7 +2747,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190250",
         "x_pl2000": 5548562.779,
         "y_pl2000": 7422978.86,
         "stan_znaku": "Dobry",
@@ -2768,7 +2768,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190260",
         "x_pl2000": 5548607.407,
         "y_pl2000": 7422958.715,
         "stan_znaku": "Dobry",
@@ -2789,7 +2789,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190270",
         "x_pl2000": 5548655.974,
         "y_pl2000": 7422968.584,
         "stan_znaku": "Dobry",
@@ -2810,7 +2810,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190280",
         "x_pl2000": 5548737.99,
         "y_pl2000": 7423012.69,
         "stan_znaku": "Dobry",
@@ -2831,7 +2831,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190290",
         "x_pl2000": 5548622.552,
         "y_pl2000": 7423024.759,
         "stan_znaku": "Dobry",
@@ -2852,7 +2852,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190300",
         "x_pl2000": 5548695.555,
         "y_pl2000": 7423091.679,
         "stan_znaku": "Dobry",
@@ -2873,7 +2873,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190310",
         "x_pl2000": 5548641.471,
         "y_pl2000": 7423064.876,
         "stan_znaku": "Dobry",
@@ -2894,7 +2894,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190320",
         "x_pl2000": 5548543.947,
         "y_pl2000": 7423034.663,
         "stan_znaku": "Dobry",
@@ -2915,7 +2915,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190330",
         "x_pl2000": 5548457.551,
         "y_pl2000": 7423011.36,
         "stan_znaku": "Dobry",
@@ -2936,7 +2936,7 @@ export const osnowaData = {
         ]
       },
       "properties": {
-        "numer_punktu": "712511000000",
+        "numer_punktu": "712511190340",
         "x_pl2000": 5548421.149,
         "y_pl2000": 7422987.894,
         "stan_znaku": "Dobry",

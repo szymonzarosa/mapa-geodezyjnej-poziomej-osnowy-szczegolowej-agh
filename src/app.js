@@ -6,20 +6,32 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import './style.css';
+import GeographicLib from 'geographiclib';
+import { registerSW } from 'virtual:pwa-register';
 
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
+// IMPORTY Z TWOICH MODUŁÓW
+import { showLoader, hideLoader, escapeHTML, getPl2000Zone } from './utils.js';
+import { generateReport } from './pdfReport.js';
+import { initUI } from './ui.js';
+import { initTutorial } from './tutorial.js';
 
 import { osnowaData } from './dane.js';
 import { zakresData } from './zakres.js';
 import { wizuryData } from './wizury.js';
 
-import { registerSW } from 'virtual:pwa-register';
-import html2pdf from 'html2pdf.js';
-
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
 
+// 1. Inicjalizacja interfejsu (modale, motyw)
+initUI();
+
+// 2. Inicjalizacja PWA
+registerSW({
+  onNeedRefresh() { console.log('Dostępna nowa wersja aplikacji. Odśwież stronę.'); },
+  onOfflineReady() { console.log('Aplikacja jest gotowa do pracy offline w terenie.'); },
+});
+
+// 3. Systemy odniesienia
 proj4.defs([
     ["EPSG:2176", "+proj=tmerc +lat_0=0 +lon_0=15 +k=0.999923 +x_0=5500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"],
     ["EPSG:2177", "+proj=tmerc +lat_0=0 +lon_0=18 +k=0.999923 +x_0=6500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"],
@@ -46,33 +58,14 @@ const wmsAdresy = L.tileLayer.wms('https://mapy.geoportal.gov.pl/wss/ext/Krajowa
 });
 
 const map = L.map('map', {
-	center: [50.0662, 19.9142],
+    center: [50.0662, 19.9142],
     zoom: 14, 
     layers: [osm],
-	zoomControl: false
+    zoomControl: false
 });
-
-function showLoader(text = 'Przetwarzanie...') {
-    document.getElementById('loaderText').innerText = text;
-    document.getElementById('globalLoader').style.display = 'flex';
-}
-
-function hideLoader() {
-    document.getElementById('globalLoader').style.display = 'none';
-}
-	
+    
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
 L.control.scale({metric: true, imperial: false, position: 'bottomleft'}).addTo(map);
-
-function escapeHTML(str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-}
 
 // OBSŁUGA CHOWANIA WARSTW W PANELU
 document.querySelectorAll('.accordion-btn').forEach(btn => {
@@ -87,13 +80,6 @@ document.querySelectorAll('.accordion-btn').forEach(btn => {
 const coordWgs = document.getElementById('coord-wgs');
 const coordPl2000 = document.getElementById('coord-pl2000');
 const pl2000Label = document.getElementById('pl2000-label');
-
-function getPl2000Zone(lng) {
-    if (lng < 16.5) return { epsg: 'EPSG:2176', zone: 5 };
-    if (lng < 19.5) return { epsg: 'EPSG:2177', zone: 6 };
-    if (lng < 22.5) return { epsg: 'EPSG:2178', zone: 7 };
-    return { epsg: 'EPSG:2179', zone: 8 };
-}
 
 let lastMoveTime = 0;
 
@@ -128,11 +114,6 @@ const measureArea = document.getElementById('measure-area');
 const measureClear = document.getElementById('measure-clear');
 const measureUndo = document.getElementById('measure-undo');
 const rowArea = document.getElementById('row-area');
-const searchInputGlobal = document.getElementById('searchInput');
-const searchErrorGlobal = document.getElementById('searchError');
-const searchInput = document.getElementById('searchInput');
-const searchError = document.getElementById('searchError');
-const customSuggestions = document.getElementById('customSuggestions');
 
 L.DomEvent.disableClickPropagation(measureBtn);
 L.DomEvent.disableClickPropagation(measurePanel);
@@ -144,18 +125,14 @@ measureBtn.addEventListener('click', () => {
     if (isMeasuring) {
         measureBtn.style.backgroundColor = 'var(--accent-color)'; 
         measureBtn.style.color = 'white';
-        
         mapContainer.style.cursor = 'crosshair';
         measurePanel.style.display = 'block';
-        
         map.on('click', handleMeasureClick);
     } else {
         measureBtn.style.backgroundColor = ''; 
         measureBtn.style.color = 'var(--primary-color)';
-        
         mapContainer.style.cursor = '';
         measurePanel.style.display = 'none';
-        
         map.off('click', handleMeasureClick); 
         clearMeasurement();
     }
@@ -167,9 +144,7 @@ document.querySelectorAll('input[name="measureMode"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
         measureMode = e.target.value; 
         rowArea.style.display = measureMode === 'area' ? 'flex' : 'none'; 
-        
         measureDistLabel.innerText = measureMode === 'area' ? 'Obwód:' : 'Odległość:';
-        
         clearMeasurement();
     });
 });
@@ -186,8 +161,6 @@ function updateMeasurementDisplay() {
     else measurePolygon.setLatLngs([]);
     calculateMeasurement();
 }
-
-import GeographicLib from 'geographiclib';
 
 function calculateMeasurement() {
     if (measurePoints.length < 2) { 
@@ -233,7 +206,6 @@ function calculateMeasurement() {
 // OSNOWA GEODEZYJNA I WIZUALIZACJA
 // ---------------------------------------------------------
 
-// Symbol - Osnowa Szczegółowa Pozioma
 function getOsnowaIcon(stan, nr, isPanstwowa = true) {
     let dotClass = 'dot-zniszczony';
     if (stan && stan.toLowerCase().includes('dobry')) dotClass = 'dot-dobry';
@@ -252,7 +224,6 @@ function getOsnowaIcon(stan, nr, isPanstwowa = true) {
     return L.divIcon({ className: '', html: `<div class="custom-osnowa-icon">${svgIcon}<div class="status-dot ${dotClass}"></div>${labelHtml}</div>`, iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -14] });
 }
 
-// Symbol - Osnowa Szczegółowa Wysokościowa 
 function getOsnowaWysokosciowaIcon(stan, nr) {
     let dotClass = 'dot-zniszczony';
     if (stan && stan.toLowerCase().includes('dobry')) dotClass = 'dot-dobry';
@@ -269,7 +240,6 @@ function getOsnowaWysokosciowaIcon(stan, nr) {
     return L.divIcon({ className: '', html: `<div class="custom-osnowa-icon">${svgIcon}<div class="status-dot ${dotClass}"></div>${labelHtml}</div>`, iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -14] });
 }
 
-// Symbol - Osnowa Pomiarowa
 function getOsnowaPomiarowaIcon(stan, nr) {
     let dotClass = 'dot-zniszczony';
     if (stan && stan.toLowerCase().includes('dobry')) dotClass = 'dot-dobry';
@@ -302,12 +272,10 @@ const wizuryDobreLayer = L.featureGroup();
 const wizuryUtrudnioneLayer = L.featureGroup();
 const zakresLayer = L.featureGroup();
 
-// Funkcja obsługująca kliknięcie w klaster
 function handleClusterClick(a) {
     a.layer.spiderfy();
 }
 
-// Przypięcie funkcji do warstw osnowy
 warstwaPanstwowa.on('clusterclick', handleClusterClick);
 warstwaSkulich.on('clusterclick', handleClusterClick);
 warstwaSkulichSzczegolowa.on('clusterclick', handleClusterClick);
@@ -318,7 +286,6 @@ warstwaWysokosciowa.on('clusterclick', handleClusterClick);
 
 const allMarkersData = []; const pointsLayer = {};
 
-// Funkcja dodająca i formatująca pojedynczy znacznik
 function processMarkerData(row, wgsCoords, fromLocalJS) {
     const latlng = [wgsCoords[1], wgsCoords[0]];
     
@@ -334,7 +301,6 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     const stabilizacja_val = (row.rodzaj_stabilizacji || row.notatka || '');
     const typ_znaku_val = (row.typ_znaku || '');
     
-// ROZPOZNAWANIE KLASY, GRUPY DOCELOWEJ I POCHODZENIA
     let targetGroup; 
     let isPanstwowa = true;
     let markerIcon;
@@ -383,8 +349,7 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
     const popLat = latlng[0]; const popLng = latlng[1];
     const wysokoscText = (!isNaN(h_val)) ? `${h_val.toFixed(3)} m` : 'Brak danych';
 
-
-let contentString = `
+    let contentString = `
     <div class="popup-content">
         <div class="popup-header"><span>Punkt Osnowy ${nr}</span><span class="badge ${badgeClass}">${stanWizualny}</span></div>
         <div class="popup-body">
@@ -395,11 +360,11 @@ let contentString = `
                 <tr><th>X (PL-2000 strefa 7):</th><td>${x_val.toFixed(2)} m</td></tr>
                 <tr><th>Y (PL-2000 strefa 7):</th><td>${y_val.toFixed(2)} m</td></tr>`;
 
-if ((stanWizualny === 'ZACHOWANY' || stanWizualny === 'USZKODZONY') && !isNaN(dx_val) && !isNaN(dy_val)) {
-    contentString += `<tr><th>Błąd dX / dY:</th><td>${dx_val.toFixed(2)} / ${dy_val.toFixed(2)} m</td></tr>`;
-}
+    if ((stanWizualny === 'ZACHOWANY' || stanWizualny === 'USZKODZONY') && !isNaN(dx_val) && !isNaN(dy_val)) {
+        contentString += `<tr><th>Błąd dX / dY:</th><td>${dx_val.toFixed(2)} / ${dy_val.toFixed(2)} m</td></tr>`;
+    }
     
-contentString += `
+    contentString += `
                 <tr><th>Klasa osnowy:</th><td>${escapeHTML(klasa_val || 'szczegółowa')}</td></tr>
                 <tr><th>Źródło danych:</th><td>${escapeHTML(row.zrodlo_danych || row.uwagi || '')}</td></tr>
             </table>
@@ -429,110 +394,36 @@ contentString += `
             
             <div class="topo-section section-raport">
                 <div class="topo-title">Generowanie raportu</div>
-                <!-- ZOSTAWILIŚMY TYLKO PUSTY KONTENER NA PRZYCISK -->
                 <div class="pdf-actions" id="report-btn-container"></div>
             </div>
         </div>
     </div>`;
 
+    const popupWrapper = document.createElement('div');
+    popupWrapper.innerHTML = contentString;
 
-const popupWrapper = document.createElement('div');
-popupWrapper.innerHTML = contentString;
+    const reportBtn = document.createElement('button');
+    reportBtn.className = 'action-btn btn-nav';
+    reportBtn.style.cssText = 'width: 100%; border:none; cursor:pointer;';
+    reportBtn.innerText = 'Pobierz metryczkę (PDF)';
 
-const reportBtn = document.createElement('button');
-reportBtn.className = 'action-btn btn-nav';
-reportBtn.style.cssText = 'width: 100%; border:none; cursor:pointer;';
-reportBtn.innerText = 'Pobierz metryczkę (PDF)';
+    reportBtn.addEventListener('click', () => {
+        generateReport(nr, popLng, x_val, y_val, h_val, typ_znaku_val, stabilizacja_val, stanWizualny);
+    });
 
-reportBtn.addEventListener('click', () => {
-    generateReport(nr, popLng, x_val, y_val, h_val, typ_znaku_val, stabilizacja_val, stanWizualny);
-});
+    popupWrapper.querySelector('#report-btn-container').appendChild(reportBtn);
 
-popupWrapper.querySelector('#report-btn-container').appendChild(reportBtn);
-
-marker.bindPopup(popupWrapper);
+    marker.bindPopup(popupWrapper);
     marker.feature = { type: "Feature", geometry: { type: "Point", coordinates: wgsCoords }, properties: row };
 
     allMarkersData.push({ layer: marker, props: row, targetGroup: targetGroup, isLocal: fromLocalJS });
     targetGroup.addLayer(marker);
 }
 
-const generateReport = function(nr, lng, x, y, h, typ, stab, stan) {
-    const originalTitle = document.title;
-    document.title = `Metryczka_Punktu_${nr}`;
-    
-    const zoneInfo = getPl2000Zone(lng);
-    
-    document.getElementById('reportNr').innerText = `Punkt nr: ${nr}`;
-    document.getElementById('reportZone').innerText = zoneInfo.zone;
-    document.getElementById('reportX').innerText = parseFloat(x).toFixed(2) + ' m';
-    document.getElementById('reportY').innerText = parseFloat(y).toFixed(2) + ' m';
-    document.getElementById('reportH').innerText = isNaN(parseFloat(h)) ? 'Brak danych' : parseFloat(h).toFixed(3) + ' m';
-    document.getElementById('reportType').innerText = typ || '-';
-    document.getElementById('reportStab').innerText = stab || '-';
-    document.getElementById('reportStan').innerText = stan;
-    document.getElementById('reportDate').innerText = new Date().toLocaleDateString('pl-PL');
-
-    const imgElement = document.getElementById('reportSzkic');
-    const reportElement = document.getElementById('printReport');
-    
-    const createPdf = () => {
-        showLoader('Generowanie metryczki PDF...');
-        const options = {
-            margin:       0,
-            filename:     `Metryczka_Punktu_${nr}.pdf`,
-            image:        { type: 'jpeg', quality: 1.0 },
-            html2canvas:  { 
-                scale: 2,
-                useCORS: true,
-                scrollY: 0
-            },
-            jsPDF:        { 
-                unit: 'mm', 
-                format: 'a4', 
-                orientation: 'portrait' 
-            }
-        };
-
-        reportElement.style.display = 'flex';
-
-        html2pdf().set(options).from(reportElement).save().then(() => {
-            document.title = originalTitle;
-            reportElement.style.display = 'none';
-            hideLoader();
-        });
-    };
-
-    imgElement.onload = null;
-    imgElement.onerror = null;
-    
-    imgElement.src = `szkice/${nr}.jpg`;
-
-    if (imgElement.complete) {
-        createPdf();
-    } else {
-        imgElement.onload = function() {
-            imgElement.onload = null;
-            imgElement.onerror = null;
-            createPdf();
-        };
-        
-        imgElement.onerror = function() {
-            imgElement.onload = null;
-            imgElement.onerror = null; 
-            
-            imgElement.src = '';
-            imgElement.alt = 'Brak szkicu topograficznego dla tego punktu w bazie.';
-            createPdf();
-        };
-    }
-};
-
 async function initData() {
     let successFromSupabase = false;
-	showLoader('Pobieranie punktów osnowy...');
+    showLoader('Pobieranie punktów osnowy...');
 
-    // 1. Supabase
     try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/osnowa?select=*`, {
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -550,7 +441,6 @@ async function initData() {
         console.warn("Supabase niedostępne, używam danych lokalnych."); 
     }
 
-    // 2. Ładowanie lokalne
     if (!successFromSupabase) {
         if (typeof osnowaData !== 'undefined' && osnowaData.features) {
             osnowaData.features.forEach(f => {
@@ -561,13 +451,11 @@ async function initData() {
         }
     }
 
-    // 3. Ładowanie zakresu opracowania
     if (typeof zakresData !== 'undefined') {
         L.geoJSON(zakresData, { style: { color: "#a629c6", weight: 3, fillOpacity: 0.02 } }).addTo(zakresLayer);
         if (document.getElementById('layerZakres')?.checked) map.addLayer(zakresLayer);
     }
-	
-	// 4. Ładowanie wizur
+    
     if (typeof wizuryData !== 'undefined') {
         L.geoJSON(wizuryData, { 
             coordsToLatLng: function (coords) {
@@ -592,17 +480,15 @@ async function initData() {
         if (document.getElementById('layerWizuryUtrudnione')?.checked) map.addLayer(wizuryUtrudnioneLayer);
     }
 
-    // 5. Dopasowanie widoku mapy do załadowanych punktów
     const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar, warstwaStarzykiewicz, warstwaKryusCalka, warstwaWysokosciowa].filter(l => l.getLayers().length > 0);
     
     if (allLayersArray.length > 0) {
         const group = L.featureGroup(allLayersArray);
-        // Podwójne zabezpieczenie przed pustą warstwą geometrii
         if (Object.keys(group._layers).length > 0) {
             map.fitBounds(group.getBounds(), { padding: [40, 40] });
         }
     }
-	hideLoader();
+    hideLoader();
 }
 
 initData();
@@ -642,6 +528,14 @@ toggleLayer('layerZakres', zakresLayer);
 const panelDiv = document.getElementById('layersPanel');
 L.DomEvent.disableClickPropagation(panelDiv); L.DomEvent.disableScrollPropagation(panelDiv);
 
+// ==========================================
+// WYSZUKIWARKA
+// ==========================================
+const searchInput = document.getElementById('searchInput');
+const searchError = document.getElementById('searchError');
+const searchBtn = document.getElementById('searchBtn');
+const customSuggestions = document.getElementById('customSuggestions');
+
 function searchPoint() {
     const inputRaw = searchInput.value;
     const input = inputRaw.trim().toUpperCase();
@@ -649,13 +543,15 @@ function searchPoint() {
     
     if (targetLayer) {
         searchError.style.display = 'none';
+        
         if (warstwaPanstwowa.hasLayer(targetLayer) && !map.hasLayer(warstwaPanstwowa)) { map.addLayer(warstwaPanstwowa); document.getElementById('layerPanstwowa').checked = true; }
         if (warstwaSkulich.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulich)) { map.addLayer(warstwaSkulich); document.getElementById('layerSkulich').checked = true; }
-		if (warstwaSkulichSzczegolowa.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulichSzczegolowa)) { map.addLayer(warstwaSkulichSzczegolowa); document.getElementById('layerSkulichSzczegolowa').checked = true; }
+        if (warstwaSkulichSzczegolowa.hasLayer(targetLayer) && !map.hasLayer(warstwaSkulichSzczegolowa)) { map.addLayer(warstwaSkulichSzczegolowa); document.getElementById('layerSkulichSzczegolowa').checked = true; }
         if (warstwaKuzniar.hasLayer(targetLayer) && !map.hasLayer(warstwaKuzniar)) { map.addLayer(warstwaKuzniar); document.getElementById('layerKuzniar').checked = true; }
-		if (warstwaStarzykiewicz.hasLayer(targetLayer) && !map.hasLayer(warstwaStarzykiewicz)) { map.addLayer(warstwaStarzykiewicz); document.getElementById('layerStarzykiewicz').checked = true; }
+        if (warstwaStarzykiewicz.hasLayer(targetLayer) && !map.hasLayer(warstwaStarzykiewicz)) { map.addLayer(warstwaStarzykiewicz); document.getElementById('layerStarzykiewicz').checked = true; }
         if (warstwaKryusCalka.hasLayer(targetLayer) && !map.hasLayer(warstwaKryusCalka)) { map.addLayer(warstwaKryusCalka); document.getElementById('layerKryusCalka').checked = true; }
-		if (warstwaWysokosciowa.hasLayer(targetLayer) && !map.hasLayer(warstwaWysokosciowa)) { map.addLayer(warstwaWysokosciowa); document.getElementById('layerWysokosciowa').checked = true; }
+        if (warstwaWysokosciowa.hasLayer(targetLayer) && !map.hasLayer(warstwaWysokosciowa)) { map.addLayer(warstwaWysokosciowa); document.getElementById('layerWysokosciowa').checked = true; }
+        
         map.setView(targetLayer.getLatLng(), 19, { animate: false });
         targetLayer.openPopup();
     } else if (input !== "") {
@@ -665,6 +561,23 @@ function searchPoint() {
     }
 }
 
+window.searchPoint = searchPoint;
+
+if (searchBtn) {
+    searchBtn.addEventListener('click', searchPoint);
+}
+
+if (searchInput) {
+    searchInput.addEventListener("keyup", function(e) { 
+        if (e.key === "Enter") {
+            searchPoint(); 
+        }
+    });
+}
+
+// ==========================================
+// FILTRY STANU
+// ==========================================
 const filterDobry = document.getElementById('filterDobry');
 const filterUszkodzony = document.getElementById('filterUszkodzony');
 const filterZniszczony = document.getElementById('filterZniszczony');
@@ -672,11 +585,11 @@ const filterZniszczony = document.getElementById('filterZniszczony');
 function applyStateFilters() {
     warstwaPanstwowa.clearLayers();
     warstwaSkulich.clearLayers();
-	warstwaSkulichSzczegolowa.clearLayers();
+    warstwaSkulichSzczegolowa.clearLayers();
     warstwaKuzniar.clearLayers();
-	warstwaStarzykiewicz.clearLayers();
+    warstwaStarzykiewicz.clearLayers();
     warstwaKryusCalka.clearLayers();
-	warstwaWysokosciowa.clearLayers();
+    warstwaWysokosciowa.clearLayers();
 
     const showDobry = filterDobry.checked;
     const showUszkodzony = filterUszkodzony.checked;
@@ -702,21 +615,20 @@ function applyStateFilters() {
 }
 
 [filterDobry, filterUszkodzony, filterZniszczony].forEach(cb => {
-    cb.addEventListener('change', applyStateFilters);
+    if(cb) cb.addEventListener('change', applyStateFilters);
 });
 
-document.getElementById('searchBtn').addEventListener('click', searchPoint);
-document.getElementById("searchInput").addEventListener("keyup", function(e) { 
-    if (e.key === "Enter") {
-        searchPoint(); 
-    }
-});
-
+// ==========================================
+// GEOLOKALIZACJA
+// ==========================================
 let userLocationMarker = null;
+const locateBtn = document.getElementById('locateBtn');
 
-document.getElementById('locateBtn').addEventListener('click', function() { 
-    map.locate({setView: true, maxZoom: 17}); 
-});
+if (locateBtn) {
+    locateBtn.addEventListener('click', function() { 
+        map.locate({setView: true, maxZoom: 17}); 
+    });
+}
 
 map.on('locationfound', function(e) { 
     if (userLocationMarker) {
@@ -736,7 +648,9 @@ map.on('locationerror', function(e) {
     alert("Nie udało się pobrać lokalizacji. Sprawdź, czy przeglądarka ma odpowiednie uprawnienia.");
 });
 
+// ==========================================
 // LEGENDA
+// ==========================================
 const legend = L.control({position: 'bottomright'});
 legend.onAdd = function () {
     const div = L.DomUtil.create('div', 'info legend ui-panel');
@@ -751,17 +665,12 @@ legend.onAdd = function () {
         </div>
         <div id="legend-content" style="margin-top: 10px; display: block;">
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="#FFFF00" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Państwowa)</div>
-			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Inne)</div>
-			
-			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><polygon points="5,5 95,5 50,90" fill="#0000FF" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/><line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa Wysokościowa</div>
-			
+            <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Inne)</div>
+            <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><polygon points="5,5 95,5 50,90" fill="#0000FF" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/><line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa Wysokościowa</div>
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg" style="border-radius:50%;"><circle cx="50" cy="65" r="30" fill="transparent" stroke="#000000" stroke-width="8"/><line x1="50" y1="35" x2="50" y2="5" stroke="#000000" stroke-width="8" stroke-linecap="round"/></svg>Osnowa Pomiarowa</div>
-            
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#a629c6" stroke-width="15"/></svg>Zakres opracowania</div>
-            
-			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><line x1="0" y1="50" x2="100" y2="50" stroke="#ef4444" stroke-width="12"/></svg>Wizury dobre</div>
-			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><line x1="0" y1="50" x2="100" y2="50" stroke="#ef4444" stroke-width="12" stroke-dasharray="20, 20"/></svg>Wizury utrudnione</div>
-			
+            <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><line x1="0" y1="50" x2="100" y2="50" stroke="#ef4444" stroke-width="12"/></svg>Wizury dobre</div>
+            <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><line x1="0" y1="50" x2="100" y2="50" stroke="#ef4444" stroke-width="12" stroke-dasharray="20, 20"/></svg>Wizury utrudnione</div>
             <div style="margin-top: 10px;"></div>
             <div class="legend-item"><div class="status-dot dot-dobry" style="position:relative; margin-right:12px; margin-left:4px;"></div>Punkty Zachowane</div>
             <div class="legend-item"><div class="status-dot dot-uszkodzony" style="position:relative; margin-right:12px; margin-left:4px;"></div>Punkty Uszkodzone</div>
@@ -773,11 +682,9 @@ legend.onAdd = function () {
 };
 legend.addTo(map);
 
-// Logika zwijania/rozwijania
 const legendHeader = document.getElementById('legend-header');
 const legendContent = document.getElementById('legend-content');
 const legendIcon = document.getElementById('legend-icon');
-
 const isMobile = window.innerWidth <= 950 || window.innerHeight <= 550;
 
 function toggleLegend(forceClose = false) {
@@ -790,19 +697,19 @@ function toggleLegend(forceClose = false) {
     }
 }
 
-// Obsługa kliknięcia
-legendHeader.addEventListener('click', () => toggleLegend());
+if (legendHeader) legendHeader.addEventListener('click', () => toggleLegend());
 
-// Inicjalizacja przy ładowaniu
 if (isMobile) {
     toggleLegend(true);
 } else {
-    legendIcon.style.transform = 'rotate(180deg)';
+    if (legendIcon) legendIcon.style.transform = 'rotate(180deg)';
 }
 
 map.fire('zoomend');
 
-// --- EKSPORT DANYCH ---
+// ==========================================
+// EKSPORT DANYCH
+// ==========================================
 let exportSelectionBox = null; 
 let exportSelectionBounds = null; 
 let selectionStartPoint = null; 
@@ -816,21 +723,21 @@ const floatExportCancel = document.getElementById('floatExportCancel');
 const floatExportCsv = document.getElementById('floatExportCsv');
 const floatExportGeoJson = document.getElementById('floatExportGeoJson');
 
-// Inicjacja rysowania po kliknięciu w "Wybierz obszar" w menu warstw
-selectAreaBtn.addEventListener('click', () => {
-    const layersPanel = document.getElementById('layersPanel');
-    if (layersPanel) layersPanel.classList.remove('mobile-active');
+if (selectAreaBtn) {
+    selectAreaBtn.addEventListener('click', () => {
+        const layersPanel = document.getElementById('layersPanel');
+        if (layersPanel) layersPanel.classList.remove('mobile-active');
 
-    isDrawingExportBox = true;
-    selectionStartPoint = null;
-    mapContainer.style.cursor = 'crosshair';
-    
-    exportFloatingPanel.style.display = 'flex';
-    exportActionButtons.style.display = 'none';
-    exportInstructions.innerText = "Kliknij w pierwszy róg obszaru na mapie...";
-});
+        isDrawingExportBox = true;
+        selectionStartPoint = null;
+        mapContainer.style.cursor = 'crosshair';
+        
+        if (exportFloatingPanel) exportFloatingPanel.style.display = 'flex';
+        if (exportActionButtons) exportActionButtons.style.display = 'none';
+        if (exportInstructions) exportInstructions.innerText = "Kliknij w pierwszy róg obszaru na mapie...";
+    });
+}
 
-// Obsługa kliknięć na mapie
 map.on('click', function(e) {
     if (!isDrawingExportBox) return;
 
@@ -842,56 +749,59 @@ map.on('click', function(e) {
             fillOpacity: 0.2, 
             interactive: false 
         }).addTo(map);
-        exportInstructions.innerText = "Teraz kliknij w drugi (przeciwległy) róg.";
+        if (exportInstructions) exportInstructions.innerText = "Teraz kliknij w drugi (przeciwległy) róg.";
     } else {
         exportSelectionBox.setBounds([selectionStartPoint, e.latlng]);
         exportSelectionBounds = exportSelectionBox.getBounds(); 
         isDrawingExportBox = false; 
         mapContainer.style.cursor = '';
         
-        exportInstructions.innerText = "Obszar zaznaczony. Wybierz format zapisu:";
-        exportActionButtons.style.display = 'flex';
+        if (exportInstructions) exportInstructions.innerText = "Obszar zaznaczony. Wybierz format zapisu:";
+        if (exportActionButtons) exportActionButtons.style.display = 'flex';
     }
 });
 
-// Wizualizacja prostokąta na żywo przy ruchu myszką
 map.on('mousemove', function(e) {
     if (isDrawingExportBox && selectionStartPoint && exportSelectionBox) {
         exportSelectionBox.setBounds([selectionStartPoint, e.latlng]);
     }
 });
 
-// Resetowanie i czyszczenie
 function clearExportSelection() { 
     isDrawingExportBox = false; 
     selectionStartPoint = null; 
     mapContainer.style.cursor = '';
-    exportFloatingPanel.style.display = 'none';
+    if (exportFloatingPanel) exportFloatingPanel.style.display = 'none';
     if (exportSelectionBox) { 
         map.removeLayer(exportSelectionBox); 
         exportSelectionBox = null; 
         exportSelectionBounds = null; 
     } 
 }
-floatExportCancel.addEventListener('click', clearExportSelection);
+
+if (floatExportCancel) floatExportCancel.addEventListener('click', clearExportSelection);
 
 function getVisibleFeatures() {
     let features = []; 
     const activeGroups = [ 
         { layer: warstwaPanstwowa, checkboxId: 'layerPanstwowa' }, 
         { layer: warstwaSkulich, checkboxId: 'layerSkulich' },
-		{ layer: warstwaSkulichSzczegolowa, checkboxId: 'layerSkulichSzczegolowa' },
+        { layer: warstwaSkulichSzczegolowa, checkboxId: 'layerSkulichSzczegolowa' },
         { layer: warstwaKuzniar, checkboxId: 'layerKuzniar' },
         { layer: warstwaStarzykiewicz, checkboxId: 'layerStarzykiewicz' },
         { layer: warstwaKryusCalka, checkboxId: 'layerKryusCalka' },
-		{ layer: warstwaWysokosciowa, checkboxId: 'layerWysokosciowa' }
+        { layer: warstwaWysokosciowa, checkboxId: 'layerWysokosciowa' }
     ];
     activeGroups.forEach(group => {
-        if (document.getElementById(group.checkboxId).checked) {
+        const checkbox = document.getElementById(group.checkboxId);
+        if (checkbox && checkbox.checked) {
             group.layer.eachLayer(marker => {
                 if (marker.feature) {
-                    if (exportSelectionBounds) { if (exportSelectionBounds.contains(marker.getLatLng())) features.push(marker.feature); } 
-                    else features.push(marker.feature);
+                    if (exportSelectionBounds) { 
+                        if (exportSelectionBounds.contains(marker.getLatLng())) features.push(marker.feature); 
+                    } else {
+                        features.push(marker.feature);
+                    }
                 }
             });
         }
@@ -920,18 +830,17 @@ function exportToGeoJson() {
     clearExportSelection();
 }
 
-floatExportCsv.addEventListener('click', exportToCsv);
-floatExportGeoJson.addEventListener('click', exportToGeoJson);
+if(floatExportCsv) floatExportCsv.addEventListener('click', exportToCsv);
+if(floatExportGeoJson) floatExportGeoJson.addEventListener('click', exportToGeoJson);
 
 const exportCsvBtn = document.getElementById('exportCsvBtn');
 const exportGeoJsonBtn = document.getElementById('exportGeoJsonBtn');
 if(exportCsvBtn) exportCsvBtn.addEventListener('click', exportToCsv);
 if(exportGeoJsonBtn) exportGeoJsonBtn.addEventListener('click', exportToGeoJson);
 
-
-// --- OBSŁUGA INTERFEJSU MOBILNEGO ---
-
-// Panel warstw
+// ==========================================
+// OBSŁUGA INTERFEJSU MOBILNEGO
+// ==========================================
 const mobileBtn = document.getElementById('mobileLayersBtn');
 const closeBtn = document.getElementById('closeLayersBtn');
 const layersPanel = document.getElementById('layersPanel');
@@ -950,7 +859,7 @@ if (mobileBtn && closeBtn && layersPanel) {
     });
 }
 
-// Lista rozwijana dla wyszukiwarki
+// Lista rozwijana dla wyszukiwarki (Podpowiedzi)
 if (searchInput && customSuggestions) {
     searchInput.addEventListener('input', function() {
         const val = this.value.trim().toUpperCase();
@@ -987,586 +896,4 @@ if (searchInput && customSuggestions) {
     });
 }
 
-// --- OBSŁUGA EKRANU POWITALNEGO ---
-document.addEventListener('DOMContentLoaded', () => {
-    const welcomeModal = document.getElementById('welcomeModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const startTutorialFromModalBtn = document.getElementById('startTutorialFromModalBtn');
-    
-    if (!sessionStorage.getItem('welcomeModalSeen')) {
-        welcomeModal.style.display = 'flex';
-    }
-
-    closeModalBtn.addEventListener('click', () => {
-        welcomeModal.style.display = 'none';
-        sessionStorage.setItem('welcomeModalSeen', 'true');
-    });
-
-    if (startTutorialFromModalBtn) {
-        startTutorialFromModalBtn.addEventListener('click', () => {
-            welcomeModal.style.display = 'none';
-            sessionStorage.setItem('welcomeModalSeen', 'true');
-            startTutorial();
-        });
-    }
-});
-
-const faqModal = document.getElementById('faqModal');
-const faqBtn = document.getElementById('faqBtn');
-const closeFaqBtn = document.getElementById('closeFaqBtn');
-const closeFaqIcon = document.getElementById('closeFaqIcon');
-
-L.DomEvent.disableClickPropagation(faqBtn);
-
-faqBtn.addEventListener('click', () => {
-    faqModal.style.display = 'flex';
-});
-
-closeFaqBtn.addEventListener('click', () => {
-    faqModal.style.display = 'none';
-});
-
-if (closeFaqIcon) {
-    closeFaqIcon.addEventListener('click', () => {
-        faqModal.style.display = 'none';
-    });
-}
-
-faqModal.addEventListener('click', (e) => {
-    if (e.target === faqModal) {
-        faqModal.style.display = 'none';
-    }
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && faqModal.style.display === 'flex') {
-        faqModal.style.display = 'none';
-    }
-});
-
-// --- OBSŁUGA ZGŁASZANIA BŁĘDÓW ---
-const bugModal = document.getElementById('bugModal');
-const bugBtn = document.getElementById('bugBtn');
-const closeBugIcon = document.getElementById('closeBugIcon');
-const sendBugBtn = document.getElementById('sendBugBtn');
-
-if (bugBtn) L.DomEvent.disableClickPropagation(bugBtn);
-
-bugBtn.addEventListener('click', () => {
-    bugModal.style.display = 'flex';
-});
-
-closeBugIcon.addEventListener('click', () => {
-    bugModal.style.display = 'none';
-});
-
-bugModal.addEventListener('click', (e) => {
-    if (e.target === bugModal) bugModal.style.display = 'none';
-});
-
-const bugForm = document.querySelector('#bugModal form');
-
-bugForm.addEventListener('submit', function(e) {
-    e.preventDefault(); 
-
-    const hCaptchaResponse = bugForm.querySelector('textarea[name=h-captcha-response]');
-    if (!hCaptchaResponse || !hCaptchaResponse.value) {
-        alert("Proszę potwierdzić, że nie jesteś robotem (Captcha).");
-        return;
-    }
-
-    const submitBtn = document.getElementById('sendBugBtn');
-    const originalText = submitBtn.innerText;
-    
-    submitBtn.innerText = 'Wysyłanie...';
-    submitBtn.disabled = true;
-
-    const formData = new FormData(this);
-
-    fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json'
-        },
-        body: formData
-    })
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Błąd serwera formularzy');
-		}
-		return response.json();
-	})
-	.then(data => {
-		if (data.success) {
-			bugModal.style.display = 'none';
-			document.getElementById('bugDescription').value = '';
-			document.getElementById('bugReporter').value = '';
-		} else {
-			alert("Wystąpił problem z wysłaniem zgłoszenia.");
-		}
-	})
-	.catch(error => {
-		console.error('Błąd wysyłania:', error);
-		alert("Błąd połączenia. Zgłoszenie nie zostało wysłane. Sprawdź, czy Twój AdBlock nie blokuje formularza.");
-	})
-	.finally(() => {
-		submitBtn.innerText = originalText;
-		submitBtn.disabled = false;
-	});
-});
-
-// --- SAMOUCZEK (DRIVER.JS) ---
-const tutorialBtn = document.getElementById('tutorialBtn');
-
-if (tutorialBtn) {
-    L.DomEvent.disableClickPropagation(tutorialBtn);
-}
-
-// 1. Wspólna konfiguracja
-const driverConfig = {
-    showProgress: true,
-    nextBtnText: 'Dalej ➔',
-    prevBtnText: '🠔 Wstecz',
-    doneBtnText: 'Zakończ',
-    popoverClass: 'custom-driver-popover',
-    allowClose: true
-};
-
-// 2. Rozbudowana ścieżka dla ekranów komputerów
-const desktopSteps = [
-    { 
-        popover: { 
-            title: 'Witaj w aplikacji!', 
-            description: "Ten przewodnik pokaże Ci, jak korzystać z dostępnych narzędzi. Kliknij 'Dalej', aby rozpocząć." 
-        } 
-    },
-    { 
-        element: '.search-container', 
-        popover: { 
-            title: 'Wyszukiwanie', 
-            description: 'Wpisz fragment numeru punktu. System wyświetli listę podpowiedzi, a po zatwierdzeniu automatycznie wyśrodkuje mapę i otworzy kartę informacyjną ze szczegółami.', 
-            side: "bottom", 
-            align: 'start' 
-        } 
-    },
-    { 
-        element: '.leaflet-popup', 
-        popover: { 
-            title: 'Karta informacyjna punktu', 
-            description: 'Przeanalizujmy atrybuty na przykładzie punktu 712511112230. Znajdziesz tu m.in. typ znaku (rurka hartowana), rodzaj stabilizacji (Naziemny), wysokość, współrzędne oraz klasę osnowy.', 
-            side: "left", 
-            align: 'start' 
-        },
-        onHighlightStarted: () => {
-            document.getElementById('searchInput').value = '712511112230';
-            searchPoint();
-        }
-    },
-    { 
-        element: '.topo-section:nth-of-type(1)', 
-        popover: { 
-            title: 'Opis topograficzny', 
-            description: 'Tutaj możesz wyświetlić (lub pobrać) opis topograficzny w formacie PDF oraz JPG.', 
-            side: "top" 
-        },
-        onHighlightStarted: () => {
-            const popupBody = document.querySelector('.popup-body');
-            const target = document.querySelectorAll('.topo-section')[0];
-            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
-        }
-    },
-    { 
-        element: '.topo-section:nth-of-type(2)', 
-        popover: { 
-            title: 'Mapa porównania z terenem', 
-            description: 'Narzędzie pozwala wyświetlić plik PDF z mapą porównania z terenem.', 
-            side: "top" 
-        },
-        onHighlightStarted: () => {
-            const popupBody = document.querySelector('.popup-body');
-            const target = document.querySelectorAll('.topo-section')[1];
-            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
-        }
-    },
-    { 
-        element: '.topo-section:nth-of-type(3)', 
-        popover: { 
-            title: 'Nawigacja do punktu', 
-            description: 'Opcja wyjątkowo przydatna w terenie. Jednym kliknięciem uruchomisz trasę w aplikacjach Google Maps lub Apple Maps prosto do lokalizacji znaku.', 
-            side: "top" 
-        },
-        onHighlightStarted: () => {
-            const popupBody = document.querySelector('.popup-body');
-            const target = document.querySelectorAll('.topo-section')[2];
-            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
-        }
-    },
-    { 
-        element: '.section-raport', 
-        popover: { 
-            title: 'Metryczka punktu', 
-            description: 'Funkcja ta pozwala na wygenerowanie automatycznego raportu odnośnie punktu osnowy w formacie PDF. Dane w raporcie tworzone są na podstawie danych opisowych znaku oraz opisu topograficznego.', 
-            side: "top",
-            align: 'start'
-        },
-        onHighlightStarted: () => {
-            const target = document.querySelector('.section-raport');
-            if (target) target.scrollIntoView({ behavior: 'auto', block: 'center' });
-        }
-    },
-    { 
-        element: '#locateBtn', 
-        popover: { 
-            title: 'Lokalizacja urządzenia',
-            description: 'Po kliknięciu danej opcji, aplikacja automatycznie wskaże oraz przeniesie Cię w Twoje aktualne położenie.', 
-            side: "right" 
-        } 
-    },
-    { 
-        element: '#measureBtn', 
-        popover: { 
-            title: 'Pomiary', 
-            description: 'Narzędzie umożliwiające pomiar odległości oraz pola powierzchni.', 
-            side: "right" 
-        } 
-    },
-    { 
-        element: '#layersPanel', 
-        popover: { 
-            title: 'Zarządzanie widokiem mapy oraz prezentacji danych', 
-            description: 'Zarządzanie widokiem. Otwórz panel, aby przełączać podkłady mapowe, uruchamiać usługi WMS i dostosowywać wyświetlane warstwy.', 
-            side: "left" 
-        } 
-    },
-    { 
-        element: '#selectAreaBtn', 
-        popover: { 
-            title: 'Eksport danych', 
-            description: 'Narzędzie do pobierania danych. Zaznacz na mapie interesujący Cię obszar, a następnie wyeksportuj dane punktów do pliku w formacie CSV lub GeoJSON.', 
-            side: "left" 
-        },
-        onHighlightStarted: () => {
-            const btn = document.getElementById('selectAreaBtn');
-            const accordionContent = btn.closest('.accordion-content');
-            const accordionHeader = accordionContent.previousElementSibling;
-            if (accordionContent.style.display !== "block") {
-                accordionContent.style.display = "block";
-                accordionHeader.classList.add('active');
-            }
-            document.querySelector('.layers-body').scrollTop = 1000;
-        }
-    },
-    { 
-        element: '.info.legend', 
-        popover: { 
-            title: 'Legenda', 
-            description: 'Zwijana legenda objaśniająca dane prezentowane na mapie.', 
-            side: "top" 
-        } 
-    },
-    { 
-        element: '#coordinatesPanel', 
-        popover: { 
-            title: 'Transformacja', 
-            description: 'Panel wyświetlający aktualne współrzędne w układzie globalnym WGS84 oraz ich przelicznik na obowiązujący układ PL-2000.', 
-            side: "top" 
-        } 
-    },
-    { 
-        element: '#faqBtn', 
-        popover: { 
-            title: 'Instrukcja obsługi', 
-            description: 'Jeśli zapomnisz do czego służą poszczególne narzędzia, tutaj odnajdziesz najczęściej zadawane pytania.', 
-            side: "right" 
-        } 
-    },
-    { 
-        element: '#tutorialBtn', 
-        popover: { 
-            title: 'Samouczek', 
-            description: 'Ponowne uruchomienie samouczka obsługi aplikacji. Jeżeli chcesz w szybki sposób przypomnieć sobie wiedzę odnośnie obsługi aplikacji, możesz ponownie włączyć przygotowany przez nas tutorial.', 
-            side: "right" 
-        } 
-    },
-    { 
-        element: '#bugBtn', 
-        popover: { 
-            title: 'Zgłaszanie błędów', 
-            description: 'Napotkałeś problem? Skorzystaj z tego przycisku, aby wysłać zgłoszenie bezpośrednio do nas.', 
-            side: "right" 
-        } 
-    },
-    {
-        popover: {
-            title: 'Koniec samouczka',
-            description: `To już wszystko, życzymy przyjemnego korzystania z aplikacji. W razie problemów panel pomocy jest do Twojej dyspozycji. Powodzenia!
-            <div style="text-align: center; margin-top: 25px;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" style="width: 50px; margin-bottom: 10px;">
-                <div style="font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Kraków, 2026 r.
-                </div>
-            </div>`
-        }
-    }
-];
-
-// 3. Ścieżka zoptymalizowana dla urządzeń mobilnych (w terenie)
-const mobileSteps = [
-    { 
-        popover: { 
-            title: 'Witaj w aplikacji!', 
-            description: "Ten przewodnik pokaże Ci, jak korzystać z dostępnych narzędzi. Kliknij 'Dalej', aby rozpocząć." 
-        } 
-    },
-    { 
-        element: '.search-container', 
-        popover: { 
-            title: 'Wyszukiwanie', 
-            description: 'Wpisz fragment numeru punktu. System wyświetli listę podpowiedzi, a po zatwierdzeniu automatycznie wyśrodkuje mapę i otworzy kartę informacyjną ze szczegółami.', 
-            side: "bottom", 
-            align: 'start' 
-        } 
-    },
-    { 
-        element: '#locateBtn', 
-        popover: { 
-            title: 'Nawigacja', 
-            description: 'Najważniejsze narzędzie w terenie. Kliknij, by wyśrodkować mapę na module GPS Twojego smartfona.', 
-            side: "right" 
-        } 
-    },
-    { 
-        element: '.leaflet-popup', 
-        popover: { 
-            title: 'Karta informacyjna punktu', 
-            description: 'Przeanalizujmy atrybuty na przykładzie punktu 712511112230. Znajdziesz tu m.in. typ znaku (rurka hartowana), rodzaj stabilizacji (Naziemny), wysokość, współrzędne oraz klasę osnowy.', 
-            side: "bottom", 
-            align: 'start' 
-        },
-        onHighlightStarted: () => {
-            document.getElementById('searchInput').value = '712511112230';
-            searchPoint();
-        }
-    },
-    { 
-        element: '.topo-section:nth-of-type(1)', 
-        popover: { 
-            title: 'Opis topograficzny', 
-            description: 'Tutaj możesz wyświetlić (lub pobrać) opis topograficzny w formacie PDF oraz JPG.', 
-            side: "top" 
-        },
-        onHighlightStarted: () => {
-            const popupBody = document.querySelector('.popup-body');
-            const target = document.querySelectorAll('.topo-section')[0];
-            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
-        }
-    },
-    { 
-        element: '.topo-section:nth-of-type(2)', 
-        popover: { 
-            title: 'Mapa porównania z terenem', 
-            description: 'Narzędzie pozwala wyświetlić plik PDF z mapą porównania z terenem.', 
-            side: "top" 
-        },
-        onHighlightStarted: () => {
-            const popupBody = document.querySelector('.popup-body');
-            const target = document.querySelectorAll('.topo-section')[1];
-            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
-        }
-    },
-    { 
-        element: '.topo-section:nth-of-type(3)', 
-        popover: { 
-            title: 'Nawigacja do punktu', 
-            description: 'Opcja wyjątkowo przydatna w terenie. Jednym kliknięciem uruchomisz trasę w aplikacjach Google Maps lub Apple Maps prosto do lokalizacji znaku.', 
-            side: "top" 
-        },
-        onHighlightStarted: () => {
-            const popupBody = document.querySelector('.popup-body');
-            const target = document.querySelectorAll('.topo-section')[2];
-            if (popupBody && target) popupBody.scrollTop = target.offsetTop - 20;
-        }
-    },
-    { 
-        element: '.section-raport', 
-        popover: { 
-            title: 'Metryczka punktu', 
-            description: 'Funkcja ta pozwala na wygenerowanie automatycznego raportu odnośnie punktu osnowy w formacie PDF. Dane w raporcie tworzone są na podstawie danych opisowych znaku oraz opisu topograficznego.', 
-            side: "top",
-            align: 'start'
-        },
-        onHighlightStarted: () => {
-            const target = document.querySelector('.section-raport');
-            if (target) target.scrollIntoView({ behavior: 'auto', block: 'center' });
-        }
-    },
-    { 
-        element: '#mobileLayersBtn', 
-        popover: { 
-            title: 'Panel Warstw', 
-            description: 'Zarządzanie widokiem. Otwórz panel, aby przełączać podkłady mapowe, uruchamiać usługi WMS i dostosowywać wyświetlane warstwy.', 
-            side: "right" 
-        },
-        onHighlightStarted: () => {
-            map.closePopup();
-            document.getElementById('layersPanel').classList.remove('mobile-active');
-        }
-    },
-    { 
-        element: '#selectAreaBtn', 
-        popover: { 
-            title: 'Eksport danych', 
-            description: 'Narzędzie do pobierania danych. Zaznacz na mapie interesujący Cię obszar, a następnie wyeksportuj dane punktów do pliku w formacie CSV lub GeoJSON.', 
-            side: "top" 
-        },
-        onHighlightStarted: () => {
-            document.getElementById('layersPanel').classList.add('mobile-active');
-            
-            const btn = document.getElementById('selectAreaBtn');
-            if (btn) {
-                const content = btn.closest('.accordion-content');
-                if (content) {
-                    content.style.display = 'block';
-                    if (content.previousElementSibling) content.previousElementSibling.classList.add('active');
-                }
-                const layersBody = document.querySelector('.layers-body');
-                if (layersBody) layersBody.scrollTo({ top: btn.offsetTop - 60, behavior: 'smooth' });
-            }
-        }
-    },
-    { 
-        element: '#measureBtn', 
-        popover: { 
-            title: 'Pomiary', 
-            description: 'Uruchamia narzędzie pomiarowe pozwalające na wyznaczenie odległości i pola powierzchni.', 
-            side: "right" 
-        },
-        onHighlightStarted: () => {
-            document.getElementById('layersPanel').classList.remove('mobile-active');
-        }
-    },
-    { 
-        element: '.info.legend', 
-        popover: { 
-            title: 'Legenda', 
-            description: 'Dotknij nagłówka legendy, aby ją rozwinąć.', 
-            side: "top" 
-        } 
-    },
-    { 
-        element: '#coordinatesPanel', 
-        popover: { 
-            title: 'Transformacja', 
-            description: 'Panel wyświetlający aktualne współrzędne w układzie globalnym WGS84 oraz ich przelicznik na obowiązujący układ PL-2000.', 
-            side: "top" 
-        } 
-    },
-    { 
-        element: '#faqBtn', 
-        popover: { 
-            title: 'Pomoc', 
-            description: 'Skrócona instrukcja obsługi narzędzi aplikacji jest dostępna zawsze pod tym przyciskiem.', 
-            side: "right" 
-        } 
-    },
-    { 
-        element: '#tutorialBtn', 
-        popover: { 
-            title: 'Samouczek', 
-            description: 'Ponowne uruchomienie samouczka obsługi aplikacji. Jeżeli chcesz w szybki sposób przypomnieć sobie wiedzę odnośnie obsługi aplikacji, możesz ponownie włączyć przygotowany przez nas tutorial.', 
-            side: "right" 
-        } 
-    },
-    { 
-        element: '#bugBtn', 
-        popover: { 
-            title: 'Zgłaszanie błędów', 
-            description: 'Napotkałeś problem? Skorzystaj z tego przycisku, aby wysłać zgłoszenie bezpośrednio do nas.', 
-            side: "right" 
-        } 
-    },
-    {
-        popover: {
-            title: 'Koniec samouczka',
-            description: `To już wszystko, życzymy przyjemnego korzystania z aplikacji. W razie problemów panel pomocy jest do Twojej dyspozycji. Powodzenia!
-            <div style="text-align: center; margin-top: 25px;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" style="width: 50px; margin-bottom: 10px;">
-                <div style="font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Kraków, 2026 r.
-                </div>
-            </div>`
-        }
-    }
-];
-
-// 4. Inicjalizacja poprzez wydzieloną funkcję
-function startTutorial() {
-    const isMobileView = window.innerWidth <= 950 || window.innerHeight <= 550;
-    
-    const initialCenter = map.getCenter();
-    const initialZoom = map.getZoom();
-    
-    const driverObj = driver({
-        ...driverConfig,
-        steps: isMobileView ? mobileSteps : desktopSteps,
-        
-        onDestroyed: () => {
-            map.closePopup();
-            map.setView(initialCenter, initialZoom);
-            document.getElementById('searchInput').value = '';
-        }
-    });
-    
-    driverObj.drive();
-}
-
-
-if (tutorialBtn) {
-    tutorialBtn.addEventListener('click', startTutorial);
-}
-
-// Inicjalizacja PWA
-const updateSW = registerSW({
-  onNeedRefresh() {
-    console.log('Dostępna nowa wersja aplikacji. Odśwież stronę.');
-  },
-  onOfflineReady() {
-    console.log('Aplikacja jest gotowa do pracy offline w terenie.');
-  },
-});
-
-// --- OBSŁUGA MOTYWU (DARK/LIGHT MODE) ---
-document.addEventListener('DOMContentLoaded', () => {
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-    const moonIcon = document.getElementById('moonIcon');
-    const sunIcon = document.getElementById('sunIcon');
-
-    const currentTheme = localStorage.getItem('theme') || 
-        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-
-    if (currentTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        moonIcon.style.display = 'none';
-        sunIcon.style.display = 'block';
-    }
-
-    if (themeToggleBtn) {
-        L.DomEvent.disableClickPropagation(themeToggleBtn);
-
-        themeToggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            let theme = 'light';
-            
-            if (document.body.classList.contains('dark-mode')) {
-                theme = 'dark';
-                moonIcon.style.display = 'none';
-                sunIcon.style.display = 'block';
-            } else {
-                moonIcon.style.display = 'block';
-                sunIcon.style.display = 'none';
-            }
-            
-            localStorage.setItem('theme', theme);
-        });
-    }
-});
+initTutorial(map);

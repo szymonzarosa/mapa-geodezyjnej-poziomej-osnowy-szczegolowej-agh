@@ -3912,6 +3912,69 @@ export const osnowaData = {
         "klasa_punktu": "podstawowa bazowa wysokościowa",
         "h_evrf2007": 207.2543
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.919666,
+          50.066129
+        ]
+      },
+      "properties": {
+        "numer_punktu": "B1",
+        "x_pl2000": 5548334.496,
+        "y_pl2000": 7422657.711,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Opracowanie własne - dr inż. M. Skulich, prof. AGH",
+        "klasa_punktu": "szczegółowa wysokościowa",
+        "h_evrf2007": 204.731
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.922022,
+          50.065234
+        ]
+      },
+      "properties": {
+        "numer_punktu": "A2",
+        "x_pl2000": 5548232.463,
+        "y_pl2000": 7422824.938,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Opracowanie własne - dr inż. M. Skulich, prof. AGH",
+        "klasa_punktu": "szczegółowa wysokościowa",
+        "h_evrf2007": 204.405
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.920212,
+          50.065627
+        ]
+      },
+      "properties": {
+        "numer_punktu": "C4",
+        "x_pl2000": 5548278.105,
+        "y_pl2000": 7422696.002,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Opracowanie własne - dr inż. M. Skulich, prof. AGH",
+        "klasa_punktu": "szczegółowa wysokościowa",
+        "h_evrf2007": 204.037
+      }
     }
   ]
 };

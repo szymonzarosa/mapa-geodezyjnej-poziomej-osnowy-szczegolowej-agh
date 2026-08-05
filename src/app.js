@@ -224,16 +224,19 @@ function getOsnowaIcon(stan, nr, isPanstwowa = true) {
     return L.divIcon({ className: '', html: `<div class="custom-osnowa-icon">${svgIcon}<div class="status-dot ${dotClass}"></div>${labelHtml}</div>`, iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -14] });
 }
 
-function getOsnowaWysokosciowaIcon(stan, nr) {
+function getOsnowaWysokosciowaIcon(stan, nr, isPanstwowa = true) {
     let dotClass = 'dot-zniszczony';
     if (stan && stan.toLowerCase().includes('dobry')) dotClass = 'dot-dobry';
     else if (stan && stan.toLowerCase().includes('uszkodzony')) dotClass = 'dot-uszkodzony';
     
+    const fillColor = isPanstwowa ? "#0000FF" : "transparent";
+    const crossColor = isPanstwowa ? "#FFFFFF" : "#000000";
+    
     const svgIcon = `
         <svg viewBox="0 0 100 100" class="osnowa-svg">
-            <polygon points="5,5 95,5 50,90" fill="#0000FF" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/>
-            <line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/>
-            <line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/>
+            <polygon points="5,5 95,5 50,90" fill="${fillColor}" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/>
+            <line x1="32.5" y1="35" x2="67.5" y2="35" stroke="${crossColor}" stroke-width="10" stroke-linecap="butt"/>
+            <line x1="50" y1="17.5" x2="50" y2="52.5" stroke="${crossColor}" stroke-width="10" stroke-linecap="butt"/>
         </svg>
     `;
     const labelHtml = nr ? `<div class="icon-nr-label">${nr}</div>` : '';
@@ -299,6 +302,7 @@ const warstwaKuzniar = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaStarzykiewicz = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaKryusCalka = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaWysokosciowa = L.markerClusterGroup(clusterOptions).addTo(map);
+const warstwaWysokosciowaUczelnia = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaFundamentalna = L.markerClusterGroup(clusterOptions).addTo(map);
 const warstwaBazowa = L.markerClusterGroup(clusterOptions).addTo(map);
 const wizuryDobreLayer = L.featureGroup();
@@ -316,6 +320,7 @@ warstwaKuzniar.on('clusterclick', handleClusterClick);
 warstwaStarzykiewicz.on('clusterclick', handleClusterClick);
 warstwaKryusCalka.on('clusterclick', handleClusterClick);
 warstwaWysokosciowa.on('clusterclick', handleClusterClick);
+warstwaWysokosciowaUczelnia.on('clusterclick', handleClusterClick);
 warstwaFundamentalna.on('clusterclick', handleClusterClick);
 warstwaBazowa.on('clusterclick', handleClusterClick);
 
@@ -349,8 +354,14 @@ function processMarkerData(row, wgsCoords, fromLocalJS) {
         markerIcon = getOsnowaBazowaIcon(stan_val, nr);
     }
     else if (klasa_val.includes('wysokościowa') || klasa_val.includes('wysokosciowa')) {
-        targetGroup = warstwaWysokosciowa;
-        markerIcon = getOsnowaWysokosciowaIcon(stan_val, nr);
+        if (zrodlo_val.includes('skulich') || zrodlo_val.includes('kuzniar') || zrodlo_val.includes('kuźniar') || zrodlo_val.includes('starzykiewicz') || zrodlo_val.includes('kryus') || zrodlo_val.includes('całka') || zrodlo_val.includes('uczelni') || zrodlo_val.includes('dydaktyczn')) {
+            isPanstwowa = false;
+            targetGroup = warstwaWysokosciowaUczelnia;
+        } else {
+            isPanstwowa = true;
+            targetGroup = warstwaWysokosciowa;
+        }
+        markerIcon = getOsnowaWysokosciowaIcon(stan_val, nr, isPanstwowa);
     } 
     else if (klasa_val.includes('pomiarowa') || zrodlo_val.includes('kryus') || zrodlo_val.includes('całka')) {
         markerIcon = getOsnowaPomiarowaIcon(stan_val, nr);
@@ -529,7 +540,7 @@ async function initData() {
         if (document.getElementById('layerWizuryUtrudnione')?.checked) map.addLayer(wizuryUtrudnioneLayer);
     }
 
-    const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar, warstwaStarzykiewicz, warstwaKryusCalka, warstwaWysokosciowa].filter(l => l.getLayers().length > 0);
+    const allLayersArray = [warstwaPanstwowa, warstwaSkulich, warstwaKuzniar, warstwaStarzykiewicz, warstwaKryusCalka, warstwaWysokosciowa, warstwaWysokosciowaUczelnia].filter(l => l.getLayers().length > 0);
     
     if (allLayersArray.length > 0) {
         const group = L.featureGroup(allLayersArray);
@@ -568,6 +579,7 @@ toggleLayer('layerKuzniar', warstwaKuzniar);
 toggleLayer('layerStarzykiewicz', warstwaStarzykiewicz);
 toggleLayer('layerKryusCalka', warstwaKryusCalka);
 toggleLayer('layerWysokosciowa', warstwaWysokosciowa);
+toggleLayer('layerWysokosciowaUczelnia', warstwaWysokosciowaUczelnia);
 toggleLayer('layerFundamentalna', warstwaFundamentalna);
 toggleLayer('layerBazowa', warstwaBazowa);
 toggleLayer('layerKieg', wmsKieg);
@@ -602,6 +614,7 @@ function searchPoint() {
         if (warstwaStarzykiewicz.hasLayer(targetLayer) && !map.hasLayer(warstwaStarzykiewicz)) { map.addLayer(warstwaStarzykiewicz); document.getElementById('layerStarzykiewicz').checked = true; }
         if (warstwaKryusCalka.hasLayer(targetLayer) && !map.hasLayer(warstwaKryusCalka)) { map.addLayer(warstwaKryusCalka); document.getElementById('layerKryusCalka').checked = true; }
         if (warstwaWysokosciowa.hasLayer(targetLayer) && !map.hasLayer(warstwaWysokosciowa)) { map.addLayer(warstwaWysokosciowa); document.getElementById('layerWysokosciowa').checked = true; }
+		if (warstwaWysokosciowaUczelnia.hasLayer(targetLayer) && !map.hasLayer(warstwaWysokosciowaUczelnia)) { map.addLayer(warstwaWysokosciowaUczelnia); document.getElementById('layerWysokosciowaUczelnia').checked = true; }
 		if (warstwaFundamentalna.hasLayer(targetLayer) && !map.hasLayer(warstwaFundamentalna)) { map.addLayer(warstwaFundamentalna); document.getElementById('layerFundamentalna').checked = true; }
 		if (warstwaBazowa.hasLayer(targetLayer) && !map.hasLayer(warstwaBazowa)) { map.addLayer(warstwaBazowa); document.getElementById('layerBazowa').checked = true; }
         
@@ -643,6 +656,7 @@ function applyStateFilters() {
     warstwaStarzykiewicz.clearLayers();
     warstwaKryusCalka.clearLayers();
     warstwaWysokosciowa.clearLayers();
+	warstwaWysokosciowaUczelnia.clearLayers();
 	warstwaFundamentalna.clearLayers();
 	warstwaBazowa.clearLayers();
 
@@ -721,7 +735,8 @@ legend.onAdd = function () {
         <div id="legend-content" style="margin-top: 10px; display: block;">
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="#FFFF00" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Państwowa)</div>
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><rect x="5" y="5" width="90" height="90" fill="transparent" stroke="#000000" stroke-width="10"/><line x1="27.5" y1="50" x2="72.5" y2="50" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="27.5" x2="50" y2="72.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa (Inne)</div>
-            <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><polygon points="5,5 95,5 50,90" fill="#0000FF" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/><line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa Wysokościowa</div>
+			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><polygon points="5,5 95,5 50,90" fill="#0000FF" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/><line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#FFFFFF" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa Wysokościowa (Państwowa)</div>
+			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><polygon points="5,5 95,5 50,90" fill="transparent" stroke="#000000" stroke-width="10" stroke-linejoin="miter"/><line x1="32.5" y1="35" x2="67.5" y2="35" stroke="#000000" stroke-width="10" stroke-linecap="butt"/><line x1="50" y1="17.5" x2="50" y2="52.5" stroke="#000000" stroke-width="10" stroke-linecap="butt"/></svg>Osnowa Szczegółowa Wysokościowa (Inne)</div>
             <div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><circle cx="50" cy="50" r="45" fill="transparent" stroke="#000000" stroke-width="6"/><polygon points="50,20 78,70 22,70" fill="#FFFF00" stroke="#000000" stroke-width="6"/><circle cx="50" cy="53" r="5" fill="#000000"/></svg>Osnowa Fundamentalna Pozioma</div>
 			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg"><polygon points="10,15 90,15 50,85" fill="#0000FF" stroke="#0000FF" stroke-width="5" stroke-linejoin="miter"/><circle cx="50" cy="40" r="6" fill="#FFFFFF"/></svg>Osnowa Bazowa Wysokościowa</div>
 			<div class="legend-item"><svg viewBox="0 0 100 100" class="legend-svg" style="border-radius:50%;"><circle cx="50" cy="65" r="30" fill="transparent" stroke="#000000" stroke-width="8"/><line x1="50" y1="35" x2="50" y2="5" stroke="#000000" stroke-width="8" stroke-linecap="round"/></svg>Osnowa Pomiarowa</div>
@@ -848,6 +863,7 @@ function getVisibleFeatures() {
         { layer: warstwaStarzykiewicz, checkboxId: 'layerStarzykiewicz' },
         { layer: warstwaKryusCalka, checkboxId: 'layerKryusCalka' },
         { layer: warstwaWysokosciowa, checkboxId: 'layerWysokosciowa' },
+		{ layer: warstwaWysokosciowaUczelnia, checkboxId: 'layerWysokosciowaUczelnia' },
 		{ layer: warstwaFundamentalna, checkboxId: 'layerFundamentalna' },
 		{ layer: warstwaBazowa, checkboxId: 'layerBazowa' }
     ];

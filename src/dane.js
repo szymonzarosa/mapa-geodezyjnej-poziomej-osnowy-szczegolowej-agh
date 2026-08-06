@@ -3975,6 +3975,27 @@ export const osnowaData = {
         "klasa_punktu": "szczegółowa wysokościowa",
         "h_evrf2007": 204.037
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.923137,
+          50.065079
+        ]
+      },
+      "properties": {
+        "numer_punktu": "A0'",
+        "x_pl2000": 5548214.14,
+        "y_pl2000": 7422904.48,
+        "stan_znaku": "Dobry",
+        "rodzaj_stabilizacji": "Ścienny",
+        "typ_znaku": "reper",
+        "zrodlo_danych": "Opracowanie własne - dr inż. M. Skulich, prof. AGH",
+        "klasa_punktu": "szczegółowa wysokościowa",
+        "h_evrf2007": 204.487
+      }
     }
   ]
 };

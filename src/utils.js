@@ -1,3 +1,5 @@
+// utils.js
+
 export function showLoader(text = 'Przetwarzanie...') {
     document.getElementById('loaderText').innerText = text;
     document.getElementById('globalLoader').style.display = 'flex';

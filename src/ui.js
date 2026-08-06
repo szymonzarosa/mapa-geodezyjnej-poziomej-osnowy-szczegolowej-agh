@@ -1,5 +1,8 @@
+// ui.js
+
+import { t } from './i18n.js';
+
 export function initUI() {
-    // --- OBSŁUGA MOTYWU ---
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const moonIcon = document.getElementById('moonIcon');
     const sunIcon = document.getElementById('sunIcon');
@@ -31,7 +34,6 @@ export function initUI() {
         });
     }
 
-    // --- OBSŁUGA FAQ ---
     const faqModal = document.getElementById('faqModal');
     const faqBtn = document.getElementById('faqBtn');
     const closeFaqBtn = document.getElementById('closeFaqBtn');
@@ -55,7 +57,6 @@ export function initUI() {
         if (e.key === 'Escape' && faqModal?.style.display === 'flex') faqModal.style.display = 'none';
     });
 
-    // --- OBSŁUGA ZGŁASZANIA BŁĘDÓW ---
     const bugModal = document.getElementById('bugModal');
     const bugBtn = document.getElementById('bugBtn');
     const closeBugIcon = document.getElementById('closeBugIcon');
@@ -79,14 +80,14 @@ export function initUI() {
             e.preventDefault(); 
             const hCaptchaResponse = bugForm.querySelector('textarea[name=h-captcha-response]');
             if (!hCaptchaResponse || !hCaptchaResponse.value) {
-                alert("Proszę potwierdzić, że nie jesteś robotem (Captcha).");
+                alert(t('captcha_req'));
                 return;
             }
 
             const submitBtn = document.getElementById('sendBugBtn');
             const originalText = submitBtn.innerText;
             
-            submitBtn.innerText = 'Wysyłanie...';
+            submitBtn.innerText = t('sending');
             submitBtn.disabled = true;
 
             const formData = new FormData(this);
@@ -106,17 +107,40 @@ export function initUI() {
                     document.getElementById('bugDescription').value = '';
                     document.getElementById('bugReporter').value = '';
                 } else {
-                    alert("Wystąpił problem z wysłaniem zgłoszenia.");
+                    alert(t('send_err'));
                 }
             })
             .catch(error => {
                 console.error('Błąd wysyłania:', error);
-                alert("Błąd połączenia. Zgłoszenie nie zostało wysłane. Sprawdź, czy Twój AdBlock nie blokuje formularza.");
+                alert(t('conn_err'));
             })
             .finally(() => {
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
             });
         });
+    }
+	
+	document.querySelectorAll('.accordion-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    });
+}
+
+export function initMobileMenu() {
+    const mobileBtn = document.getElementById('mobileLayersBtn');
+    const closeBtn = document.getElementById('closeLayersBtn');
+    const layersPanel = document.getElementById('layersPanel');
+    if (mobileBtn && closeBtn && layersPanel) {
+        L.DomEvent.disableClickPropagation(mobileBtn);
+        mobileBtn.addEventListener('click', e => { e.preventDefault(); layersPanel.classList.add('mobile-active'); });
+        closeBtn.addEventListener('click', e => { e.preventDefault(); layersPanel.classList.remove('mobile-active'); });
     }
 }

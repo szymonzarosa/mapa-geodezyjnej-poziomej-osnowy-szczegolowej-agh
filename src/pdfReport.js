@@ -1,46 +1,57 @@
-import html2pdf from 'html2pdf.js';
+// pdfReport.js
+
 import { showLoader, hideLoader, getPl2000Zone } from './utils.js';
+import { t, tv, getCurrentLang } from './i18n.js';
 
 export const generateReport = function(nr, lng, x, y, h, typ, stab, stan, klasa = '') {
     const originalTitle = document.title;
-    document.title = `Metryczka_Punktu_${nr}`;
-    
-    const zoneInfo = getPl2000Zone(lng);
+    document.title = `${t('report_filename')}_${nr}`;
     
     const isPodstawowa = klasa.toLowerCase().includes('fundamentalna') || klasa.toLowerCase().includes('bazowa');
-    const precisionXY = isPodstawowa ? 2 : 2;
+    const precisionXY = 2;
     const precisionH = isPodstawowa ? 4 : 3;
     
-    document.getElementById('reportNr').innerText = `Punkt nr: ${nr}`;
-    document.getElementById('reportZone').innerText = zoneInfo.zone;
+    document.getElementById('reportNr').innerText = `${t('print_point_nr')} ${nr}`;
     document.getElementById('reportX').innerText = parseFloat(x).toFixed(precisionXY) + ' m';
     document.getElementById('reportY').innerText = parseFloat(y).toFixed(precisionXY) + ' m';
-    document.getElementById('reportH').innerText = isNaN(parseFloat(h)) ? 'Brak danych' : parseFloat(h).toFixed(precisionH) + ' m';
-    document.getElementById('reportType').innerText = typ || '-';
-    document.getElementById('reportStab').innerText = stab || '-';
-    document.getElementById('reportStan').innerText = stan;
-    document.getElementById('reportDate').innerText = new Date().toLocaleDateString('pl-PL');
+    document.getElementById('reportH').innerText = isNaN(parseFloat(h)) ? t('no_data') : parseFloat(h).toFixed(precisionH) + ' m';
+    document.getElementById('reportType').innerText = tv(typ) || '-';
+    document.getElementById('reportStab').innerText = tv(stab) || '-';
+    document.getElementById('reportStan').innerText = t(stan).toUpperCase();
+    
+    const locale = getCurrentLang() === 'pl' ? 'pl-PL' : 'en-GB';
+    document.getElementById('reportDate').innerText = new Date().toLocaleDateString(locale);
 
     const imgElement = document.getElementById('reportSzkic');
     const reportElement = document.getElementById('printReport');
     
-    const createPdf = () => {
-        showLoader('Generowanie metryczki PDF...');
-        const options = {
-            margin:       0,
-            filename:     `Metryczka_Punktu_${nr}.pdf`,
-            image:        { type: 'jpeg', quality: 1.0 },
-            html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+    const createPdf = async () => {
+        showLoader(t('generating_pdf'));
+        
+        try {
+            const module = await import('html2pdf.js');
+            const html2pdf = module.default || module;
 
-        reportElement.style.display = 'flex';
+            const options = {
+                margin:       0,
+                filename:     `${t('report_filename')}_${nr}.pdf`,
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-        html2pdf().set(options).from(reportElement).save().then(() => {
-            document.title = originalTitle;
-            reportElement.style.display = 'none';
+            reportElement.style.display = 'flex';
+
+            html2pdf().set(options).from(reportElement).save().then(() => {
+                document.title = originalTitle;
+                reportElement.style.display = 'none';
+                hideLoader();
+            });
+        } catch (error) {
+            console.error("PDF Library Error:", error);
             hideLoader();
-        });
+            alert(t('pdf_error'));
+        }
     };
 
     imgElement.onload = null;
@@ -62,7 +73,7 @@ export const generateReport = function(nr, lng, x, y, h, typ, stab, stan, klasa 
             imgElement.onerror = null; 
             
             imgElement.src = '';
-            imgElement.alt = 'Brak szkicu topograficznego dla tego punktu w bazie.';
+            imgElement.alt = t('no_sketch');
             createPdf();
         };
     }

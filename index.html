@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Interaktywna Osnowy - Praca Inżynierska</title>
-	
-	<link rel="icon" type="image/svg" href="/logo_agh.svg" />
-	
-	<meta name="theme-color" content="#1a1a1a">
+    
+    <link rel="icon" type="image/svg" href="/logo_agh.svg" />
+    
+    <meta name="theme-color" content="#1a1a1a">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
@@ -16,7 +16,7 @@
 
 <div id="globalLoader" style="display: none;">
     <div class="spinner"></div>
-    <div id="loaderText">Przetwarzanie...</div>
+    <div id="loaderText" data-i18n="loading">Przetwarzanie...</div>
 </div>
 
 <div id="welcomeModal" class="modal-overlay">
@@ -24,144 +24,139 @@
             <div class="modal-header">
                 <div class="modal-logos">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" alt="Logo AGH" class="logo-agh">
-                    
-                    </div>
-                
-                <h2>Akademia Górniczo-Hutnicza im. Stanisława Staszica w Krakowie</h2>
-                <h3>Wydział Geodezji Górniczej i Inżynierii Środowiska<br>Katedra Geodezji Zintegrowanej i Kartografii</h3>
+                </div>
+                <h2 data-i18n="uni_name">Akademia Górniczo-Hutnicza im. Stanisława Staszica w Krakowie</h2>
+                <h3 data-i18n="faculty_name">Wydział Geodezji Górniczej i Inżynierii Środowiska<br>Katedra Geodezji Zintegrowanej i Kartografii</h3>
             </div>
             
             <div class="modal-body">
-                <div class="thesis-type">Projekt dyplomowy</div>
+                <div class="thesis-type" data-i18n="welcome_type">Projekt dyplomowy</div>
                 
-                <h1 class="thesis-title-pl">
+                <h1 class="thesis-title-pl" data-i18n="thesis_title" style="margin-bottom: 25px;">
                     Inwentaryzacja geodezyjnej poziomej osnowy szczegółowej wraz z projektem modernizacji na wybranym terenie Miasta Krakowa
                 </h1>
-                <div class="thesis-title-en">
-                    Inventory of the detailed horizontal geodetic control network along with a modernization project in a selected area of the City of Krakow
-                </div>
 
                 <div class="app-description">
-                    <strong>O aplikacji:</strong> To integralna część pracy inżynierskiej. Umożliwia ona interaktywną wizualizację stanu osnowy geodezyjnej, przeglądanie atrybutów poszczególnych punktów oraz opisów topograficznych, a także wykonywanie pomiarów na mapie i eksport danych (CSV/GeoJSON).
+                    <strong data-i18n="welcome_about">O aplikacji:</strong> <span data-i18n="welcome_desc">To integralna część pracy inżynierskiej...</span>
                 </div>
 
                 <table class="authors-table">
                     <tr>
-                        <th>Autorzy:</th>
+                        <th data-i18n="author_label">Autorzy:</th>
                         <td>Szymon Kobacki, Szymon Zarosa</td>
                     </tr>
                     <tr>
-                        <th>Kierunek studiów:</th>
-                        <td>Geodezja i Kartografia</td>
+                        <th data-i18n="major_label">Kierunek studiów:</th>
+                        <td data-i18n="major_name">Geodezja i Kartografia</td>
                     </tr>
                     <tr>
-                        <th>Opiekun pracy:</th>
-                        <td>dr inż. Mikołaj Skulich, prof. AGH</td>
+                        <th data-i18n="supervisor_label">Opiekun pracy:</th>
+                        <td data-i18n="supervisor_name">dr inż. Mikołaj Skulich, prof. AGH</td>
                     </tr>
                 </table>
                 
-                <div class="modal-footer-text">Kraków, 2026</div>
+                <div class="modal-footer-text" data-i18n="krakow_date">Kraków, 2026</div>
             </div>
-			
-			<button id="startTutorialFromModalBtn" class="action-btn btn-outline">
-				Chcę poznać aplikację (Samouczek)
-			</button>
+            
+            <button id="startTutorialFromModalBtn" class="action-btn btn-outline" data-i18n="btn_tutorial">
+                Chcę poznać aplikację (Samouczek)
+            </button>
 
-			<button id="closeModalBtn" class="action-btn btn-primary">
-				Rozumiem, przejdź do aplikacji
-			</button>
+            <button id="closeModalBtn" class="action-btn btn-primary" data-i18n="btn_start">
+                Rozumiem, przejdź do aplikacji
+            </button>
         </div>
     </div>
-	
-	<div id="faqModal" class="modal-overlay">
-    <div class="modal-content ui-panel" style="position: relative;">
-        <span id="closeFaqIcon" style="position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #9ca3af; cursor: pointer; line-height: 1;">&times;</span>
-        
-        <div class="modal-header">
-            <h2>Instrukcja Obsługi</h2>
-            <h3>Często zadawane pytania (FAQ)</h3>
-        </div>
-        <div class="modal-body">
-            <h4 style="color: var(--accent-color); margin-bottom: 5px;">1. Jak odszukać punkt osnowy w aplikacji?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Wpisz numer punktu w polu wyszukiwania znajdującym się w lewym górnym rogu aplikacji. Po wybraniu odpowiedniego wyniku mapa automatycznie przeniesie się do lokalizacji punktu i odpowiednio przybliży widok. Wystarczy podanie tylko części numeru, aby aplikacja automatycznie dopasowała wszystkie dostępne odpowiedzi.</p>
+    
+    <div id="faqModal" class="modal-overlay">
+        <div class="modal-content ui-panel" style="position: relative;">
+            <span id="closeFaqIcon" style="position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #9ca3af; cursor: pointer; line-height: 1;">&times;</span>
             
-            <h4 style="color: var(--accent-color); margin-bottom: 5px;">2. Gdzie mogę znaleźć opis topograficzny punktu?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Po kliknięciu wybranego punktu na mapie, otworzy się okno z jego szczegółami. W panelu informacji dostępny jest przycisk umożliwiający wyświetlenie opisu topograficznego. Opis można wyświetlić w formie zdjęcia bądź pliku pdf.</p>
-            
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">3. Jak pobrać dane osnowy?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Przejdź do sekcji eksportu danych znajdującego się w panelu warstw, wybierz interesujący Cię obszar (postępuj zgodnie z wyświetlaną instrukcją) lub punkt oraz format pliku (CSV/GeoJSON). Następnie kliknij przycisk Pobierz, aby zapisać dane na swoim urządzeniu.</p>
-			
-            <h4 style="color: var(--accent-color); margin-bottom: 5px;">4. Jak wyświetlić informacje o punkcie?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Kliknij wybrany punkt na mapie. Zostanie wyświetlone okno zawierające podstawowe informacje opisowe, takie jak numer punktu, stan znaku, typ znaku, współrzędne, rodzaj stabilizacji oraz inne dostępne dane.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">5. Jak zmienić warstwę mapy?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Skorzystaj z panelu warstw i wybierz interesujący podkład mapowy, np. mapę standardową, ortofotomapę lub mapę topograficzną. Dodatkowo można posłużyć się warstwami działek lub adresów i ulic pozyskanych z geoportalu. Jednocześnie w zakładce „ANALIZY I EKSPORT DANYCH” dostępne są autorskie warstwy powiększające zakres wykorzystania aplikacji.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">6. Jak przybliżyć lub oddalić mapę?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Możesz użyć przycisków + i − znajdujących się na mapie lub skorzystać z kółka myszy. Na urządzeniach mobilnych użyj gestu „szczypania” dwoma palcami.</p>
-			
-            <h4 style="color: var(--accent-color); margin-bottom: 5px;">7. Dlaczego nie mogę znaleźć wybranego punktu?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Sprawdź, czy numer punktu został wpisany poprawnie. Jeśli punkt nadal nie jest widoczny, upewnij się, że odpowiednia warstwa danych jest włączona. Do odszukania interesującego cię punktu nie potrzeba podawać jego pełnej nazwy, wystarczy tylko część numeru, a algorytm odszuka wszystkie możliwe opcje wyboru.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">8. Jak zmierzyć odległość lub powierzchnię?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Wybierz narzędzie pomiarowe z paska narzędzi (ikona przypominająca gumkę), a następnie zaznacz punkty na mapie. Aplikacja automatycznie obliczy długość lub powierzchnię wraz z obwodem zaznaczonego obszaru.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">9. Jak odczytać współrzędne punktu?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Kliknij punkt na mapie. W oknie informacji zostaną wyświetlone jego współrzędne w wykorzystywanym państwowym układzie odniesienia.</p>
-			
-            <h4 style="color: var(--accent-color); margin-bottom: 5px;">10. Jak wyczyścić wyniki wyszukiwania lub pomiarów?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Kliknij przycisk Wyczyść znajdujący się w funkcji „Włącz/Wyłącz pomiar odległości i pola”, aby usunąć zaznaczenia z mapy.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">11. Czy mogę wyświetlić kilka warstw jednocześnie?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Tak. W panelu warstw możesz zaznaczyć kilka warstw jednocześnie, aby porównać prezentowane dane. Jednakże warstwy znajdujące się w zakładce „PODKŁADY MAPOWE” nie mogą być wyświetlane jednocześnie. Każda warstwa została sporządzona w zależności od preferencji użytkowników.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">12. Co zrobić, jeśli mapa nie wyświetla się poprawnie?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Odśwież stronę internetową. Jeśli problem nadal występuje, sprawdź połączenie z Internetem lub spróbuj otworzyć aplikację w innej przeglądarce. Jeżeli używasz aplikacji na urządzeniu mobilnym, preferowaną opcją jest posługiwanie się nią w przeglądarce internetowej.</p>
-			
-            <h4 style="color: var(--accent-color); margin-bottom: 5px;">13. Jak sprawdzić swoje aktualne położenie za pomocą aplikacji?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Kliknij przycisk Pokaż moją lokalizację (ikonka strzałki) znajdujący się pod panelem wyszukiwania punktów. Po uzyskaniu dostępu do lokalizacji aplikacja automatycznie wskażę twoje przybliżone położenie.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">14. Czy aplikacja działa na telefonach i tabletach?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Tak. Aplikacja jest responsywna i może być używana zarówno na komputerach, jak i urządzeniach mobilnych. Preferowaną opcją używania aplikacji jest przeglądarka internetowa.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">15. Jak dotrzeć do wybranego przeze mnie punktu osnowy?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Kliknij punkt na mapie, a następnie po wyświetleniu danych opisowych w zakładce „NAWIGACJA DO PUNKTU” wybierz preferowaną przez ciebie opcję nawigacji. Aplikacja przeniesie Cię do Google Maps/Apple Maps, a następnie wskaże najkrótszą możliwą drogę do punktu.</p>
-			
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">16. Jak odczytać współrzędne punktu nie będącego punktem osnowy geodezyjnej?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Poprzez kliknięcie/wskazanie na mapie interesującego cię punktu, nie będącego punktem osnowy geodezyjnej, jesteś w stanie odczytać jego współrzędne z paletki współrzędnych znajdującej się po środku na dole strony. Współrzędne można odczytać zarówno w systemie odniesienia WGS84, jak i w obowiązującym państwowym układzie współrzędnych geodezyjnych PL-2000 (PUWG 2000).</p>
-						
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">17. Czy mogę wygenerować raport (metryczkę) dla punktu osnowy?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Tak. Po kliknięciu na punkt na mapie, w oknie z informacjami znajdziesz sekcję „Generowanie raportu”. Przycisk „Pobierz metryczkę (PDF)” otworzy okno drukowania, w którym możesz wygenerować plik PDF z kompletem danych o punkcie, w tym z opisem topograficznym.</p>
-						
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">18. Jak ponownie uruchomić samouczek aplikacji?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Jeśli chcesz przypomnieć sobie funkcje aplikacji, kliknij ikonę samouczka (przycisk z symbolem odtwarzania) znajdującą się po lewej stronie mapy. Przewodnik przeprowadzi Cię przez najważniejsze narzędzia krok po kroku.</p>
-						
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">19. Czy aplikacja działa w trybie offline?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Tak, aplikacja posiada funkcjonalność PWA (Progressive Web App). Po pierwszym załadowaniu danych w zasięgu sieci, aplikacja zostanie zapisana w pamięci Twojej przeglądarki, co pozwoli na dostęp do podstawowych informacji o punktach i korzystanie z mapy także w miejscach bez dostępu do Internetu.</p>
-						
-			<h4 style="color: var(--accent-color); margin-bottom: 5px;">20. Jak zgłosić błąd lub potrzebną poprawkę?</h4>
-            <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;">Jeśli zauważyłeś nieścisłość w danych lub błąd w działaniu narzędzi, skorzystaj z ikony zgłaszania błędów (przycisk z symbolem klucza) na pasku narzędzi. Wypełnij krótki formularz, który prześle Twoją uwagę bezpośrednio do zespołu projektowego.</p>
+            <div class="modal-header">
+                <h2 data-i18n="faq_title">Instrukcja Obsługi</h2>
+                <h3 data-i18n="faq_subtitle">Często zadawane pytania (FAQ)</h3>
+            </div>
+            <div class="modal-body">
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q1">1. Jak odszukać punkt osnowy w aplikacji?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a1">Wpisz numer punktu w polu wyszukiwania znajdującym się w lewym górnym rogu aplikacji. Po wybraniu odpowiedniego wyniku mapa automatycznie przeniesie się do lokalizacji punktu i odpowiednio przybliży widok. Wystarczy podanie tylko części numeru, aby aplikacja automatycznie dopasowała wszystkie dostępne odpowiedzi.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q2">2. Gdzie mogę znaleźć opis topograficzny punktu?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a2">Po kliknięciu wybranego punktu na mapie, otworzy się okno z jego szczegółami. W panelu informacji dostępny jest przycisk umożliwiający wyświetlenie opisu topograficznego. Opis można wyświetlić w formie zdjęcia bądź pliku pdf.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q3">3. Jak pobrać dane osnowy?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a3">Przejdź do sekcji eksportu danych znajdującego się w panelu warstw, wybierz interesujący Cię obszar (postępuj zgodnie z wyświetlaną instrukcją) lub punkt oraz format pliku (CSV/GeoJSON). Następnie kliknij przycisk Pobierz, aby zapisać dane na swoim urządzeniu.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q4">4. Jak wyświetlić informacje o punkcie?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a4">Kliknij wybrany punkt na mapie. Zostanie wyświetlone okno zawierające podstawowe informacje opisowe, takie jak numer punktu, stan znaku, typ znaku, współrzędne, rodzaj stabilizacji oraz inne dostępne dane.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q5">5. Jak zmienić warstwę mapy?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a5">Skorzystaj z panelu warstw i wybierz interesujący podkład mapowy, np. mapę standardową, ortofotomapę lub mapę topograficzną. Dodatkowo można posłużyć się warstwami działek lub adresów i ulic pozyskanych z geoportalu. Jednocześnie w zakładce „ANALIZY I EKSPORT DANYCH” dostępne są autorskie warstwy powiększające zakres wykorzystania aplikacji.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q6">6. Jak przybliżyć lub oddalić mapę?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a6">Możesz użyć przycisków + i − znajdujących się na mapie lub skorzystać z kółka myszy. Na urządzeniach mobilnych użyj gestu „szczypania” dwoma palcami.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q7">7. Dlaczego nie mogę znaleźć wybranego punktu?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a7">Sprawdź, czy numer punktu został wpisany poprawnie. Jeśli punkt nadal nie jest widoczny, upewnij się, że odpowiednia warstwa danych jest włączona. Do odszukania interesującego cię punktu nie potrzeba podawać jego pełnej nazwy, wystarczy tylko część numeru, a algorytm odszuka wszystkie możliwe opcje wyboru.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q8">8. Jak zmierzyć odległość lub powierzchnię?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a8">Wybierz narzędzie pomiarowe z paska narzędzi (ikona przypominająca gumkę), a następnie zaznacz punkty na mapie. Aplikacja automatycznie obliczy długość lub powierzchnię wraz z obwodem zaznaczonego obszaru.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q9">9. Jak odczytać współrzędne punktu?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a9">Kliknij punkt na mapie. W oknie informacji zostaną wyświetlone jego współrzędne w wykorzystywanym państwowym układzie odniesienia.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q10">10. Jak wyczyścić wyniki wyszukiwania lub pomiarów?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a10">Kliknij przycisk Wyczyść znajdujący się w funkcji „Włącz/Wyłącz pomiar odległości i pola”, aby usunąć zaznaczenia z mapy.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q11">11. Czy mogę wyświetlić kilka warstw jednocześnie?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a11">Tak. W panelu warstw możesz zaznaczyć kilka warstw jednocześnie, aby porównać prezentowane dane. Jednakże warstwy znajdujące się w zakładce „PODKŁADY MAPOWE” nie mogą być wyświetlane jednocześnie. Każda warstwa została sporządzona w zależności od preferencji użytkowników.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q12">12. Co zrobić, jeśli mapa nie wyświetla się poprawnie?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a12">Odśwież stronę internetową. Jeśli problem nadal występuje, sprawdź połączenie z Internetem lub spróbuj otworzyć aplikację w innej przeglądarce. Jeżeli używasz aplikacji na urządzeniu mobilnym, preferowaną opcją jest posługiwanie się nią w przeglądarce internetowej.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q13">13. Jak sprawdzić swoje aktualne położenie za pomocą aplikacji?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a13">Kliknij przycisk Pokaż moją lokalizację (ikonka strzałki) znajdujący się pod panelem wyszukiwania punktów. Po uzyskaniu dostępu do lokalizacji aplikacja automatycznie wskaże twoje przybliżone położenie.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q14">14. Czy aplikacja działa na telefonach i tabletach?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a14">Tak. Aplikacja jest responsywna i może być używana zarówno na komputerach, jak i urządzeniach mobilnych. Preferowaną opcją używania aplikacji jest przeglądarka internetowa.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q15">15. Jak dotrzeć do wybranego przeze mnie punktu osnowy?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a15">Kliknij punkt na mapie, a następnie po wyświetleniu danych opisowych w zakładce „NAWIGACJA DO PUNKTU” wybierz preferowaną przez ciebie opcję nawigacji. Aplikacja przeniesie Cię do Google Maps/Apple Maps, a następnie wskaże najkrótszą możliwą drogę do punktu.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q16">16. Jak odczytać współrzędne punktu nie będącego punktem osnowy geodezyjnej?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a16">Poprzez kliknięcie/wskazanie na mapie interesującego cię punktu, nie będącego punktem osnowy geodezyjnej, jesteś w stanie odczytać jego współrzędne z paletki współrzędnych znajdującej się po środku na dole strony. Współrzędne można odczytać zarówno w systemie odniesienia WGS84, jak i w obowiązującym państwowym układzie współrzędnych geodezyjnych PL-2000 (PUWG 2000).</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q17">17. Czy mogę wygenerować raport (metryczkę) dla punktu osnowy?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a17">Tak. Po kliknięciu na punkt na mapie, w oknie z informacjami znajdziesz sekcję „Generowanie raportu”. Przycisk „Pobierz metryczkę (PDF)” otworzy okno drukowania, w którym możesz wygenerować plik PDF z kompletem danych o punkcie, w tym z opisem topograficznym.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q18">18. Jak ponownie uruchomić samouczek aplikacji?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a18">Jeśli chcesz przypomnieć sobie funkcje aplikacji, kliknij ikonę samouczka (przycisk z symbolem odtwarzania) znajdującą się po lewej stronie mapy. Przewodnik przeprowadzi Cię przez najważniejsze narzędzia krok po kroku.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q19">19. Czy aplikacja działa w trybie offline?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a19">Tak, aplikacja posiada funkcjonalność PWA (Progressive Web App). Po pierwszym załadowaniu danych w zasięgu sieci, aplikacja zostanie zapisana w pamięci Twojej przeglądarki, co pozwoli na dostęp do podstawowych informacji o punktach i korzystanie z mapy także w miejscach bez dostępu do Internetu.</p>
+                
+                <h4 style="color: var(--accent-color); margin-bottom: 5px;" data-i18n="faq_q20">20. Jak zgłosić błąd lub potrzebną poprawkę?</h4>
+                <p style="font-size: 13px; color: var(--text-main); margin-bottom: 15px;" data-i18n="faq_a20">Jeśli zauważyłeś nieścisłość w danych lub błąd w działaniu narzędzi, skorzystaj z ikony zgłaszania błędów (przycisk z symbolem klucza) na pasku narzędzi. Wypełnij krótki formularz, który prześle Twoją uwagę bezpośrednio do zespołu projektowego.</p>
+            </div>
+            <button id="closeFaqBtn" class="btn-primary" data-i18n="faq_close">Zamknij</button>
         </div>
-        <button id="closeFaqBtn" class="btn-primary">Zamknij</button>
     </div>
-</div>
 
 <div class="search-container ui-panel">
         <div style="position: relative; flex-grow: 1;">
-            <input type="text" id="searchInput" placeholder="Wpisz numer punktu..." autocomplete="off">
+            <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Wpisz numer punktu..." autocomplete="off">
             <ul id="customSuggestions" class="custom-suggestions"></ul>
         </div>
-        <button id="searchBtn">Szukaj</button>
+        <button id="searchBtn" data-i18n="search_btn">Szukaj</button>
     </div>
     <div id="searchError">Nie znaleziono punktu</div>
 
-    <button class="locate-btn ui-panel" id="locateBtn" title="Pokaż moją lokalizację">
+    <button class="locate-btn ui-panel" id="locateBtn" data-i18n-title="tt_locate" title="Pokaż moją lokalizację">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
         </svg>
     </button>
     
-    <button class="locate-btn ui-panel" id="measureBtn" style="top: 155px;" title="Włącz/Wyłącz pomiar odległości i pola">
+    <button class="locate-btn ui-panel" id="measureBtn" style="top: 155px;" data-i18n-title="tt_measure" title="Włącz/Wyłącz pomiar odległości i pola">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21.17 3.25q.33.33.5.76q.16.42.16.86q0 .44-.16.86q-.17.43-.5.76l-11.5 11.5q-.33.33-.76.5q-.42.16-.86.16q-.44 0-.86-.16q-.43-.17-.76-.5L3.25 14q-.33-.33-.5-.76q-.16-.42-.16-.86q0-.44.16-.86q.17-.43.5-.76l11.5-11.5q.33-.33.76-.5q.42-.16.86-.16q.44 0 .86.16q.43.17.76.5Z"></path>
             <path d="m7.5 4.5l12 12"></path>
@@ -169,41 +164,41 @@
             <path d="m10.5 6.5l3.5 3.5"></path>
         </svg>
     </button>
-	
-	<button class="locate-btn ui-panel" id="mobileLayersBtn" style="top: 155px;" title="Warstwy">
+    
+    <button class="locate-btn ui-panel" id="mobileLayersBtn" style="top: 155px;" data-i18n-title="tt_layers" title="Warstwy">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
             <polyline points="2 12 12 17 22 12"></polyline>
         </svg>
     </button>
-	
-	<button class="locate-btn ui-panel" id="faqBtn" style="top: 200px;" title="Pomoc i Instrukcja Obsługi">
+    
+    <button class="locate-btn ui-panel" id="faqBtn" style="top: 200px;" data-i18n-title="tt_faq" title="Pomoc i Instrukcja Obsługi">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
         <line x1="12" y1="17" x2="12.01" y2="17"></line>
     </svg>
-	</button>
-	
-	<button class="locate-btn ui-panel" id="tutorialBtn" style="top: 245px;" title="Uruchom samouczek">
+    </button>
+    
+    <button class="locate-btn ui-panel" id="tutorialBtn" style="top: 245px;" data-i18n-title="tt_tutorial" title="Uruchom samouczek">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="5 3 19 12 5 21 5 3"></polygon>
         </svg>
     </button>
-	
-	<button class="locate-btn ui-panel" id="bugBtn" style="top: 290px;" title="Zgłoś problem / błąd">
+    
+    <button class="locate-btn ui-panel" id="bugBtn" style="top: 290px;" data-i18n-title="tt_bug" title="Zgłoś problem / błąd">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
         </svg>
     </button>
-	
-	<button class="locate-btn ui-panel" id="themeToggleBtn" style="top: 335px;" title="Zmień motyw (Jasny/Ciemny)">
-        <!-- Ikona księżyca (Tryb jasny) -->
+    
+    <button class="locate-btn ui-panel" id="themeToggleBtn" style="top: 335px;" data-i18n-title="tt_theme" title="Zmień motyw (Jasny/Ciemny)">
+        <!-- Tryb jasny -->
         <svg id="moonIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
-        <!-- Ikona słońca (Tryb ciemny) -->
+        <!-- Tryb ciemny -->
         <svg id="sunIcon" style="display: none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -217,116 +212,114 @@
         </svg>
     </button>
     
+    <button class="locate-btn ui-panel" id="statsBtn" style="top: 380px;" data-i18n-title="tt_stats" title="Statystyki bazy osnowy">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+    </button>
+    
+    <button class="locate-btn ui-panel" id="langToggleBtn" style="top: 425px; font-weight: bold; font-size: 11px;" data-i18n-title="tt_lang" title="Zmień język / Change language">
+        EN
+    </button>
+    
     <div id="measurePanel" class="ui-panel">
-        <div class="measure-header">Pomiary Geodezyjne</div>
+        <div class="measure-header" data-i18n="measure_title">Pomiary Geodezyjne</div>
         <div class="measure-toggle">
             <input type="radio" id="mode-dist" name="measureMode" value="distance" checked>
-            <label for="mode-dist">Odległość</label>
-            <input type="radio" id="mode-area" name="measureMode" value="area">
-            <label for="mode-area">Powierzchnia</label>
+            <label for="mode-dist" data-i18n="meas_dist">Odległość</label>
+			<input type="radio" id="mode-area" name="measureMode" value="area">
+			<label for="mode-area" data-i18n="meas_area">Powierzchnia</label>
         </div>
         <div class="measure-results">
             <div class="coord-row">
-                <span class="coord-label" id="measure-dist-label">Odległość:</span>
+                <span class="coord-label" id="measure-dist-label" data-i18n="distance">Odległość:</span>
                 <span id="measure-dist" class="coord-value">0.00 m</span>
             </div>
             <div class="coord-row" id="row-area" style="display: none;">
-                <span class="coord-label">Powierzchnia:</span>
+                <span class="coord-label" data-i18n="area">Powierzchnia:</span>
                 <span id="measure-area" class="coord-value">0.00 m²</span>
             </div>
         </div>
         <div class="pdf-actions" style="margin-top: 15px;">
-            <button id="measure-undo" class="action-btn btn-pdf" style="width: 100%;">Cofnij</button>
-			<button id="measure-clear" class="action-btn btn-nav" style="width: 100%; margin-top: 0;">Wyczyść</button>
+            <button id="measure-undo" class="action-btn btn-pdf" style="width: 100%;" data-i18n="undo">Cofnij</button>
+            <button id="measure-clear" class="action-btn btn-nav" style="width: 100%; margin-top: 0;" data-i18n="clear">Wyczyść</button>
         </div>
     </div>
 
     <div class="custom-layers-control ui-panel" id="layersPanel">
         <div class="layers-header">
-            Warstwy 
+            <span data-i18n="layers_title">Warstwy</span>
             <span id="closeLayersBtn" class="close-layers" style="cursor:pointer; font-size: 20px; line-height: 1;">&times;</span>
         </div>
         <div class="layers-body">
             
-            <button class="accordion-btn active">Podkłady Mapowe</button>
+            <button class="accordion-btn active" data-i18n="cat_base">Podkłady Mapowe</button>
             <div class="accordion-content" style="display: block;">
-                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOsm" checked><span>CartoDB Voyager</span></label>
-                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOrtoGeo"><span>Ortofotomapa (Geoportal)</span></label>
-                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOrtoEsri"><span>Ortofotomapa (Esri)</span></label>
-                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseTopoEsri"><span>Mapa Topograficzna (Esri)</span></label>
-                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseTopoOpen"><span>OpenTopoMap</span></label>        
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOsm" checked><span data-i18n="base_carto">CartoDB Voyager</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOrtoGeo"><span data-i18n="base_orto_geo">Ortofotomapa (Geoportal)</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseOrtoEsri"><span data-i18n="base_orto_esri">Ortofotomapa (Esri)</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseTopoEsri"><span data-i18n="base_topo_esri">Mapa Topograficzna (Esri)</span></label>
+                <label class="layer-item-label"><input type="radio" name="baseMapGroup" id="baseTopoOpen"><span data-i18n="base_topo_open">OpenTopoMap</span></label>        
             </div>
 
-            <button class="accordion-btn active">Usługi WMS</button>
-			<div class="accordion-content" style="display: block;">
-				<label class="layer-item-label"><input type="checkbox" id="layerKieg"><span>Działki i Budynki (KIEG)</span></label>
-				<label class="layer-item-label"><input type="checkbox" id="layerAdresy"><span>Adresy i Ulice (EMUiA)</span></label>
-			</div>
-			
-			<button class="accordion-btn active">Stan punktu</button>
-			<div class="accordion-content" style="display: block;">
-				<label class="layer-item-label"><input type="checkbox" id="filterDobry" checked><span>Dobry</span></label>
-				<label class="layer-item-label"><input type="checkbox" id="filterUszkodzony" checked><span>Uszkodzone</span></label>
-				<label class="layer-item-label"><input type="checkbox" id="filterZniszczony" checked><span>Zniszczone</span></label>
-			</div>
-			
-			<button class="accordion-btn active">Osnowa Podstawowa Pozioma</button>
-			<div class="accordion-content" style="display: block;">
-				<label class="layer-item-label">
-					<input type="checkbox" id="layerFundamentalna" checked>
-					<span>Fundamentalna osnowa pozioma</span>
-				</label>
-			</div>
-
-			<button class="accordion-btn active">Osnowa Podstawowa Wysokościowa</button>
-			<div class="accordion-content" style="display: block;">
-				<label class="layer-item-label">
-					<input type="checkbox" id="layerBazowa" checked>
-					<span>Bazowa osnowa wysokościowa</span>
-				</label>
-			</div>
-
-            <button class="accordion-btn active">Osnowa Szczegółowa Pozioma</button>
-			<div class="accordion-content" style="display: block;">
-				<label class="layer-item-label"><input type="checkbox" id="layerPanstwowa" checked><span>Osnowa Państwowa</span></label>
-    
-				<label class="layer-item-label"><input type="checkbox" id="layerSkulichSzczegolowa" checked><span>Opracowanie Dydaktyczne (dr inż. M. Skulich, prof. AGH)</span></label>
-    
-				<label class="layer-item-label"><input type="checkbox" id="layerKuzniar" checked><span>Opracowanie Projektowe (inż. K. Kuźniar)</span></label>
-				<label class="layer-item-label"><input type="checkbox" id="layerStarzykiewicz" checked><span>Opracowanie Własne (inż. K. Starzykiewicz)</span></label>
-			</div>
-			
-			<button class="accordion-btn active">Osnowa Szczegółowa Wysokościowa</button>
-			<div class="accordion-content" style="display: block;">
-				<label class="layer-item-label">
-					<input type="checkbox" id="layerWysokosciowa" checked>
-					<span>Osnowa Państwowa</span>
-				</label>
-				<label class="layer-item-label">
-					<input type="checkbox" id="layerWysokosciowaUczelnia" checked>
-					<span>Opracowanie Dydaktyczne</span>
-				</label>
-			</div>
-
-            <button class="accordion-btn active">Osnowa Pomiarowa</button>
+            <button class="accordion-btn active" data-i18n="cat_wms">Usługi WMS</button>
             <div class="accordion-content" style="display: block;">
-                <label class="layer-item-label"><input type="checkbox" id="layerSkulich" checked><span>Opracowanie Dydaktyczne (dr inż. M. Skulich, prof. AGH)</span></label>
-                <label class="layer-item-label"><input type="checkbox" id="layerKryusCalka" checked><span>Opracowanie Własne (inż. K. Kryus, inż. P. Całka)</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerKieg"><span data-i18n="wms_kieg">Działki i Budynki (KIEG)</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerAdresy"><span data-i18n="wms_emuia">Adresy i Ulice (EMUiA)</span></label>
+            </div>
+            
+            <button class="accordion-btn active" data-i18n="cat_status">Stan punktu</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="checkbox" id="filterDobry" checked><span data-i18n="filter_good">Dobry</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="filterUszkodzony" checked><span data-i18n="filter_dmg">Uszkodzone</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="filterZniszczony" checked><span data-i18n="filter_dest">Zniszczone</span></label>
+            </div>
+            
+            <button class="accordion-btn active" data-i18n="cat_fund">Osnowa Podstawowa Pozioma</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label">
+                    <input type="checkbox" id="layerFundamentalna" checked>
+                    <span data-i18n="layer_fund">Fundamentalna osnowa pozioma</span>
+                </label>
             </div>
 
-            <button class="accordion-btn active">Analizy i Eksport Danych</button>
+            <button class="accordion-btn active" data-i18n="cat_base_h">Osnowa Podstawowa Wysokościowa</button>
             <div class="accordion-content" style="display: block;">
-                <label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerZakres" checked><span>Zakres opracowania</span></label>
-				<label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerWizuryDobre" checked><span>Wizury dobre</span></label>
-				<label class="layer-item-label" style="margin-bottom: 15px;"><input type="checkbox" id="layerWizuryUtrudnione" checked><span>Wizury utrudnione</span></label>
+                <label class="layer-item-label">
+                    <input type="checkbox" id="layerBazowa" checked>
+                    <span data-i18n="layer_baz">Bazowa osnowa wysokościowa</span>
+                </label>
+            </div>
+
+            <button class="accordion-btn active" data-i18n="cat_detail">Osnowa Szczegółowa Pozioma</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="checkbox" id="layerSzczegolowaPanstwowa" checked><span data-i18n="layer_panst">Osnowa Państwowa</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerSzczegolowaInne" checked><span data-i18n="layer_inne">Inne</span></label>
+            </div>
+            
+            <button class="accordion-btn active" data-i18n="cat_detail_h">Osnowa Szczegółowa Wysokościowa</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="checkbox" id="layerWysokosciowaPanstwowa" checked><span data-i18n="layer_panst">Osnowa Państwowa</span></label>
+                <label class="layer-item-label"><input type="checkbox" id="layerWysokosciowaInne" checked><span data-i18n="layer_inne">Inne</span></label>
+            </div>
+
+            <button class="accordion-btn active" data-i18n="cat_meas">Osnowa Pomiarowa</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label"><input type="checkbox" id="layerPomiarowaInne" checked><span data-i18n="layer_inne">Inne</span></label>
+            </div>
+
+            <button class="accordion-btn active" data-i18n="cat_export">Analizy i Eksport Danych</button>
+            <div class="accordion-content" style="display: block;">
+                <label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerZakres" checked><span data-i18n="layer_zakres">Zakres opracowania</span></label>
+                <label class="layer-item-label" style="margin-bottom: 8px;"><input type="checkbox" id="layerWizuryDobre" checked><span data-i18n="layer_wiz_dob">Wizury dobre</span></label>
+                <label class="layer-item-label" style="margin-bottom: 15px;"><input type="checkbox" id="layerWizuryUtrudnione" checked><span data-i18n="layer_wiz_zla">Wizury utrudnione</span></label>
                 
-                <button id="selectAreaBtn" class="action-btn btn-pdf" style="width: 100%; margin-bottom: 8px;">Wybierz obszar na mapie</button>
-				<div style="display: flex; gap: 8px;">
-					<button id="exportCsvBtn" class="action-btn btn-pdf" style="flex: 1;">Do CSV</button>
-					<button id="exportGeoJsonBtn" class="action-btn btn-pdf" style="flex: 1;">Do GeoJSON</button>
-				</div>
+                <button id="selectAreaBtn" class="action-btn btn-pdf" style="width: 100%; margin-bottom: 8px;" data-i18n="export_btn1">Wybierz obszar na mapie</button>
+                <div style="display: flex; gap: 8px;">
+                    <button id="exportCsvBtn" class="action-btn btn-pdf" style="flex: 1;" data-i18n="export_btn2">Do CSV</button>
+                    <button id="exportGeoJsonBtn" class="action-btn btn-pdf" style="flex: 1;" data-i18n="export_btn3">Do GeoJSON</button>
+                </div>
             </div>
-
         </div>
     </div>
     
@@ -335,10 +328,10 @@
     <div id="exportFloatingPanel" class="ui-panel" style="display: none; position: absolute; top: 75px; left: 50%; transform: translateX(-50%); z-index: 2000; padding: 12px; width: 90%; max-width: 350px; flex-direction: column; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
 		<div id="exportInstructions" style="font-weight: 700; font-size: 13px; color: var(--text-main); text-align: center;">Kliknij w pierwszy róg obszaru na mapie...</div>
 		<div id="exportActionButtons" style="display: none; gap: 8px; width: 100%;">
-			<button id="floatExportCsv" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;">Pobierz CSV</button>
-			<button id="floatExportGeoJson" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;">Pobierz GeoJSON</button>
+			<button id="floatExportCsv" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;" data-i18n="export_btn2">Pobierz CSV</button>
+			<button id="floatExportGeoJson" class="action-btn btn-pdf" style="flex: 1; cursor: pointer;" data-i18n="export_btn3">Pobierz GeoJSON</button>
 		</div>
-		<button id="floatExportCancel" class="btn-danger">Anuluj eksport</button>
+		<button id="floatExportCancel" class="btn-danger" data-i18n="export_cancel">Anuluj eksport</button>
 	</div>
 	
     <div id="coordinatesPanel" class="ui-panel">
@@ -354,10 +347,10 @@
 	
     <div id="bugModal" class="modal-overlay">
         <div class="modal-content ui-panel" style="position: relative; max-width: 500px;">
-            <span id="closeBugIcon" style="position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #9ca3af; cursor: pointer; line-height: 1;">×</span>
+            <span id="closeBugIcon" style="position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #9ca3af; cursor: pointer; line-height: 1;">&times;</span>
             <div class="modal-header">
-                <h2>Zgłoś problem</h2>
-                <h3>Opisz napotkany błąd w aplikacji</h3>
+                <h2 data-i18n="bug_title">Zgłoś problem</h2>
+                <h3 data-i18n="bug_subtitle">Opisz napotkany błąd w aplikacji</h3>
             </div>
             
             <form action="https://api.web3forms.com/submit" method="POST" id="bugFormElement">
@@ -366,16 +359,16 @@
 				<input type="hidden" name="from_name" value="Mapa Osnowy">
     
 				<div class="modal-body" style="padding: 10px 0;">
-					<input type="text" name="Zgłaszający" id="bugReporter" placeholder="Podaj swój e-mail" required style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); border-radius: 6px; font-family: inherit; font-size: 13px; margin-bottom: 10px; outline: none;">                    
+					<input type="text" name="Zgłaszający" id="bugReporter" data-i18n-placeholder="bug_email_ph" placeholder="Podaj swój e-mail" required style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); border-radius: 6px; font-family: inherit; font-size: 13px; margin-bottom: 10px; outline: none;">                    
         
-					<textarea name="Opis_problemu" id="bugDescription" rows="5" required style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); border-radius: 6px; font-family: inherit; font-size: 13px; resize: vertical; outline: none;" placeholder="Opisz dokładnie, co nie działa lub co wymaga poprawy..."></textarea>
+					<textarea name="Opis_problemu" id="bugDescription" rows="5" required style="width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); border-radius: 6px; font-family: inherit; font-size: 13px; resize: vertical; outline: none;" data-i18n-placeholder="bug_desc_ph" placeholder="Opisz dokładnie, co nie działa lub co wymaga poprawy..."></textarea>
         
 					<div class="h-captcha" data-captcha="true" style="margin-top: 10px; display: flex; justify-content: center;"></div>
         
-					<p style="font-size: 11px; color: #6b7280; margin-top: 10px; text-align: center;">Zgłoszenie zostanie bezpośrednio przekazane do autorów projektu.</p>
+					<p style="font-size: 11px; color: #6b7280; margin-top: 10px; text-align: center;" data-i18n="bug_info">Zgłoszenie zostanie bezpośrednio przekazane do autorów projektu.</p>
 				</div>
     
-				<button type="submit" id="sendBugBtn" class="btn-primary">Wyślij zgłoszenie</button>
+				<button type="submit" id="sendBugBtn" class="btn-primary" data-i18n="bug_submit">Wyślij zgłoszenie</button>
 			</form>
         </div>
     </div>
@@ -385,67 +378,86 @@
         <div style="display: flex; align-items: center; gap: 15px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Znak_graficzny_AGH.svg" style="height: 60px;" alt="Logo AGH">
             <div>
-                <h2 style="margin: 0; font-size: 14px; text-transform: uppercase;">Akademia Górniczo-Hutnicza w Krakowie</h2>
-                <p style="margin: 2px 0 0 0; font-size: 11px; color: #444;">Wydział Geodezji Górniczej i Inżynierii Środowiska</p>
-                <p style="margin: 0; font-size: 10px; color: #666;">Katedra Geodezji Zintegrowanej i Kartografii</p>
+                <h2 style="margin: 0; font-size: 14px; text-transform: uppercase;" data-i18n="print_uni">Akademia Górniczo-Hutnicza w Krakowie</h2>
+                <p style="margin: 2px 0 0 0; font-size: 11px; color: #444;" data-i18n="print_faculty">Wydział Geodezji Górniczej i Inżynierii Środowiska</p>
+                <p style="margin: 0; font-size: 10px; color: #666;" data-i18n="print_dept">Katedra Geodezji Zintegrowanej i Kartografii</p>
             </div>
         </div>
         <div style="text-align: right; min-width: 180px;">
-            <p style="margin: 0; font-size: 11px; color: #666;">Data wydruku:</p>
+            <p style="margin: 0; font-size: 11px; color: #666;" data-i18n="print_date">Data wydruku:</p>
             <p style="margin: 2px 0 0 0; font-size: 14px; font-weight: bold;" id="reportDate"></p>
         </div>
     </div>
 
-    <h1 style="text-align: center; font-size: 18px; letter-spacing: 1px; margin-bottom: 5px;">KARTA INFORMACYJNA PUNKTU OSNOWY</h1>
+    <h1 style="text-align: center; font-size: 18px; letter-spacing: 1px; margin-bottom: 5px;" data-i18n="print_title">KARTA INFORMACYJNA PUNKTU OSNOWY</h1>
     <h2 style="text-align: center; font-size: 22px; color: #1a1a1a; margin-top: 0; margin-bottom: 20px;" id="reportNr"></h2>
 
     <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
         <tbody>
             <tr>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; width: 45%; font-weight: 600;">Układ współrzędnych płaskich:</td>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700;">PL-2000 (strefa <span id="reportZone"></span>)</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; width: 45%; font-weight: 600;" data-i18n="print_crs">Układ współrzędnych płaskich:</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700;">PL-2000</td>
             </tr>
             <tr>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Współrzędna X:</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;" data-i18n="print_x">Współrzędna X:</td>
                 <td id="reportX" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
             </tr>
             <tr>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Współrzędna Y:</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;" data-i18n="print_y">Współrzędna Y:</td>
                 <td id="reportY" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
             </tr>
             <tr>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Wysokość H (PL-EVRF2007-NH):</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;" data-i18n="height">Wysokość H (PL-EVRF2007-NH):</td>
                 <td id="reportH" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-family: monospace; font-size: 14px;"></td>
             </tr>
             <tr>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Typ znaku:</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;" data-i18n="point_type">Typ znaku:</td>
                 <td id="reportType" style="padding: 8px 12px; border: 1px solid #1a1a1a;"></td>
             </tr>
             <tr>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Rodzaj stabilizacji:</td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;" data-i18n="stabilization">Rodzaj stabilizacji:</td>
                 <td id="reportStab" style="padding: 8px 12px; border: 1px solid #1a1a1a;"></td>
             </tr>
             <tr>
-                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;">Stan znaku (dzień inwentaryzacji):</td>
-                <td id="reportStan" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700; text-transform: uppercase;"></td>
+                <td style="padding: 8px 12px; border: 1px solid #1a1a1a; background: #f3f4f6; font-weight: 600;" data-i18n="print_status">Stan znaku (dzień inwentaryzacji):</td>
+				<td id="reportStan" style="padding: 8px 12px; border: 1px solid #1a1a1a; font-weight: 700; text-transform: uppercase;"></td>
             </tr>
         </tbody>
     </table>
 
     <div class="report-image-container">
-        <div style="position: absolute; top: 0; left: 0; background-color: #f3f4f6; padding: 4px 8px; font-weight: 600; font-size: 11px; border-bottom: 1px solid #1a1a1a; border-right: 1px solid #1a1a1a; z-index: 2;">
+        <div style="position: absolute; top: 0; left: 0; background-color: #f3f4f6; padding: 4px 8px; font-weight: 600; font-size: 11px; border-bottom: 1px solid #1a1a1a; border-right: 1px solid #1a1a1a; z-index: 2;" data-i18n="topo_desc">
             Opis topograficzny
         </div>
         <img id="reportSzkic" src="">
     </div>
-
+    
     <div style="text-align: center; margin-top: 15px;">
-        <p style="font-size: 12px; font-weight: 600; margin: 0; color: #1a1a1a;"><i>WYGENEROWANO AUTOMATYCZNIE</i></p>
+        <p style="font-size: 12px; font-weight: 600; margin: 0; color: #1a1a1a;"><i data-i18n="print_auto">WYGENEROWANO AUTOMATYCZNIE</i></p>
     </div>
 </div>
 
-    <script type="module" src="/src/app.js"></script>
-	<script src="https://web3forms.com/client/script.js" async defer></script>
+<div id="statsModal" class="modal-overlay">
+    <div class="modal-content ui-panel" style="position: relative; max-width: 800px; width: 95%;">
+        <span id="closeStatsIcon" style="position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #9ca3af; cursor: pointer; line-height: 1;">&times;</span>
+        <div class="modal-header">
+            <h2 data-i18n="stats_title">Pulpit Statystyk</h2>
+            <h3 data-i18n="stats_subtitle">Analiza danych osnowy geodezyjnej</h3>
+        </div>
+        <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around;">
+            <div style="width: 100%; max-width: 350px; text-align: center;">
+                <h4 data-i18n="stats_chart1">Stan zachowania znaków</h4>
+                <canvas id="chartStan"></canvas>
+            </div>
+            <div style="width: 100%; max-width: 350px; text-align: center;">
+                <h4 data-i18n="stats_chart2">Struktura klas osnowy</h4>
+                <canvas id="chartKlasa"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script type="module" src="/src/app.js"></script>
+<script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>

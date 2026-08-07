@@ -173,10 +173,10 @@ export class DataManager {
             reportBtn.style.cssText = 'width: 100%; border:none; cursor:pointer;';
             reportBtn.innerText = t('download_report');
             
-            let stanWizualny = stan_val.toLowerCase().includes(STAN_ZNAKU.DOBRY) ? STAN_WIZUALNY.ZACHOWANY : 
-                              (stan_val.toLowerCase().includes(STAN_ZNAKU.USZKODZONY) ? STAN_WIZUALNY.USZKODZONY : STAN_WIZUALNY.ZNISZCZONY);
+            let stanKlucz = stan_val.toLowerCase().includes(STAN_ZNAKU.DOBRY) ? 'stat_good' : 
+                            (stan_val.toLowerCase().includes(STAN_ZNAKU.USZKODZONY) ? 'stat_dmg' : 'stat_dest');
             
-            reportBtn.addEventListener('click', () => generateReport(nr, latlng[1], x_val, y_val, h_val, typ_znaku_val, stabilizacja_val, stanWizualny, klasa_val));
+            reportBtn.addEventListener('click', () => generateReport(nr, latlng[1], x_val, y_val, h_val, typ_znaku_val, stabilizacja_val, stanKlucz, klasa_val));
             popupWrapper.querySelector('#report-btn-container').appendChild(reportBtn);
 
             L.popup().setLatLng(latlng).setContent(popupWrapper).openOn(this.map);
